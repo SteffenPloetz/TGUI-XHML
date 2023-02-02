@@ -1,2 +1,2 @@
 # TGUI-XHML
-XHTML vierwe widget for texus TGUI
+XHTML viewer widget for texus TGUI (see https://github.com/texus/TGUI/).
