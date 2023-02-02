@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Renderers">
+      <UniqueIdentifier>{75f88056-cb2a-4b8b-bec3-f98c054dadcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Widgets">
+      <UniqueIdentifier>{1433038f-f6b2-4ef5-b534-4bc8a46b01fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xhtml">
+      <UniqueIdentifier>{67911c62-cbcb-4d7b-a354-6a34f7f99599}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\TGUI\Renderers\FormattedTextRenderer.hpp">
+      <Filter>Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Widgets\FormattedElements.hpp">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Widgets\FormattedTextView.hpp">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Widgets\FormattedTextXhtmlDocument.hpp">
+      <Filter>Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\XhtmlAttributes.hpp">
+      <Filter>Xhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\XhtmlElements.hpp">
+      <Filter>Xhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\XhtmlEntityResolver.hpp">
+      <Filter>Xhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\XhtmlParser.hpp">
+      <Filter>Xhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\UtfHelper.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\FileHelper.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\StringHelper.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\StringHelper.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Renderers\FormattedTextRenderer.cpp">
+      <Filter>Renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\FormattedElements.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\FormattedTextView.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Widgets\FormattedTextXhtmlDocument.cpp">
+      <Filter>Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Xhtml\XhtmlAttributes.cpp">
+      <Filter>Xhtml</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Xhtml\XhtmlElements.cpp">
+      <Filter>Xhtml</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Xhtml\XhtmlEntityResolver.cpp">
+      <Filter>Xhtml</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Xhtml\XhtmlParser.cpp">
+      <Filter>Xhtml</Filter>
+    </ClCompile>
+    <ClCompile Include="src\UtfHelper.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
