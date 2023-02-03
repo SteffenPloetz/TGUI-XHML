@@ -24,3 +24,47 @@ The next two images show the sample aplication on Linux
 * XhtmlViewer_01.png               - Sample application, showing a document created from DOM element C++ constructor calls
 * XhtmlViewer_02.png               - Sample application, showing a document parsed from HTML file
 * dllmain.cpp                      - ***Microsoft (R) Windows*** dynamic link library entry point (not needed for ***Linux***)
+
+## Features
+List od supported XHTML features
+* CSS styling
+* style attribute
+* supported tags:
+  * !documenttype
+  * document
+  * html, head, body
+  * meta, title, style
+  * h1...h6
+  * em, i, s, b, u
+  * sup, sub
+  * ul, ol, li
+  * span, div, p
+  * pre, code
+  * br
+  * img
+
+### CSS styling - to be created from DOM element C++ constructor calls
+**auto** *htmlHead* = tgui::XhtmlElement::createHead(*htmlRoot1*);<br/>
+**auto** *thmlStyle* = tgui::XhtmlElement::createStyle(*htmlHead*);<br/>
+*thmlStyle*->setEntry(U"cp", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#666666"), U"Monospace",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tgui::OneDimSize(tgui::SizeType::Relative, 1.0f),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; static_cast<tgui::TextStyle>(tgui::TextStyle::Italic  | tgui::TextStyle::Bold)));<br/>
+*thmlStyle*->setEntry(U"kt", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#666666"), U"Monospace",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tgui::OneDimSize(tgui::SizeType::Relative, 1.0f),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Bold)));<br/>
+...<br/>
+
+### CSS styling - to be parsed from HTML file
+**&lt;html&gt;**<br/>
+&nbsp; &nbsp; **&lt;head&gt;**<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; **&lt;style&gt;**<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pre.highlight {**background-color**:#f0f0f0; **border-color**:#a0a0a0; **border-width**:1px; **padding**:0px 4px;}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; span.cp {**color**:#666666; **font-style**: italic; **font-weight**: bold;}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ...<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; **&lt;/style&gt;**<br/>
+&nbsp; &nbsp; **&lt;/head&gt;**<br/>
+**&lt;/html&gt;**
+
+----
+
+to be continued...
