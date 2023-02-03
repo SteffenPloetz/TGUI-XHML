@@ -1,10 +1,15 @@
-# TGUI-XHML
+# TGUI-XHTML
 XHTML viewer widget for texus TGUI (see https://github.com/texus/TGUI/).
 
-The sample aplication on Linux:
-![screenshor](Screenshot_2023-02-XhtmlViewer.png)
+## First impression
+The next two images show the sample aplication on Linux
+* document created from DOM element C++ constructor calls and
+* document parsed from HTML file:
 
-## Folders and files of the root folder
+<img src="XhtmlViewer_01.png" width="48%"/>  <img src="XhtmlViewer_02.png" width="48%"/>
+
+
+## Folders and files
 * include/TGUI                     - folder of include files
 * src                              - folder of source files
 * LICENSE                          - license text file
@@ -16,4 +21,6 @@ The sample aplication on Linux:
 * TGUI-XHTML.vcxproj.filters       - **Visual Studio 2022** community edition file filters
 * TGUI-XHTML.vcxproj.user          - **Visual Studio 2022** community edition personal preferences
 * XHTMLViewer-SampleAppProject.zip - archive of a test application (project files for **Code::Blocks** and **Visual Studio 2022** community edition included)
+* XhtmlViewer_01.png               - Sample application, showing a document created from DOM element C++ constructor calls
+* XhtmlViewer_02.png               - Sample application, showing a document parsed from HTML file
 * dllmain.cpp                      - ***Microsoft (R) Windows*** dynamic link library entry point (not needed for ***Linux***)
