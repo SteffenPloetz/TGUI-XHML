@@ -1,6 +1,9 @@
 # TGUI-XHML
 XHTML viewer widget for texus TGUI (see https://github.com/texus/TGUI/).
 
+The sample aplication on Linux:
+![screenshor](Screenshot_2023-02-XhtmlViewer.png)
+
 ## Folders and files of the root folder
 * include/TGUI                     - folder of include files
 * src                              - folder of source files
