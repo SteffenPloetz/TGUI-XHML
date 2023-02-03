@@ -46,12 +46,12 @@ List od supported XHTML features
 ### CSS styling - to be created from DOM element C++ constructor calls
 **auto** *htmlHead* = tgui::XhtmlElement::createHead(*htmlRoot1*);<br/>
 **auto** *thmlStyle* = tgui::XhtmlElement::createStyle(*htmlHead*);<br/>
-*thmlStyle*->setEntry(U"cp", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#666666"), U"Monospace",<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tgui::OneDimSize(tgui::SizeType::Relative, 1.0f),<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; static_cast<tgui::TextStyle>(tgui::TextStyle::Italic  | tgui::TextStyle::Bold)));<br/>
-*thmlStyle*->setEntry(U"kt", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#666666"), U"Monospace",<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tgui::OneDimSize(tgui::SizeType::Relative, 1.0f),<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Bold)));<br/>
+*thmlStyle*->setEntry(U"cp", std::make_shared&lt;tgui::XhtmlStyleEntry&gt;(tgui::Color(U"#666666"), U"Monospace",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tgui::OneDimSize(tgui::SizeType::Relative, 1.0f),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; static_cast&lt;tgui::TextStyle&gt;(tgui::TextStyle::Italic  | tgui::TextStyle::Bold)));<br/>
+*thmlStyle*->setEntry(U"kt", std::make_shared&lt;tgui::XhtmlStyleEntry&gt;(tgui::Color(U"#666666"), U"Monospace",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tgui::OneDimSize(tgui::SizeType::Relative, 1.0f),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; static_cast&lt;tgui::TextStyle&gt;(tgui::TextStyle::Regular | tgui::TextStyle::Bold)));<br/>
 ...<br/>
 
 ### CSS styling - to be parsed from HTML file
