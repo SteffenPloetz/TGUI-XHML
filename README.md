@@ -119,7 +119,7 @@ List od supported XHTML features
 &nbsp; &nbsp;if four numeric values are provided, they are applied to top, right, bottom and left<br/>
 <sup>6</sup> the default measuring unit is pixels, the measuring unit can be defined expilcitly with the appendices *px* for pixels, *pt* for points, *em* for equivalemt of 'M' and *%*, but the behavior of *%* is currently unpredictable<br/>
 <sup>7</sup> supported are *regular* and *italic*<br/>
-<sup>7</sup> supported are *regular* and *bold*
+<sup>8</sup> supported are *regular* and *bold*
 
 # <a name="supported-tags">Supported tags</a>
 * ***&lt;!doctype&gt;*** (in that way, that it doesn't create errors or warnings)
