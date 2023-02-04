@@ -8,8 +8,15 @@ The next two images show the sample aplication on Linux
 
 <img src="XhtmlViewer_01.png" width="48%"/>  <img src="XhtmlViewer_02.png" width="48%"/>
 
+## Table of contents
+* [Folders and files](#foldera-and-files)
+* [Features](#features)
+* [CSS styling](#css-styling)
+* [inline styling](#inline-styling)
+* [supported style attributes](#supported-style-attributes)
+* [supported tags](#supported-tags)
 
-## Folders and files
+## <a name="foldera-and-files">Folders and files</a>
 * include/TGUI                     - folder of include files
 * src                              - folder of source files
 * LICENSE                          - license text file
@@ -25,11 +32,12 @@ The next two images show the sample aplication on Linux
 * XhtmlViewer_02.png               - Sample application, showing a document parsed from HTML file
 * dllmain.cpp                      - ***Microsoft (R) Windows*** dynamic link library entry point (not needed for ***Linux***)
 
-## Features
+## <a name="features">Features</a>
 List od supported XHTML features
-* CSS styling
-* style attribute
-* supported tags:
+* [CSS styling](#css-styling)
+* [inline styling](#inline-styling)
+* [supported style attributes](#supported-style-attributes)
+* [supported tags](#supported-tags):
   * !documenttype
   * document
   * html, head, body
@@ -43,27 +51,59 @@ List od supported XHTML features
   * br
   * img
 
+## <a name="css-styling">CSS styling</a>
 ### CSS styling - to be created from DOM element C++ constructor calls
-**auto** *htmlHead* = tgui::XhtmlElement::createHead(*htmlRoot1*);<br/>
-**auto** *thmlStyle* = tgui::XhtmlElement::createStyle(*htmlHead*);<br/>
-*thmlStyle*->setEntry(U"cp", std::make_shared&lt;tgui::XhtmlStyleEntry&gt;(tgui::Color(U"#666666"), U"Monospace",<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tgui::OneDimSize(tgui::SizeType::Relative, 1.0f),<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; static_cast&lt;tgui::TextStyle&gt;(tgui::TextStyle::Italic  | tgui::TextStyle::Bold)));<br/>
-*thmlStyle*->setEntry(U"kt", std::make_shared&lt;tgui::XhtmlStyleEntry&gt;(tgui::Color(U"#666666"), U"Monospace",<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; tgui::OneDimSize(tgui::SizeType::Relative, 1.0f),<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; static_cast&lt;tgui::TextStyle&gt;(tgui::TextStyle::Regular | tgui::TextStyle::Bold)));<br/>
+***auto*** **htmlHead** = *tgui::XhtmlElement::createHead*(**htmlRoot**);<br/>
+***auto*** **thmlStyle** = *tgui::XhtmlElement::createStyle*(**htmlHead**);<br/>
+**thmlStyle**->*setEntry*(U"cp", ***std::make_shared***&lt;*tgui::XhtmlStyleEntry*&gt;(*tgui::Color*(U"#666666"), U"Monospace",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *tgui::OneDimSize*(*tgui::SizeType::Relative*, 1.0f),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ***static_cast***&lt;*tgui::TextStyle*&gt;(*tgui::TextStyle::Italic*  | *tgui::TextStyle::Bold*)));<br/>
+**thmlStyle**->*setEntry*(U"kt", ***std::make_shared***&lt;*tgui::XhtmlStyleEntry*&gt;(*tgui::Color*(U"#666666"), U"Monospace",<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *tgui::OneDimSize*(*tgui::SizeType::Relative*, 1.0f),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ***static_cast***&lt;*tgui::TextStyle*&gt;(*tgui::TextStyle::Regular* | *tgui::TextStyle::Bold*)));<br/>
 ...<br/>
 
 ### CSS styling - to be parsed from HTML file
-**&lt;html&gt;**<br/>
-&nbsp; &nbsp; **&lt;head&gt;**<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; **&lt;style&gt;**<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; pre.highlight {**background-color**:#f0f0f0; **border-color**:#a0a0a0; **border-width**:1px; **padding**:0px 4px;}<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; span.cp {**color**:#666666; **font-style**: italic; **font-weight**: bold;}<br/>
+***&lt;html&gt;***<br/>
+&nbsp; &nbsp; ***&lt;head&gt;***<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; ***&lt;style&gt;***<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **pre.highlight** {***background-color***:#f0f0f0; ***border-color***:#a0a0a0; ***border-width***:1px; ***padding***:0px 4px;}<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; **span.cp** {***color***:#666666; ***font-style***: italic; ***font-weight***: bold;}<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ...<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; **&lt;/style&gt;**<br/>
-&nbsp; &nbsp; **&lt;/head&gt;**<br/>
-**&lt;/html&gt;**
+&nbsp; &nbsp; &nbsp; &nbsp; ***&lt;/style&gt;***<br/>
+&nbsp; &nbsp; ***&lt;/head&gt;***<br/>
+***&lt;/html&gt;***
+
+## <a name="inline-styling">inline styling</a>
+### inline styling - to be created from DOM element C++ constructor calls
+***auto*** **span1** = *tgui::XhtmlElement::createSpan*(***nullptr***, *tgui::Color*(U"#008800"),<br/>
+&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *tgui::XhtmlElement::createInnerText*(***nullptr***, U"test local color"));<br/>
+***auto*** **silverBG** = ***std::make_shared***<*tgui::XhtmlStyleEntry>*();<br/>
+**silverBG**->*setBackgroundColor*(*tgui::Color*(248, 248, 248, 255));<br/>
+**silverBG**->*setBorderColor*(*tgui::Color*(160, 160, 160, 192));<br/>
+**silverBG**->*setBorderWidth*(*tgui::FourDimSize*(*tgui::SizeType::Pixel*, 1.0f));<br/>
+**silverBG**->*setPadding*(*tgui::FourDimSize*(*tgui::SizeType::Pixel*, 0.0f, 4.0f));<br/>
+***auto*** **div1** = *tgui::XhtmlElement::createDivision*(***nullptr***, **silverBG**, *tgui::XhtmlElement::createInnerText*(***nullptr***, U"test style"));
+        
+### inline styling - to be parsed from HTML file
+***&lt;span*** **style**="color:green"&gt; test local color ***&lt;/span&gt;***<br/>
+***&lt;style&gt;***<br/>
+&nbsp; &nbsp; **silverBG** {***background-color***:#f0f0f0; ***border-color***:#a0a0a0; ***border-width***:1px; ***padding***:0px 4px;}<br/>
+***&lt;/style&gt;***<br/>
+***&lt;div*** **class**="silverBG"&gt; test style ***&lt;/div&gt;***<br/>
+
+## <a name="supported-style-attributes">supported style attributes</a>
+* background-color
+* border-color
+* color
+* opacity
+* border-width
+* padding
+* margin
+* font-style
+* font-weight
+
+## <a name="supported-tags">supported tags</a>
 
 ----
 
