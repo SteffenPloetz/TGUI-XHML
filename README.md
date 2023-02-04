@@ -124,24 +124,24 @@ List od supported XHTML features
 # <a name="supported-tags">Supported tags</a>
 * ***&lt;!doctype&gt;*** (in that way, that it doesn't create errors or warnings)
 * ***&lt;document&gt;*** (in that way, that it doesn't create errors or warnings)
-* ***&lt;html&gt;*** (ready to contain &lt;head&gt; and &lt;body&gt;)
+* ***&lt;html&gt;***<sup>1</sup> (ready to contain &lt;head&gt; and &lt;body&gt;)
 * ***&lt;head&gt;*** (ready to contain &lt;meta&gt;, &lt;title&gt; and &lt;style&gt;)
 * ***&lt;meta&gt;*** (in that way, that it doesn't create errors or warnings)
 * ***&lt;title&gt;*** (in that way, that it doesn't create errors or warnings)
-* ***&lt;style&gt;***
-* ***&lt;body&gt;*** (ready to contain all the tags below)
+* ***&lt;style&gt;*** (see [CSS styles](#css-styling))
+* ***&lt;body&gt;***<sup>1</sup> (ready to contain all the tags below)
 * ***&lt;h1&gt;*** ... ***&lt;h6&gt;*** for head line 1st order ... 6th order
-* ***&lt;em&gt;*** for mphasized and ***&lt;i&gt;*** for italic
+* ***&lt;em&gt;*** for emphasized and ***&lt;i&gt;*** for italic
 * ***&lt;s&gt;*** for strong ***&lt;b&gt;*** for bold
 * ***&lt;u&gt;*** for underline
 * ***&lt;sup&gt;*** for superscript and ***&lt;sub&gt;*** for subscript
 * ***&lt;ul&gt;*** for unordered list, ***&lt;ol&gt;*** for ordered list and ***&lt;li&gt;*** for list item
-* ***&lt;span&gt;***, ***&lt;div&gt;*** for division and ***&lt;p&gt;*** for paragraph
-* ***&lt;pre&gt;*** for preformatted and ***&lt;code&gt;***
+* ***&lt;span&gt;***<sup>1</sup>, ***&lt;div&gt;***<sup>1</sup> for division and ***&lt;p&gt;***<sup>1</sup> for paragraph
+* ***&lt;pre&gt;***<sup>1</sup> for preformatted and ***&lt;code&gt;***<sup>1</sup>
 * ***&lt;br/&gt;*** for line break
 * ***&lt;img&gt;*** for image
 
-to be continued...
+<sup>1</sup> can be styled with [inline and CSS styling](#inline-styling)
 
 # <a name="extension-code">The XHTML viewer widget code</a>
 The XHTML viewer widget has been developed and tested on these environments:
