@@ -1,6 +1,7 @@
 # TGUI-XHTML
 XHTML viewer widget for texus [TGUI](https://github.com/texus/TGUI/).
 
+## Introduction
 This project is an extension for the [immediate mode GUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) TGUI. It includes a simple XHTML parser, a simple rich text document (which converts the HTML elements, supplied by the XHTML parser, into rich text elements and makes them available for display) and a simple rich text display widget (which displays the rich text elements from the rich text document).
 
 These three components - parser, document and widget - are largely decoupled and allow for easy further development as well as future support of alternative rich text sources - e.g. markdown.
@@ -15,14 +16,8 @@ I hope to provide this in the near future.
 
 Nevertheless, the functionality already available is so extensive that a description would be very laborious. Instead, I recommend studying the sample application - it tests all the currently available functionality and is an excellent source of knowledge.
 
-## First impression
-The next two images show the sample aplication on Linux
-* image one: document created from DOM element C++ constructor calls (no XHTML parser involved) and
-* image two: document parsed from HTML file (minmum of code required):
-
-<img src="XhtmlViewer_01.png" width="48%"/>  <img src="XhtmlViewer_02.png" width="48%"/>
-
 ## Table of contents
+* [First impression](#first-impression)
 * [Folders and files](#foldera-and-files)
 * [Features](#features)
 * [CSS styles](#css-styling)
@@ -32,7 +27,14 @@ The next two images show the sample aplication on Linux
 * [The XHTML viewer widget code](#extension-code)
 * [The sample application](#sample-app)
 
-## <a name="foldera-and-files">Folders and files</a>
+# <a name="first-impression">First impression</a>
+The next two images show the sample aplication on Linux
+* image one: document created from DOM element C++ constructor calls (no XHTML parser involved) and
+* image two: document parsed from HTML file (minmum of code required):
+
+<img src="XhtmlViewer_01.png" width="48%"/>  <img src="XhtmlViewer_02.png" width="48%"/>
+
+# <a name="foldera-and-files">Folders and files</a>
 * include/TGUI                     - folder of include files
 * src                              - folder of source files
 * LICENSE                          - license text file
@@ -48,26 +50,15 @@ The next two images show the sample aplication on Linux
 * XhtmlViewer_02.png               - Sample application, showing a document parsed from HTML file
 * dllmain.cpp                      - ***Microsoft (R) Windows*** dynamic link library entry point (not needed for ***Linux***)
 
-## <a name="features">Features</a>
+# <a name="features">Features</a>
 List od supported XHTML features
 * [CSS styles](#css-styling)
 * [Inline and CSS styling](#inline-styling)
 * [Supported style attributes](#supported-style-attributes)
-* [Supported tags](#supported-tags):
-  * document
-  * html, head, body
-  * meta, title, style
-  * h1...h6
-  * em, i, s, b, u
-  * sup, sub
-  * ul, ol, li
-  * span, div, p
-  * pre, code
-  * br
-  * img
+* [Supported tags](#supported-tags)
 
-## <a name="css-styling">CSS styles</a>
-### CSS styles - to be created from DOM element C++ constructor calls
+# <a name="css-styling">CSS styles</a>
+## CSS styles - to be created from DOM element C++ constructor calls
 ***auto*** **htmlHead** = *tgui::XhtmlElement::createHead*(**htmlRoot**);<br/>
 ***auto*** **thmlStyle** = *tgui::XhtmlElement::createStyle*(**htmlHead**);<br/>
 **thmlStyle**->*setEntry*(U"cp", ***std::make_shared***&lt;*tgui::XhtmlStyleEntry*&gt;(*tgui::Color*(U"#666666"), U"Monospace",<br/>
@@ -78,7 +69,7 @@ List od supported XHTML features
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ***static_cast***&lt;*tgui::TextStyle*&gt;(*tgui::TextStyle::Regular* | *tgui::TextStyle::Bold*)));<br/>
 ...<br/>
 
-### CSS styles - to be parsed from HTML file
+## CSS styles - to be parsed from HTML file
 ***&lt;html&gt;***<br/>
 &nbsp; &nbsp; ***&lt;head&gt;***<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; ***&lt;style&gt;***<br/>
@@ -89,8 +80,8 @@ List od supported XHTML features
 &nbsp; &nbsp; ***&lt;/head&gt;***<br/>
 ***&lt;/html&gt;***
 
-## <a name="inline-styling">Inline and CSS styling</a>
-### Inline and CSS styling - to be created from DOM element C++ constructor calls
+# <a name="inline-styling">Inline and CSS styling</a>
+## Inline and CSS styling - to be created from DOM element C++ constructor calls
 ***auto*** **span1** = *tgui::XhtmlElement::createSpan*(***nullptr***, *tgui::Color*(U"#008800"),<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *tgui::XhtmlElement::createInnerText*(***nullptr***, U"test local color"));<br/>
 ***auto*** **silverBG** = ***std::make_shared***<*tgui::XhtmlStyleEntry>*();<br/>
@@ -100,29 +91,59 @@ List od supported XHTML features
 **silverBG**->*setPadding*(*tgui::FourDimSize*(*tgui::SizeType::Pixel*, 0.0f, 4.0f));<br/>
 ***auto*** **div1** = *tgui::XhtmlElement::createDivision*(***nullptr***, **silverBG**, *tgui::XhtmlElement::createInnerText*(***nullptr***, U"test style"));
         
-### Inline and CSS styling - to be parsed from HTML file
+## Inline and CSS styling - to be parsed from HTML file
 ***&lt;span*** **style**="color:green"&gt; test inline color ***&lt;/span&gt;***<br/>
 ***&lt;style&gt;***<br/>
 &nbsp; &nbsp; **silverBG** {***background-color***:#f0f0f0; ***border-color***:#a0a0a0; ***border-width***:1px; ***padding***:0px 4px;}<br/>
 ***&lt;/style&gt;***<br/>
 ***&lt;div*** **class**="silverBG"&gt; test style ***&lt;/div&gt;***<br/>
 
-## <a name="supported-style-attributes">Supported style attributes</a>
-* background-color
-* border-color
-* color
-* opacity
-* border-width
-* padding
-* margin
-* font-style
-* font-weight
+# <a name="supported-style-attributes">Supported style attributes</a>
+* background-color<sup>1</sup>
+* border-color<sup>1</sup>
+* color<sup>1</sup>
+* opacity<sup>2</sup>
+* border-width<sup>3</sup><sup>5</sup><sup>6</sup>
+* padding<sup>4</sup><sup>5</sup><sup>6</sup>
+* margin<sup>4</sup><sup>5</sup><sup>6</sup>
+* font-style<sup>7</sup>
+* font-weight<sup>8</sup>
 
-## <a name="supported-tags">Supported tags</a>
+<sup>1</sup> supported are all 142 web [color names](https://www.w3schools.com/colors/colors_names.asp) and values with *#RRGGBB* syntax<br/>
+<sup>2</sup> values between *0.0* = full transparency and *1.0* = full opacity<br/>
+<sup>3</sup> supported are the alias names *thin* translated to 1px, *medium* translated to 3px and *thick* translated to 5px as well as 1...4 numeric values, optionally with prefix for the measuring unit<br/>
+<sup>4</sup> supported are 1...4 numeric values, optionally with prefix for the measuring unit<br/>
+<sup>5</sup> if one numeric value is provided, it is applied to top, right, bottom and left<br/>
+&nbsp; &nbsp;if two numeric values are provided, they are applied to top/bottom and right/left<br/>
+&nbsp; &nbsp;if three numeric values are provided, they are applied to top, right/left and bottom<br/>
+&nbsp; &nbsp;if four numeric values are provided, they are applied to top, right, bottom and left<br/>
+<sup>6</sup> the default measuring unit is pixels, the measuring unit can be defined expilcitly with the appendices *px* for pixels, *pt* for points, *em* for equivalemt of 'M' and *%*, but the behavior of *%* is currently unpredictable<br/>
+<sup>7</sup> supported are *regular* and *italic*<br/>
+<sup>7</sup> supported are *regular* and *bold*
+
+# <a name="supported-tags">Supported tags</a>
+* ***&lt;!doctype&gt;*** (in that way, that it doesn't create errors or warnings)
+* ***&lt;document&gt;*** (in that way, that it doesn't create errors or warnings)
+* ***&lt;html&gt;*** (ready to contain &lt;head&gt; and &lt;body&gt;)
+* ***&lt;head&gt;*** (ready to contain &lt;meta&gt;, &lt;title&gt; and &lt;style&gt;)
+* ***&lt;meta&gt;*** (in that way, that it doesn't create errors or warnings)
+* ***&lt;title&gt;*** (in that way, that it doesn't create errors or warnings)
+* ***&lt;style&gt;***
+* ***&lt;body&gt;*** (ready to contain all the tags below)
+* ***&lt;h1&gt;*** ... ***&lt;h6&gt;*** for head line 1st order ... 6th order
+* ***&lt;em&gt;*** for mphasized and ***&lt;i&gt;*** for italic
+* ***&lt;s&gt;*** for strong ***&lt;b&gt;*** for bold
+* ***&lt;u&gt;*** for underline
+* ***&lt;sup&gt;*** for superscript and ***&lt;sub&gt;*** for subscript
+* ***&lt;ul&gt;*** for unordered list, ***&lt;ol&gt;*** for ordered list and ***&lt;li&gt;*** for list item
+* ***&lt;span&gt;***, ***&lt;div&gt;*** for division and ***&lt;p&gt;*** for paragraph
+* ***&lt;pre&gt;*** for preformatted and ***&lt;code&gt;***
+* ***&lt;br/&gt;*** for line break
+* ***&lt;img&gt;*** for image
 
 to be continued...
 
-## <a name="extension-code">The XHTML viewer widget code</a>
+# <a name="extension-code">The XHTML viewer widget code</a>
 The XHTML viewer widget has been developed and tested on these environments:
 * Manjaro Linux (22.0) x64, Code::Blocks 20.03, gnu compiler collection 12.2.1-1
 * Windows 11 x64, Visual Studio 2022 community edition
@@ -139,10 +160,10 @@ Since a DLL on Windows forces the programmer to distinguish between imported and
 &num;endif<br/>
 &num;endif<br/>
 
-## <a name="sample-app">The sample application</a>
+# <a name="sample-app">The sample application</a>
 The sample application has (like the XHTML viewer widget) been developed and tested on these environments:
 * Manjaro Linux (22.0) x64, Code::Blocks 20.03, gnu compiler collection 12.2.1-1
 * Windows 11 x64, Visual Studio 2022 community edition
 
 The sample application is based on a TGUI build for the **SFML_GRAPHICS** backend. It tests all the currently available functionality and therefore has sample code for all the currently available functionality.<br/>
-The sample application contains a **TabContainer** widget with two tabs: The first tab contains a **FormattedTextView** (XHTML viewer) widget instance, that displays the content of a **FormattedTextXhtmlDocument** (rich text) document created from DOM element C++ constructor calls. The second tab contains another **FormattedTextView** (XHTML viewer) widget instance, that displays the content of another **FormattedTextXhtmlDocument** (rich text) document created from parsing an HTML file.
+The sample application contains a **TabContainer** widget with two tabs: The first tab contains a **FormattedTextView** (XHTML viewer) widget, that displays the content of a **FormattedTextXhtmlDocument** (rich text) document created from DOM element C++ constructor calls. The second tab contains another **FormattedTextView** (XHTML viewer) widget, that displays the content of another **FormattedTextXhtmlDocument** (rich text) document created from parsing an HTML file.
