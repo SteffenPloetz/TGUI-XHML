@@ -1,20 +1,36 @@
 # TGUI-XHTML
-XHTML viewer widget for texus TGUI (see https://github.com/texus/TGUI/).
+XHTML viewer widget for texus [TGUI](https://github.com/texus/TGUI/).
+
+This project is an extension for the [immediate mode GUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) TGUI. It includes a simple XHTML parser, a simple rich text document (which converts the HTML elements, supplied by the XHTML parser, into rich text elements and makes them available for display) and a simple rich text display widget (which displays the rich text elements from the rich text document).
+
+These three components - parser, document and widget - are largely decoupled and allow for easy further development as well as future support of alternative rich text sources - e.g. markdown.
+
+This project does not claim to replace a browser plugin - the functionality available in a browser plugin is simply too powerful for that.<br/>
+Rather, this project aims to provide a rich text display widget that is "easy" to integrate into an application. With "easy" is meant above all: A seamless and painless integration into the already used GUI library. This also means: No glue-code, no external dependencies, no extra effort for deployment on the desired target system (Windows, Linux, ...) and no hassle with changing APIs.
+
+Typical use cases include boosting static displays and an integrated help system.
+
+Two unfortunately not yet implemented but important functionalities of rich text are: tables and links/anchors<br/>
+I hope to provide this in the near future.
+
+Nevertheless, the functionality already available is so extensive that a description would be very laborious. Instead, I recommend studying the sample application - it tests all the currently available functionality and is an excellent source of knowledge.
 
 ## First impression
 The next two images show the sample aplication on Linux
-* document created from DOM element C++ constructor calls and
-* document parsed from HTML file:
+* image one: document created from DOM element C++ constructor calls (no XHTML parser involved) and
+* image two: document parsed from HTML file (minmum of code required):
 
 <img src="XhtmlViewer_01.png" width="48%"/>  <img src="XhtmlViewer_02.png" width="48%"/>
 
 ## Table of contents
 * [Folders and files](#foldera-and-files)
 * [Features](#features)
-* [CSS styling](#css-styling)
-* [inline styling](#inline-styling)
-* [supported style attributes](#supported-style-attributes)
-* [supported tags](#supported-tags)
+* [CSS styles](#css-styling)
+* [Inline and CSS styling](#inline-styling)
+* [Supported style attributes](#supported-style-attributes)
+* [Supported tags](#supported-tags)
+* [The XHTML viewer widget code](#extension-code)
+* [The sample application](#sample-app)
 
 ## <a name="foldera-and-files">Folders and files</a>
 * include/TGUI                     - folder of include files
@@ -34,11 +50,10 @@ The next two images show the sample aplication on Linux
 
 ## <a name="features">Features</a>
 List od supported XHTML features
-* [CSS styling](#css-styling)
-* [inline styling](#inline-styling)
-* [supported style attributes](#supported-style-attributes)
-* [supported tags](#supported-tags):
-  * !documenttype
+* [CSS styles](#css-styling)
+* [Inline and CSS styling](#inline-styling)
+* [Supported style attributes](#supported-style-attributes)
+* [Supported tags](#supported-tags):
   * document
   * html, head, body
   * meta, title, style
@@ -51,8 +66,8 @@ List od supported XHTML features
   * br
   * img
 
-## <a name="css-styling">CSS styling</a>
-### CSS styling - to be created from DOM element C++ constructor calls
+## <a name="css-styling">CSS styles</a>
+### CSS styles - to be created from DOM element C++ constructor calls
 ***auto*** **htmlHead** = *tgui::XhtmlElement::createHead*(**htmlRoot**);<br/>
 ***auto*** **thmlStyle** = *tgui::XhtmlElement::createStyle*(**htmlHead**);<br/>
 **thmlStyle**->*setEntry*(U"cp", ***std::make_shared***&lt;*tgui::XhtmlStyleEntry*&gt;(*tgui::Color*(U"#666666"), U"Monospace",<br/>
@@ -63,7 +78,7 @@ List od supported XHTML features
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; ***static_cast***&lt;*tgui::TextStyle*&gt;(*tgui::TextStyle::Regular* | *tgui::TextStyle::Bold*)));<br/>
 ...<br/>
 
-### CSS styling - to be parsed from HTML file
+### CSS styles - to be parsed from HTML file
 ***&lt;html&gt;***<br/>
 &nbsp; &nbsp; ***&lt;head&gt;***<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; ***&lt;style&gt;***<br/>
@@ -74,8 +89,8 @@ List od supported XHTML features
 &nbsp; &nbsp; ***&lt;/head&gt;***<br/>
 ***&lt;/html&gt;***
 
-## <a name="inline-styling">inline styling</a>
-### inline styling - to be created from DOM element C++ constructor calls
+## <a name="inline-styling">Inline and CSS styling</a>
+### Inline and CSS styling - to be created from DOM element C++ constructor calls
 ***auto*** **span1** = *tgui::XhtmlElement::createSpan*(***nullptr***, *tgui::Color*(U"#008800"),<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *tgui::XhtmlElement::createInnerText*(***nullptr***, U"test local color"));<br/>
 ***auto*** **silverBG** = ***std::make_shared***<*tgui::XhtmlStyleEntry>*();<br/>
@@ -85,14 +100,14 @@ List od supported XHTML features
 **silverBG**->*setPadding*(*tgui::FourDimSize*(*tgui::SizeType::Pixel*, 0.0f, 4.0f));<br/>
 ***auto*** **div1** = *tgui::XhtmlElement::createDivision*(***nullptr***, **silverBG**, *tgui::XhtmlElement::createInnerText*(***nullptr***, U"test style"));
         
-### inline styling - to be parsed from HTML file
-***&lt;span*** **style**="color:green"&gt; test local color ***&lt;/span&gt;***<br/>
+### Inline and CSS styling - to be parsed from HTML file
+***&lt;span*** **style**="color:green"&gt; test inline color ***&lt;/span&gt;***<br/>
 ***&lt;style&gt;***<br/>
 &nbsp; &nbsp; **silverBG** {***background-color***:#f0f0f0; ***border-color***:#a0a0a0; ***border-width***:1px; ***padding***:0px 4px;}<br/>
 ***&lt;/style&gt;***<br/>
 ***&lt;div*** **class**="silverBG"&gt; test style ***&lt;/div&gt;***<br/>
 
-## <a name="supported-style-attributes">supported style attributes</a>
+## <a name="supported-style-attributes">Supported style attributes</a>
 * background-color
 * border-color
 * color
@@ -103,8 +118,31 @@ List od supported XHTML features
 * font-style
 * font-weight
 
-## <a name="supported-tags">supported tags</a>
-
-----
+## <a name="supported-tags">Supported tags</a>
 
 to be continued...
+
+## <a name="extension-code">The XHTML viewer widget code</a>
+The XHTML viewer widget has been developed and tested on these environments:
+* Manjaro Linux (22.0) x64, Code::Blocks 20.03, gnu compiler collection 12.2.1-1
+* Windows 11 x64, Visual Studio 2022 community edition
+
+The code is ready to be compiled as a separate dynamic link library or to be integrated (either into a custom TGUI build or into the target application).<br/>
+Since a DLL on Windows forces the programmer to distinguish between imported and exported API (which Linux does not), a little trick has to be used for Windows, which can be found in every CPP file:
+
+// MSC needs a clear distiction between "__declspec(dllimport)" (above) and "__declspec(dllexport)" (below) this comment.<br/>
+// So in the case of direct source file integration (in contrast to library creation and linking), the API must be 'dllexport'.<br/>
+&num;ifndef TGUI_STATIC<br/>
+&num;ifdef TGUI_SYSTEM_WINDOWS<br/>
+&num;undef TGUI_API<br/>
+&num;define TGUI_API __declspec(dllexport)<br/>
+&num;endif<br/>
+&num;endif<br/>
+
+## <a name="sample-app">The sample application</a>
+The sample application has (like the XHTML viewer widget) been developed and tested on these environments:
+* Manjaro Linux (22.0) x64, Code::Blocks 20.03, gnu compiler collection 12.2.1-1
+* Windows 11 x64, Visual Studio 2022 community edition
+
+The sample application is based on a TGUI build for the **SFML_GRAPHICS** backend. It tests all the currently available functionality and therefore has sample code for all the currently available functionality.<br/>
+The sample application contains a **TabContainer** widget with two tabs: The first tab contains a **FormattedTextView** (XHTML viewer) widget instance, that displays the content of a **FormattedTextXhtmlDocument** (rich text) document created from DOM element C++ constructor calls. The second tab contains another **FormattedTextView** (XHTML viewer) widget instance, that displays the content of another **FormattedTextXhtmlDocument** (rich text) document created from parsing an HTML file.
