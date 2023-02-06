@@ -459,7 +459,7 @@ namespace tgui
                 try
                 {
                     auto colorValue = WebColorMap.find(styleEntryParts[1]) != WebColorMap.end() ? WebColorMap[styleEntryParts[1]] : styleEntryParts[1];
-                    if (ext::u32string::isNum(colorValue[0]))
+                    if (colorValue[0] != U'#')
                         colorValue = U"#" + colorValue;
                     Color color(colorValue);
                     setBackgroundColor(color);
@@ -476,7 +476,7 @@ namespace tgui
                 try
                 {
                     auto colorValue = WebColorMap.find(styleEntryParts[1]) != WebColorMap.end() ? WebColorMap[styleEntryParts[1]] : styleEntryParts[1];
-                    if (ext::u32string::isNum(colorValue[0]))
+                    if (colorValue[0] != U'#')
                         colorValue = U"#" + colorValue;
                     Color color(colorValue);
                     setColor(color);
@@ -493,7 +493,7 @@ namespace tgui
                 try
                 {
                     auto colorValue = WebColorMap.find(styleEntryParts[1]) != WebColorMap.end() ? WebColorMap[styleEntryParts[1]] : styleEntryParts[1];
-                    if (ext::u32string::isNum(colorValue[0]))
+                    if (colorValue[0] != U'#')
                         colorValue = U"#" + colorValue;
                     Color color(colorValue);
                     setBorderColor(color);
@@ -529,116 +529,55 @@ namespace tgui
             }
             else if (ext::u32string::compareNoCase(styleEntryParts[0], U"border-width") == 0)
             {
-                FourDimSize borderWidth = getBorderWidth();
                 ext::u32string::replace(styleEntryParts[1], U"thin", U"1px");
                 ext::u32string::replace(styleEntryParts[1], U"medium", U"3px");
                 ext::u32string::replace(styleEntryParts[1], U"thick", U"5px");
-                auto widthParts = ext::u32string::split(styleEntryParts[1], U' ');
-                if (widthParts.size() == 1)
-                    borderWidth.top = borderWidth.left = borderWidth.bottom = borderWidth.right = ext::u32string::tof(widthParts[0].c_str());
-                if (widthParts.size() == 2)
-                {
-                    borderWidth.top = borderWidth.bottom = ext::u32string::tof(widthParts[0].c_str());
-                    borderWidth.left = borderWidth.right = ext::u32string::tof(widthParts[1].c_str());
-                }
-                if (widthParts.size() == 3)
-                {
-                    borderWidth.top = ext::u32string::tof(widthParts[0].c_str());
-                    borderWidth.left = borderWidth.right = ext::u32string::tof(widthParts[1].c_str());
-                    borderWidth.bottom = ext::u32string::tof(widthParts[2].c_str());
-                }
-                if (widthParts.size() == 4)
-                {
-                    borderWidth.top = ext::u32string::tof(widthParts[0].c_str());
-                    borderWidth.right = ext::u32string::tof(widthParts[1].c_str());
-                    borderWidth.bottom = ext::u32string::tof(widthParts[2].c_str());
-                    borderWidth.left = ext::u32string::tof(widthParts[3].c_str());
-                }
-
-                if (ext::u32string::find(styleEntryParts[1], U"px") != SIZE_MAX)
-                    borderWidth.sizeType = SizeType::Pixel;
-                if (ext::u32string::find(styleEntryParts[1], U"pt") != SIZE_MAX)
-                    borderWidth.sizeType = SizeType::Point;
-                if (ext::u32string::find(styleEntryParts[1], U"em") != SIZE_MAX)
-                    borderWidth.sizeType = SizeType::EquivalentOfM;
-                if (ext::u32string::find(styleEntryParts[1], U"%") != SIZE_MAX)
-                    borderWidth.sizeType = SizeType::Relative;
+                FourDimSize borderWidth = getBorderWidth();
+                borderWidth.parse(ext::u32string::split(styleEntryParts[1], U' '));
                 setBorderWidth(borderWidth);
                 continue;
             }
-            else if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin") == 0 ||
-                     ext::u32string::compareNoCase(styleEntryParts[0], U"margin-top") == 0 ||
-                     ext::u32string::compareNoCase(styleEntryParts[0], U"margin-left") == 0 ||
-                     ext::u32string::compareNoCase(styleEntryParts[0], U"margin-bottom") == 0 ||
-                     ext::u32string::compareNoCase(styleEntryParts[0], U"margin-right") == 0)
+            else if (ext::u32string::containsAnyNoCase(styleEntryParts[0],
+                        {U"margin", U"margin-top", U"margin-left", U"margin-bottom", U"margin-right"}))
             {
                 FourDimSize margin = getMargin();
                 if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin") == 0)
+                    margin.parse(ext::u32string::split(styleEntryParts[1], U' ', true));
+                else
                 {
-                    auto styleValueParts = ext::u32string::split(styleEntryParts[1], U' ', true);
-                    if (styleValueParts.size() == 1)
-                        margin.top = margin.left = margin.bottom = margin.right = ext::u32string::tof(styleValueParts[0].c_str());
-                    if (styleValueParts.size() == 2)
-                    {
-                        margin.top  = margin.bottom  = ext::u32string::tof(styleValueParts[0].c_str());
-                        margin.left = margin.right   = ext::u32string::tof(styleValueParts[1].c_str());
-                    }
-                }
-                if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-top") == 0)
-                    margin.top = ext::u32string::tof(styleEntryParts[1].c_str());
-                if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-left") == 0)
-                    margin.left = ext::u32string::tof(styleEntryParts[1].c_str());
-                if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-bottom") == 0)
-                    margin.bottom = ext::u32string::tof(styleEntryParts[1].c_str());
-                if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-right") == 0)
-                    margin.right = ext::u32string::tof(styleEntryParts[1].c_str());
+                    if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-top") == 0)
+                        margin.top = ext::u32string::tof(styleEntryParts[1].c_str());
+                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-left") == 0)
+                        margin.left = ext::u32string::tof(styleEntryParts[1].c_str());
+                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-bottom") == 0)
+                        margin.bottom = ext::u32string::tof(styleEntryParts[1].c_str());
+                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-right") == 0)
+                        margin.right = ext::u32string::tof(styleEntryParts[1].c_str());
 
-                if (ext::u32string::find(styleEntryParts[1], U"px") != SIZE_MAX)
-                    margin.sizeType = SizeType::Pixel;
-                if (ext::u32string::find(styleEntryParts[1], U"pt") != SIZE_MAX)
-                    margin.sizeType = SizeType::Point;
-                if (ext::u32string::find(styleEntryParts[1], U"em") != SIZE_MAX)
-                    margin.sizeType = SizeType::EquivalentOfM;
-                if (ext::u32string::find(styleEntryParts[1], U"%") != SIZE_MAX)
-                    margin.sizeType = SizeType::Relative;
+                    margin.sizeType = FourDimSize::determineSizeType(styleEntryParts[1]);
+                }
                 setMargin(margin);
                 continue;
             }
-            else if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding") == 0 ||
-                     ext::u32string::compareNoCase(styleEntryParts[0], U"padding-top") == 0 ||
-                     ext::u32string::compareNoCase(styleEntryParts[0], U"padding-left") == 0 ||
-                     ext::u32string::compareNoCase(styleEntryParts[0], U"padding-bottom") == 0 ||
-                     ext::u32string::compareNoCase(styleEntryParts[0], U"padding-right") == 0)
+            else if (ext::u32string::containsAnyNoCase(styleEntryParts[0],
+                        {U"padding", U"padding-top", U"padding-left", U"padding-bottom", U"padding-right"}))
             {
                 FourDimSize padding = getPadding();
                 if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding") == 0)
+                    padding.parse(ext::u32string::split(styleEntryParts[1], U' ', true));
+                else
                 {
-                    auto styleValueParts = ext::u32string::split(styleEntryParts[1], U' ', true);
-                    if (styleValueParts.size() == 1)
-                        padding.top = padding.left = padding.bottom = padding.right = ext::u32string::tof(styleValueParts[0].c_str());
-                    if (styleValueParts.size() == 2)
-                    {
-                        padding.top  = padding.bottom = ext::u32string::tof(styleValueParts[0].c_str());
-                        padding.left = padding.right  = ext::u32string::tof(styleValueParts[1].c_str());
-                    }
-                }
-                if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-top") == 0)
-                    padding.top = ext::u32string::tof(styleEntryParts[1].c_str());
-                if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-left") == 0)
-                    padding.left = ext::u32string::tof(styleEntryParts[1].c_str());
-                if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-bottom") == 0)
-                    padding.bottom = ext::u32string::tof(styleEntryParts[1].c_str());
-                if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-right") == 0)
-                    padding.right = ext::u32string::tof(styleEntryParts[1].c_str());
+                    if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-top") == 0)
+                        padding.top = ext::u32string::tof(styleEntryParts[1].c_str());
+                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-left") == 0)
+                        padding.left = ext::u32string::tof(styleEntryParts[1].c_str());
+                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-bottom") == 0)
+                        padding.bottom = ext::u32string::tof(styleEntryParts[1].c_str());
+                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-right") == 0)
+                        padding.right = ext::u32string::tof(styleEntryParts[1].c_str());
 
-                if (ext::u32string::find(styleEntryParts[1], U"px") != SIZE_MAX)
-                    padding.sizeType = SizeType::Pixel;
-                if (ext::u32string::find(styleEntryParts[1], U"pt") != SIZE_MAX)
-                    padding.sizeType = SizeType::Point;
-                if (ext::u32string::find(styleEntryParts[1], U"em") != SIZE_MAX)
-                    padding.sizeType = SizeType::EquivalentOfM;
-                if (ext::u32string::find(styleEntryParts[1], U"%") != SIZE_MAX)
-                    padding.sizeType = SizeType::Relative;
+                    padding.sizeType = FourDimSize::determineSizeType(styleEntryParts[1]);
+                }
                 setPadding(padding);
                 continue;
             }

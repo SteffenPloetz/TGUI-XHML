@@ -125,6 +125,26 @@ namespace ext
         static int compareNoCase(const std::u32string& left, const std::u32string& right);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Determines whether indicated string contains the pattern case insensitive
+        ///
+        /// @param left     The string to be compared with the predicates
+        /// @param pattern  The string to check containment
+        ///
+        /// @return The flag indicating whether pattern is contained (true) or not (false)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static bool containsNoCase(const std::u32string& nocaseLeft, const std::u32string& pattern);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Determines whether indicated string contains case insensitive one of the predicates
+        ///
+        /// @param left      The string to be compared with the predicates
+        /// @param patterns  The strings to check containment
+        ///
+        /// @return The flag indicating whether one of the predicates is contained (true) or not (false)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static bool containsAnyNoCase(const std::u32string& nocaseLeft, const std::vector<std::u32string>& patterns);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Removes leading white space characters in-place
         ///
         /// @param text  The string to be trimmed

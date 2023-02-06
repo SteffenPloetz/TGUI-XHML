@@ -235,11 +235,11 @@ namespace tgui
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets this four dimension size in pixel
+        /// @brief Calculates this four dimension size equivalent in pixel out of the current size
         ///
         /// @param parentSize  The parent size for the calculation of a relative defined size
         ///
-        /// @return This four dimension size in pixel
+        /// @return The four dimension size equivalent in pixel calculated out of the current size
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline FourDimSize toPixel(Vector2f parentSize) const
         {
@@ -251,6 +251,57 @@ namespace tgui
                 return FourDimSize(SizeType::Pixel, top * 16.0f, right * 16.0f, bottom * 16.0f, left * 16.0f);
             else
                 return FourDimSize(SizeType::Pixel, top * parentSize.y, right * parentSize.x, bottom * parentSize.y, left * parentSize.x);
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Determines the size type
+        ///
+        /// @param sizePart  The string that should contain information about the size type
+        ///
+        /// @return The size type
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static inline SizeType determineSizeType(std::u32string sizePart)
+        {
+            if (ext::u32string::find(sizePart, U"px") != SIZE_MAX)        return SizeType::Pixel;
+            else if (ext::u32string::find(sizePart, U"pt") != SIZE_MAX)   return SizeType::Point;
+            else if (ext::u32string::find(sizePart, U"em") != SIZE_MAX)   return SizeType::EquivalentOfM;
+            else if (ext::u32string::find(sizePart, U"%") != SIZE_MAX)    return SizeType::Relative;
+            else                                                          return SizeType::Pixel;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Parsed the four size values
+        ///
+        /// @param sizeParts  The string array that should contain information about the size values
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline void parse(std::vector<std::u32string> sizeParts)
+        {
+            if (sizeParts.size() == 1)
+            {
+                top      = left = bottom = right = ext::u32string::tof(sizeParts[0].c_str());
+                sizeType = FourDimSize::determineSizeType(sizeParts[0]);
+            }
+            if (sizeParts.size() == 2)
+            {
+                top      = bottom = ext::u32string::tof(sizeParts[0].c_str());
+                left     = right = ext::u32string::tof(sizeParts[1].c_str());
+                sizeType = FourDimSize::determineSizeType(sizeParts[0]);
+            }
+            if (sizeParts.size() == 3)
+            {
+                top      = ext::u32string::tof(sizeParts[0].c_str());
+                left     = right = ext::u32string::tof(sizeParts[1].c_str());
+                bottom   = ext::u32string::tof(sizeParts[2].c_str());
+                sizeType = FourDimSize::determineSizeType(sizeParts[0]);
+            }
+            if (sizeParts.size() == 4)
+            {
+                top      = ext::u32string::tof(sizeParts[0].c_str());
+                right    = ext::u32string::tof(sizeParts[1].c_str());
+                bottom   = ext::u32string::tof(sizeParts[2].c_str());
+                left     = ext::u32string::tof(sizeParts[3].c_str());
+                sizeType = FourDimSize::determineSizeType(sizeParts[0]);
+            }
         }
     };
 

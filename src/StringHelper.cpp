@@ -35,6 +35,27 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    bool u32string::containsNoCase(const std::u32string& nocaseLeft, const std::u32string& pattern)
+    {
+        std::u32string buffLeft = nocaseLeft;
+        std::transform(buffLeft.begin(), buffLeft.end(), buffLeft.begin(), ::tolower);
+
+        return buffLeft.find(pattern, 0) != std::u32string::npos;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    bool u32string::containsAnyNoCase(const std::u32string& nocaseLeft, const std::vector<std::u32string>& patterns)
+    {
+        for (auto pattern : patterns)
+            if (u32string::containsNoCase(nocaseLeft, pattern) == 0)
+                return true;
+
+        return false;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // trim from start (in place)
     void u32string::trimLeft(std::u32string& text)
     {

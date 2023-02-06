@@ -1415,7 +1415,7 @@ namespace tgui
         {
             auto index = parent->indexOfChild(element);
             if (index > 0 && index != SIZE_MAX)
-                return element->getChild(index - 1);
+                return parent->getChild(index - 1);
         }
 
         return nullptr;

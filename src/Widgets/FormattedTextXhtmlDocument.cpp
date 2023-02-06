@@ -13,6 +13,7 @@
 #endif
 #endif
 
+#include "TGUI/StringHelper.hpp"
 #include "TGUI/Xhtml/XhtmlEntityResolver.hpp"
 #include "TGUI/Xhtml/XhtmlAttributes.hpp"
 #include "TGUI/StringHelper.hpp"
@@ -713,8 +714,8 @@ namespace tgui
 
             if ((attribute = xhtmlElement->getAttribute(U"src")) != nullptr && attribute->getValue().size() > 0)
             {
-                std::hash<std::u32string> hash_string;
-                auto hash = hash_string(attribute->getValue());
+                std::hash<std::u32string> hashString;
+                auto hash = hashString(attribute->getValue());
 
                 auto iterator = m_textures.find(hash);
                 if (iterator != m_textures.end())
@@ -735,7 +736,13 @@ namespace tgui
                 {
                     try
                     {
-                        auto textureWrapper = tgui::Deserializer::deserialize(tgui::ObjectConverter::Type::Texture, attribute->getValue());
+                        std::u32string uri(attribute->getValue());
+                        if (!ext::u32string::containsNoCase(uri, U"data:"))
+                        {
+                            if (ext::u32string::containsNoCase(uri, U"file://"))
+                                ext::u32string::replace(uri, U"file://", U"");
+                        }
+                        auto textureWrapper = tgui::Deserializer::deserialize(tgui::ObjectConverter::Type::Texture, uri);
                         const Texture& texture = textureWrapper.getTexture();
                         auto  size = texture.getImageSize();
                         if (size != Vector2u{})
