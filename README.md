@@ -24,7 +24,8 @@ Nevertheless, the functionality already available is so extensive that a descrip
 * [Inline and CSS styling](#inline-styling)
 * [Supported style attributes](#supported-style-attributes)
 * [Supported tags](#supported-tags)
-* [The XHTML viewer widget code](#extension-code)
+* [The TGUI-XHTML code](#extension-code)
+* [The FormattedTextView widget](#formatted-text-widget)
 * [The sample application](#sample-app)
 
 # <a name="first-impression">First impression</a>
@@ -143,7 +144,7 @@ List od supported XHTML features
 
 <sup>1</sup> can be styled with [inline and CSS styling](#inline-styling)
 
-# <a name="extension-code">The XHTML viewer widget code</a>
+# <a name="extension-code">The TGUI-XHTML code</a>
 The XHTML viewer widget has been developed and tested on these environments:
 * Manjaro Linux (22.0) x64, Code::Blocks 20.03, gnu compiler collection 12.2.1-1
 * Windows 11 x64, Visual Studio 2022 community edition
@@ -159,6 +160,11 @@ Since a DLL on Windows forces the programmer to distinguish between imported and
 &num;define TGUI_API __declspec(dllexport)<br/>
 &num;endif<br/>
 &num;endif<br/>
+
+# <a name="formatted-text-widget">The FormattedTextView widget</a>
+The widget displays static (not editable) formatted text. The widget suppors scroll bars in both directions. By default the policy of the vertical scrollbar is initialized to ***always*** and the visibility is set to ***true*** while the policy of the horizontal scroll bar is set to ***automatic*** and the visibility is set to ***false***.
+
+The widget also supports zoom between 10% and 1000%. To zoom, the scroll wheel hast to be crolled with pressed control key.
 
 # <a name="sample-app">The sample application</a>
 The sample application has (like the XHTML viewer widget) been developed and tested on these environments:
