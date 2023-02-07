@@ -98,7 +98,7 @@ namespace tgui
         bool                    IsStyleable;         //!< The flag indicating whether element can have a style entry
         bool                    IsContainer;         //!< The flag indicating whether element can have children
         bool                    IsStructuringBlock;  //!< The flag indicating whether element is a structuring block (H1, ...)
-        bool                    IsTextBlock;         //!< The flag indicating whether element is a text block (div, pre, ...) 
+        bool                    IsTextBlock;         //!< The flag indicating whether element is a text block (div, pre, ...)
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1548,7 +1548,7 @@ namespace tgui
         /// @return The type name of the element as wide character string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline std::u32string getTypeNameU32() const
-        {   return ext::u32string::u32stringfromstring(m_elementType.TypeName);   }
+        {   return ext::u32string::u32stringFromString(m_elementType.TypeName);   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Determines whether the element can contain child elements
@@ -1560,7 +1560,7 @@ namespace tgui
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Determines whether the element is a structuring block
-        /// 
+        ///
         /// This specifies the global document structure (creates document sections with linebreak/ carriage return behavior)
         ///
         /// @return The flag indicating whether the element is a structuring block (specifies the global document structure)
@@ -1570,7 +1570,7 @@ namespace tgui
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Determines whether the element is a text block
-        /// 
+        ///
         /// This specifies the local document structure (creates paragraphs with linebreak/ carriage return behavior)
         ///
         /// @return The flag indicating whether the element can contain child elements (specifies the local document structure)

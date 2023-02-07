@@ -1813,7 +1813,7 @@ namespace tgui
         std::wcout << U"Set name '" << typeName << U"' to" << (isOpeningTag ? " opening" : "") << (isClosingTag ? " closing" : "") << " element with " << attributesBuffer.size() << " attributes.\r\n";
 #endif
 
-        auto element = XhtmlElement::createAuto(ext::u32string::stringfromu32string(typeName).c_str(), parent, beginPosition, endPosition, elementClosed && elementOpened);
+        auto element = XhtmlElement::createAuto(ext::u32string::stringFromU32string(typeName).c_str(), parent, beginPosition, endPosition, elementClosed && elementOpened);
         element->addAttributes(attributesBuffer);
         attributesBuffer.clear();
 
@@ -1911,12 +1911,12 @@ namespace tgui
     {
         if (typeName != nullptr && strlen(typeName) > 0 && className.size() > 0)
         {
-            auto styleName = ext::u32string::u32stringfromstring(typeName) + U"." + className;
+            auto styleName = ext::u32string::u32stringFromString(typeName) + U"." + className;
             return ( m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);
         }
         else if (typeName != nullptr && (strlen(typeName) > 0 || className.size() > 0))
         {
-            auto styleName = ext::u32string::u32stringfromstring(typeName) + className;
+            auto styleName = ext::u32string::u32stringFromString(typeName) + className;
             return (m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);
         }
         return nullptr;

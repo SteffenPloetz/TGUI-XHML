@@ -10,15 +10,19 @@ namespace tgui
     /// A formatted text view widget is a multi-line formatted text output field which supports word-wrap and scrollbars.
     /// If you are looking for a multi-line text input field then check out the TextArea class (that doesn't support format).
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    class TGUI_API FormattedTextView : public Widget
+    class TGUI_API FormattedTextView : public ClickableWidget
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public:
+
         using Ptr = std::shared_ptr<FormattedTextView>;            //!< Shared widget pointer
         using ConstPtr = std::shared_ptr<const FormattedTextView>; //!< Shared constant widget pointer
 
         static constexpr const char StaticWidgetType[] = "FormattedTextView";
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public:
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Initializing constructor
         ///
@@ -32,10 +36,15 @@ namespace tgui
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates a new XHTML static widget
         ///
+        /// @param size  Size of the clickable widget
+        ///
         /// @return The new XHTML static
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static inline FormattedTextView::Ptr create()
-        { return std::make_shared<FormattedTextView>(StaticWidgetType, true); }
+        TGUI_NODISCARD static inline FormattedTextView::Ptr create(const Layout2d& size = {"100%", "100%"})
+        {   auto widget = std::make_shared<FormattedTextView>(StaticWidgetType, true);   widget->setSize(size);   return widget;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    protected:
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Makes a copy of the widget if you don't know its exact type
@@ -45,8 +54,11 @@ namespace tgui
         ///
         /// @return Copy of the widget
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline Widget::Ptr clone() const override
-        { return std::make_shared<FormattedTextView>(*this); }
+        TGUI_NODISCARD inline Widget::Ptr clone() const override
+        {   return std::make_shared<FormattedTextView>(*this);   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public:
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Makes a copy of another XHTML ststic
@@ -55,7 +67,7 @@ namespace tgui
         ///
         /// @return The new XHTML static
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static FormattedTextView::Ptr copy(FormattedTextView::ConstPtr formattedTextView);
+        TGUI_NODISCARD static FormattedTextView::Ptr copy(FormattedTextView::ConstPtr formattedTextView);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the renderer, which gives access to functions that determine how the widget is displayed
@@ -63,10 +75,10 @@ namespace tgui
         /// @return Temporary pointer to the renderer that may be shared with other widgets using the same renderer
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline FormattedTextRenderer* getSharedRenderer()
-        { return aurora::downcast<FormattedTextRenderer*>(Widget::getSharedRenderer()); }
+        {   return aurora::downcast<FormattedTextRenderer*>(Widget::getSharedRenderer());   }
 
         inline const FormattedTextRenderer* getSharedRenderer() const
-        { return aurora::downcast<const FormattedTextRenderer*>(Widget::getSharedRenderer()); }
+        {   return aurora::downcast<const FormattedTextRenderer*>(Widget::getSharedRenderer());   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the renderer, which gives access to functions that determine how the widget is displayed
@@ -96,7 +108,7 @@ namespace tgui
         /// @warning This setSize overload must never be used from internal TGUI code or by custom widget implementations
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setSize(Layout width, Layout height)
-        { setSize({std::move(width), std::move(height)}); }
+        {   setSize({std::move(width), std::move(height)});   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the underlying XHTML document
@@ -104,7 +116,7 @@ namespace tgui
         /// @param document  The underlying XHTML document to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setDocument(FormattedTextXhtmlDocument::Ptr document)
-        { m_document = document; }
+        {   m_document = document;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the underlying XHTML document
@@ -112,7 +124,7 @@ namespace tgui
         /// @return The underlying XHTML document
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline FormattedTextXhtmlDocument::Ptr getDocument()
-        { return m_document; }
+        {   return m_document;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the font collection
@@ -133,7 +145,7 @@ namespace tgui
         /// @return The font collection
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline const FormattedTextDocument::FontCollection& getFontCollection() const
-        { return m_fontCollection; }
+        {   return m_fontCollection;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @internal
@@ -165,7 +177,7 @@ namespace tgui
         /// The default policy is Automatic, which means word-wrap will be used to keep the text within the FormattedTextView.
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline Scrollbar::Policy getHorizontalScrollbarPolicy() const
-        { return m_horizontalScrollbarPolicy; }
+        {   return m_horizontalScrollbarPolicy;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Changes whether the vertical scroll-bar should be displayed
@@ -184,7 +196,7 @@ namespace tgui
         /// The default policy is Always, which means word-wrap will be used to keep the text within the FormattedTextView.
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline Scrollbar::Policy getVerticalScrollbarPolicy() const
-        { return m_verticalScrollbarPolicy; }
+        {   return m_verticalScrollbarPolicy;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Changes the thumb position of the horizontal scroll-bar
@@ -192,7 +204,7 @@ namespace tgui
         /// @param value  New value of the horizontal scroll-bar
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setHorizontalScrollbarValue(unsigned int value)
-        { m_horizontalScrollbar->setValue(value); }
+        {   m_horizontalScrollbar->setValue(value);   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Returns the thumb position of the horizontal scroll-bar
@@ -200,7 +212,7 @@ namespace tgui
         /// @return Value of the horizontal scroll-bar
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline unsigned int getHorizontalScrollbarValue() const
-        { return m_horizontalScrollbar->getValue(); }
+        {   return m_horizontalScrollbar->getValue();   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Changes the thumb position of the vertical scroll-bar
@@ -208,7 +220,7 @@ namespace tgui
         /// @param value  New value of the vertical scroll-bar
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setVerticalScrollbarValue(unsigned int value)
-        { m_verticalScrollbar->setValue(value); }
+        {   m_verticalScrollbar->setValue(value);   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Returns the thumb position of the vertical scroll-bar
@@ -216,14 +228,50 @@ namespace tgui
         /// @return Value of the vertical scroll-bar
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline unsigned int getVerticalScrollbarValue() const
-        { return m_verticalScrollbar->getValue(); }
+        {   return m_verticalScrollbar->getValue();   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets whether the mouse position (which is relative to the parent widget) lies on top of the widget
-        ///
-        /// @return Is the mouse on top of the widget?
+    protected:
+
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        bool isMouseOnWidget(Vector2f pos) const override;
+        /// @brief Updates the zoom (limited between 10% and 1000%)
+        ///
+        /// @param delta  The wheel scroll direction
+        ///
+        /// @return The flag whether zomm update was successful (true) or not (false)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        bool updateZoom(float delta);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Retrieves a signal based on its name
+        ///
+        /// @param signalName  Name of the signal
+        ///
+        /// @return Signal that corresponds to the name
+        ///
+        /// @throw Exception when the name does not match any signal
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        TGUI_NODISCARD Signal& getSignal(String signalName) override;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public:
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Sets the zoom (limited between 10% and 1000%)
+        ///
+        /// @param newZoom  The new zoom
+        ///
+        /// @return The flag whether zomm set was successful (true) or not (false)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        bool setZoom(float newZoom);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the zoom (limited between 10% and 1000%)
+        ///
+        /// @return The current zoom
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline float getZoom() const
+        {   return m_zoom;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @internal
@@ -294,17 +342,23 @@ namespace tgui
         Vector2f getRenderSize() const;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public:
+
+        SignalFloat   onZoomChange = {"ZoomChanged"}; //!< The zoom was changed. Parameter: new zoom
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private:
-        FormattedTextXhtmlDocument::Ptr m_document;              //!< The formatted document to display
 
-        Borders                         m_bordersCached;
-        Padding                         m_paddingCached;
-        Color                           m_borderColorCached;
-        Color                           m_backgroundColorCached;
+        FormattedTextXhtmlDocument::Ptr         m_document;              //!< The formatted document to display
+        float                                   m_zoom = 1.0f;           //!< The zoom
 
-        // The scrollbars
-        CopiedSharedPtr<ScrollbarChildWidget>   m_horizontalScrollbar;
-        CopiedSharedPtr<ScrollbarChildWidget>   m_verticalScrollbar;
+        Borders                                 m_bordersCached;
+        Padding                                 m_paddingCached;
+        Color                                   m_borderColorCached;
+        Color                                   m_backgroundColorCached;
+
+        CopiedSharedPtr<ScrollbarChildWidget>   m_horizontalScrollbar;   //!< The horizontal scrollbar
+        CopiedSharedPtr<ScrollbarChildWidget>   m_verticalScrollbar;     //!< The vertical scrollbar
         Scrollbar::Policy                       m_verticalScrollbarPolicy = Scrollbar::Policy::Automatic;
         Scrollbar::Policy                       m_horizontalScrollbarPolicy = Scrollbar::Policy::Never;
 

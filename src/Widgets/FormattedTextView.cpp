@@ -29,7 +29,7 @@ namespace tgui
 #endif
 
     FormattedTextView::FormattedTextView(const char* typeName, bool initRenderer) :
-        Widget{typeName, false}, m_document(), m_bordersCached(0), m_paddingCached(2),
+        ClickableWidget{typeName, false}, m_document(), m_zoom(1.0f), m_bordersCached(0), m_paddingCached(2),
         m_borderColorCached(Color::Transparent), m_backgroundColorCached(Color::Transparent),
         m_horizontalScrollbar(), m_verticalScrollbar(), m_fontCollection()
     {
@@ -71,7 +71,7 @@ namespace tgui
 
     void FormattedTextView::setSize(const Layout2d& size)
     {
-        Widget::setSize(size);
+        ClickableWidget::setSize(size);
 
         m_bordersCached.updateParentSize(getSize());
         m_paddingCached.updateParentSize(getSize());
@@ -86,6 +86,9 @@ namespace tgui
 
     bool FormattedTextView::mouseWheelScrolled(float delta, Vector2f pos)
     {
+        if(keyboard::isMultiselectModifierPressed())
+            return updateZoom(delta);
+
         bool scrollbarMoved = false;
         if (m_horizontalScrollbar->isShown() &&
             (!m_verticalScrollbar->isShown() ||
@@ -154,21 +157,52 @@ namespace tgui
         rearrangeText(false);
     }
 
+    bool FormattedTextView::updateZoom(float delta)
+    {
+        float newZoom = m_zoom;
+
+        if (delta < 0.0f && m_zoom > 5.0f)            newZoom -= 0.5f;
+        else if (delta < 0.0f && m_zoom > 2.0f)       newZoom -= 0.2f;
+        else if (delta < 0.0f && m_zoom > 0.1f)       newZoom -= 0.1f;
+
+        else if (delta > 0.0f && m_zoom < 2.0f)       newZoom += 0.1f;
+        else if (delta > 0.0f && m_zoom < 5.0f)       newZoom += 0.2f;
+        else if (delta > 0.0f && m_zoom < 10.0f)      newZoom += 0.5f;
+
+        return setZoom(newZoom);
+    }
+
+    bool FormattedTextView::setZoom(float newZoom)
+    {
+        if (newZoom < 0.1f)
+            newZoom = 0.1f;
+        if (newZoom > 10.0f)
+            newZoom = 10.0f;
+
+        if (newZoom == m_zoom)
+            return false;
+
+        m_zoom = newZoom;
+        rearrangeText(true);
+        onZoomChange.emit(this, m_zoom);
+        return true;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    bool FormattedTextView::isMouseOnWidget(Vector2f pos) const
+    Signal& FormattedTextView::getSignal(String signalName)
     {
-        if (FloatRect{getPosition().x, getPosition().y, getSize().x, getSize().y}.contains(pos))
-            return true;
+        if (signalName == onZoomChange.getName())
+            return onZoomChange;
         else
-            return false;
+            return ClickableWidget::getSignal(std::move(signalName));
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void FormattedTextView::leftMousePressed(Vector2f pos)
     {
-        Widget::leftMousePressed(pos);
+        ClickableWidget::leftMousePressed(pos);
 
         pos -= getPosition();
 
@@ -207,12 +241,16 @@ namespace tgui
             if (m_horizontalScrollbar->isMouseDown())
                 m_horizontalScrollbar->leftMouseReleased(pos - getPosition());
         }
+
+        ClickableWidget::leftMouseReleased(pos);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void FormattedTextView::mouseMoved(Vector2f pos)
     {
+        ClickableWidget::rightMousePressed(pos);
+
         pos -= getPosition();
 
         if (!m_mouseHover)
@@ -244,6 +282,8 @@ namespace tgui
             m_verticalScrollbar->mouseNoLongerOnWidget();
             m_horizontalScrollbar->mouseNoLongerOnWidget();
         }
+
+        ClickableWidget::rightMouseReleased(pos);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -264,7 +304,7 @@ namespace tgui
 
     void FormattedTextView::leftMouseButtonNoLongerDown()
     {
-        Widget::leftMouseButtonNoLongerDown();
+        ClickableWidget::leftMouseButtonNoLongerDown();
 
         if (m_verticalScrollbar->isShown())
             m_verticalScrollbar->leftMouseButtonNoLongerDown();
@@ -285,7 +325,7 @@ namespace tgui
             keyboard::closeVirtualKeyboard();
 #endif
 
-        Widget::setFocused(focused);
+        ClickableWidget::setFocused(focused);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -344,11 +384,10 @@ namespace tgui
     void FormattedTextView::rearrangeText(bool keepSelection)
     {
         auto renderSize = getRenderSize();
-        float zoom = 1.0f; // 0.6f;
 
         if (m_document)
         {
-            m_document->layout(renderSize, m_textSizeCached * zoom, getSharedRenderer()->getDefaultTextColor(), m_opacityCached,
+            m_document->layout(renderSize, m_textSizeCached * m_zoom, getSharedRenderer()->getDefaultTextColor(), m_opacityCached,
                                m_fontCollection, keepSelection);
         }
 

@@ -234,20 +234,30 @@ namespace ext
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Simplifies a wide character string to a legacy string
         ///
-        /// @param data  The string to be simplified (might cause data loss)
+        /// @param text  The string to be simplified (might cause data loss)
         ///
         /// @return The simplified legacy string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::string stringfromu32string(const std::u32string& text);
+        static std::string stringFromU32string(const std::u32string& text);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Converts a legacy string to a wide character string
         ///
-        /// @param data  The legacy string to be converted
+        /// @param text  The legacy string to be converted
         ///
         /// @return The converted wide character string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::u32string u32stringfromstring(const char* text);
+        static std::u32string u32stringFromString(const char* text);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Converts a legacy string to a wide character string
+        ///
+        /// @param text  The legacy string to be converted
+        ///
+        /// @return The converted wide character string
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static inline std::u32string u32stringFromString(const std::string& text)
+        {   return u32stringFromString(text.c_str());   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Converts a UTF-8 byte stream to a wide character string
@@ -256,7 +266,19 @@ namespace ext
         ///
         /// @return The converted wide character string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::u32string u32stringfromUtf8(const std::vector<char>& data);
+        static std::u32string u32stringFromUtf8(const std::vector<char>& data);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Converts an iteger value to a wide character string
+        ///
+        /// Avoid the std::to_string(int value) bug:
+        /// The std::to_string(int value) call returns a string as std::to_string(double value) would be called
+        ///
+        /// @param value  The integer value to be converted
+        ///
+        /// @return The converted wide character string
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static std::u32string u32stringFromInt(int value);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Interprets a float value in the indicated string

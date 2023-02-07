@@ -5,6 +5,7 @@
 #include <cuchar>
 #include <codecvt>
 #include <locale>
+#include <string>
 
 // MSC needs a clear distiction between "__declspec(dllimport)" (above) and "__declspec(dllexport)" (below) this comment.
 // So in the case of direct source file integration (in contrast to library creation and linking), the API must be 'dllexport'.
@@ -173,7 +174,7 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::string u32string::stringfromu32string(const std::u32string& text)
+    std::string u32string::stringFromU32string(const std::u32string& text)
     {
         size_t textLen = text.size();
         if (textLen == 0)
@@ -188,7 +189,7 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::u32string u32string::u32stringfromstring(const char* text)
+    std::u32string u32string::u32stringFromString(const char* text)
     {
         if (text == 0)
             return U"";
@@ -206,7 +207,7 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::u32string u32string::u32stringfromUtf8(const std::vector<char>& data)
+    std::u32string u32string::u32stringFromUtf8(const std::vector<char>& data)
     {
 #if _MSC_VER >= 1900
 #if _MSVC_LANG < 201703L
@@ -260,11 +261,22 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    std::u32string u32string::u32stringFromInt(int value)
+    {
+        std::ostringstream s;
+        s << value;
+        std::u32string result = u32stringFromString(s.str().c_str());
+
+        return result;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     float u32string::tof(const char32_t* value)
     {
         std::string buffer;
         while (*value == U'-' || *value == U'0' || *value == U'1' || *value == U'2' || *value == U'3' || *value == U'4' ||
-            *value == U'5' || *value == U'6' || *value == U'7' || *value == U'8' || *value == U'9' || *value == U'.')
+               *value == U'5' || *value == U'6' || *value == U'7' || *value == U'8' || *value == U'9' || *value == U'.')
         {
             buffer.push_back((char)*value);
             value++;
