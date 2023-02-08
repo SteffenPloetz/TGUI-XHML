@@ -35,6 +35,7 @@ namespace tgui
     constexpr const char  XhtmlElementType::Head[];
     constexpr const char  XhtmlElementType::Meta[];
     constexpr const char  XhtmlElementType::Link[];
+    constexpr const char  XhtmlElementType::Title[];
     constexpr const char  XhtmlElementType::Body[];
     constexpr const char  XhtmlElementType::Input[];
     constexpr const char  XhtmlElementType::Label[];
@@ -53,7 +54,8 @@ namespace tgui
     constexpr const char  XhtmlElementType::Superscript[];
     constexpr const char  XhtmlElementType::Subscript[];
 
-    constexpr const char  XhtmlElementType::List[];
+    constexpr const char  XhtmlElementType::UnorderedList[];
+    constexpr const char  XhtmlElementType::OrderedList[];
     constexpr const char  XhtmlElementType::ListItem[];
     constexpr const char  XhtmlElementType::Span[];
     constexpr const char  XhtmlElementType::Division[];
@@ -1497,7 +1499,7 @@ namespace tgui
         tgui::String parent = U", parent: " + (m_parent == nullptr ? U"none" : U"'" + m_parent->getTypeNameU32() + U"'");
         tgui::String children = (m_children != nullptr ? U", children: " + (wchar_t)(U'0' + m_children->size()) : U"");
 
-        std::u32string content = U"";
+        tgui::String content = U"";
         if (ext::string::strcasecmp(getTypeName(), XhtmlElementType::Text) == 0)
         {
             if (((XhtmlInnerText*)this)->getText().length() > 12)
@@ -1532,7 +1534,7 @@ namespace tgui
 
         if (buffer.empty())
         {
-            std::u32string message(U"XhtmlElement::createFromParseStr() -> Invalid buffer!");
+            tgui::String message(U"XhtmlElement::createFromParseStr() -> Invalid buffer!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return nullptr;
         }
@@ -1552,7 +1554,7 @@ namespace tgui
         // HTML tags always begin with a less-than symbol
         if (buffer[workPosition] != U'<')
         {
-            std::u32string message(U"XhtmlElement::createFromParseStr() -> Invalid start character!");
+            tgui::String message(U"XhtmlElement::createFromParseStr() -> Invalid start character!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return nullptr;
         }
@@ -1569,13 +1571,13 @@ namespace tgui
         {
             if (!typeName.empty())
             {
-                std::u32string message(U"XhtmlElement::createFromParseStr() -> Element type name should be empty, but isn't!");
+                tgui::String message(U"XhtmlElement::createFromParseStr() -> Element type name should be empty, but isn't!");
                 messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 return nullptr;
             }
             if (elementClosed)
             {
-                std::u32string message(U"XhtmlElement::createFromParseStr() -> Closing tag should not be reached, but is!");
+                tgui::String message(U"XhtmlElement::createFromParseStr() -> Closing tag should not be reached, but is!");
                 messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 return nullptr;
             }
@@ -1598,7 +1600,7 @@ namespace tgui
             }
             else
             {
-                std::u32string message(U"XhtmlElement::createFromParseStr() -> Element type name should start with an alphabet character, but doesn't!");
+                tgui::String message(U"XhtmlElement::createFromParseStr() -> Element type name should start with an alphabet character, but doesn't!");
                 messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 return nullptr;
             }
@@ -1622,7 +1624,7 @@ namespace tgui
                 {
                     if (endPosition == workPosition)
                     {
-                        std::u32string message(U"XhtmlElement::createFromParseStr() -> Element is of length 0, but shouldn't!");
+                        tgui::String message(U"XhtmlElement::createFromParseStr() -> Element is of length 0, but shouldn't!");
                         messages.push_back(std::make_tuple(MessageType::ERROR, message));
                         return nullptr;
                     }
@@ -1637,7 +1639,7 @@ namespace tgui
                 }
 
                 // any other character will fail parsing process
-                std::u32string message(U"XhtmlElement::createFromParseStr() -> Element type name should consist of ");
+                tgui::String message(U"XhtmlElement::createFromParseStr() -> Element type name should consist of ");
                 message.append(U"alpha-numerical characters, underscores, hyphen, colons and periods only, but doesn't!");
                 messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 return nullptr;
@@ -1656,7 +1658,7 @@ namespace tgui
         {
             if (!elementClosed)
             {
-                std::u32string message(U"XhtmlElement::parseFromStr() -> Element of type '");
+                tgui::String message(U"XhtmlElement::parseFromStr() -> Element of type '");
                 message.append(typeName).append(U"' (anticipated type is script) should be closed, but isn't!");
                 message.append(U" We assume it is a tag inside the script code and continue.");
                 messages.push_back(std::make_tuple(MessageType::WARNING, message));
@@ -1665,7 +1667,7 @@ namespace tgui
 
             if (ext::String::compareIgnoreCase(typeName, U"script"))
             {
-                std::u32string message(U"XhtmlElement::createFromParseStr() -> Element of type '");
+                tgui::String message(U"XhtmlElement::createFromParseStr() -> Element of type '");
                 message.append(typeName).append(U"' (anticipated type is script) closing tag expected, but isn't!");
                 message.append(U" We assume it is a tag inside the script code and continue.");
                 messages.push_back(std::make_tuple(MessageType::WARNING, message));
@@ -1685,7 +1687,7 @@ namespace tgui
             // else will result in parsing failure
             if (buffer[endPosition] != U'>')
             {
-                std::u32string message(U"XhtmlElement::createFromParseStr() -> Element of type '");
+                tgui::String message(U"XhtmlElement::createFromParseStr() -> Element of type '");
                 message.append(typeName).append(U"' closing tag end delimiter expected, but isn't!");
                 messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 return nullptr;
@@ -1696,7 +1698,7 @@ namespace tgui
 
             if (typeName.empty())
             {
-                std::u32string message(U"XhtmlElement::createFromParseStr() -> Element type name should not be empty "
+                tgui::String message(U"XhtmlElement::createFromParseStr() -> Element type name should not be empty "
                                        U"for the closing tag, but is!");
                 messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 return nullptr;
@@ -1730,7 +1732,7 @@ namespace tgui
                 endPosition = workPosition + buffer.find(U"/>", workPosition);
                 if (endPosition == workPosition)
                 {
-                    std::u32string message(U"XhtmlElement::createFromParseStr() -> Element of type '");
+                    tgui::String message(U"XhtmlElement::createFromParseStr() -> Element of type '");
                     message.append(typeName).append(U"' should be delimited by '/>', but isn't!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                     return nullptr;
@@ -1749,7 +1751,7 @@ namespace tgui
                 {
                     attributesBuffer.clear();
 
-                    std::u32string message(U"XhtmlElement::createFromParseStr() -> Element of type '");
+                    tgui::String message(U"XhtmlElement::createFromParseStr() -> Element of type '");
                     message.append(typeName).append(U"' should be delimited after the inner text, but isn't (EOF found)!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                     return nullptr;
@@ -1761,7 +1763,7 @@ namespace tgui
             {
                 if (!elementOpened)
                 {
-                    std::u32string message(U"XhtmlElement::createFromParseStr() -> Element of type '");
+                    tgui::String message(U"XhtmlElement::createFromParseStr() -> Element of type '");
                     message.append(typeName).append(U"' should be opened before the occurence of the end tag symbol'/', but isn't!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                     return nullptr;
@@ -1779,7 +1781,7 @@ namespace tgui
         {
             attributesBuffer.clear();
 
-            std::u32string message(U"XhtmlElement::createFromParseStr() -> Element of type '");
+            tgui::String message(U"XhtmlElement::createFromParseStr() -> Element of type '");
             message.append(typeName).append(U"' should be delimited by '>', but isn't!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return nullptr;
@@ -1818,7 +1820,7 @@ namespace tgui
 
         if (ext::string::strcasecmp(element->getTypeName(), "empty") == 0)
         {
-            std::u32string message(U"XhtmlElement::createFromParseData() -> Couldn't recognize element type for tag type '");
+            tgui::String message(U"XhtmlElement::createFromParseData() -> Couldn't recognize element type for tag type '");
             message.append(typeName).append(U"', continue with 'empty' - but this is unsafe!");
             messages.push_back(std::make_tuple(MessageType::WARNING, message));
         }
@@ -1833,7 +1835,7 @@ namespace tgui
     {
         if (buffer.empty())
         {
-            std::u32string message(U"XhtmlElement::parseAttributesFromStr() -> Invalid buffer!");
+            tgui::String message(U"XhtmlElement::parseAttributesFromStr() -> Invalid buffer!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return 0;
         }
@@ -1898,7 +1900,7 @@ namespace tgui
 
             auto se = std::make_shared<XhtmlStyleEntry>();
             se->putValue(messages, styleEntryParts[1]);
-            m_styles.insert_or_assign(styleEntryParts[0], se);
+            m_styles[styleEntryParts[0]] = se;
         }
         return;
     }

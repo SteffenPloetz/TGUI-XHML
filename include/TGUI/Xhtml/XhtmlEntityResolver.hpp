@@ -75,7 +75,7 @@ namespace tgui
         static unsigned int resolveEntity(std::vector<std::tuple<tgui::MessageType, String>>& messages, char32_t* encode, char32_t& substitute);
 
     private:
-        static std::map<std::u32string, char32_t> m_charEntityRefs; /**< The map of encoded entity names to decoded entities */
+        static std::map<tgui::String, char32_t> m_charEntityRefs; /**< The map of encoded entity names to decoded entities */
     };
 
 }

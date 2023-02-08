@@ -20,7 +20,7 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::map<std::u32string, char32_t> XhtmlEntityResolver::m_charEntityRefs
+    std::map<tgui::String, char32_t> XhtmlEntityResolver::m_charEntityRefs
     {
         /** C0 Controls and Basic Latin */
         {  U"quot",    U'\x22'  },
@@ -133,14 +133,14 @@ namespace tgui
     {
         if (m_charEntityRefs.empty())
         {
-            std::u32string message(U"TinyXhtmlEntityResolver::resolveEntity() -> Entity references not initialized!");
+            tgui::String message(U"TinyXhtmlEntityResolver::resolveEntity() -> Entity references not initialized!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return 0;
         }
 
         if (encode == nullptr)
         {
-            std::u32string message(U"TinyXhtmlEntityResolver::resolveEntity() -> Entity to encode not valid!");
+            tgui::String message(U"TinyXhtmlEntityResolver::resolveEntity() -> Entity to encode not valid!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return 0;
         }
@@ -195,7 +195,7 @@ namespace tgui
         // character entity reference
         else
         {
-            std::u32string	strKey(begin, length);
+            tgui::String	strKey(begin, length);
 
             // because some character entity references are
             // case-sensitive, we must fix them manually
@@ -221,7 +221,7 @@ namespace tgui
             else
             {
                 char32_t chTemp = strKey[0];
-                std::u32string	strT = strKey.substr(1);
+                tgui::String	strT = strKey.substr(1);
                 std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::tolower);
                 if (ext::String::compareIgnoreCase(strT, U"grave") == 0 ||
                     ext::String::compareIgnoreCase(strT, U"acute") == 0 ||

@@ -34,7 +34,7 @@ namespace tgui
 
         size_t startPosition = m_bufferPos + 4;
         size_t workPosition = m_buffer.find(commentEnd, startPosition);
-        if (workPosition == std::u32string::npos)
+        if (workPosition == tgui::String::npos)
         {
             tgui::String message(U"XhtmlParser::parseComment() -> Probably not closed comment tag, starting at position: ");
             message.append(tgui::String::fromNumber(m_bufferPos));
@@ -195,7 +195,7 @@ namespace tgui
                             }
                             else
                             {
-                                std::u32string message(U"XhtmlParser::parseDocument() -> An inner text '");
+                                tgui::String message(U"XhtmlParser::parseDocument() -> An inner text '");
                                 message.append(characters).append(U"' should have a parent style element or parent container element, but parent element is of type '");
                                 message.append(parentElement->getTypeNameU32()).append(U"'!");
                                 m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
@@ -203,7 +203,7 @@ namespace tgui
                         }
                         else
                         {
-                            std::u32string message(U"XhtmlParser::parseDocument() -> An inner text '");
+                            tgui::String message(U"XhtmlParser::parseDocument() -> An inner text '");
                             message.append(characters).append(U"' should have a parent container element, but hasn't!");
                             m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
                         }
@@ -220,7 +220,7 @@ namespace tgui
                     }
                     else if (newElement == nullptr)
                     {
-                        std::u32string message(U"XhtmlParser::parseDocument() -> An XHTML element should be created, but isn't!");
+                        tgui::String message(U"XhtmlParser::parseDocument() -> An XHTML element should be created, but isn't!");
                         m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
                     }
                     else
@@ -296,7 +296,7 @@ namespace tgui
         // do a simple quality check
         if (workDataLen || characters.size())
         {
-            std::u32string message(U"XhtmlParser::parseDocument() -> There are remaining characters '");
+            tgui::String message(U"XhtmlParser::parseDocument() -> There are remaining characters '");
             message.append(characters).append(U"' after the end of document parsing!");
             m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
         }
@@ -308,7 +308,7 @@ namespace tgui
 
         if (htmlRootElements > 1)
         {
-            std::u32string message(U"XhtmlParser::parseDocument() -> There is more than 1 'html' root element, but shouldn't!");
+            tgui::String message(U"XhtmlParser::parseDocument() -> There is more than 1 'html' root element, but shouldn't!");
             m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
         }
 
@@ -373,7 +373,7 @@ namespace tgui
             auto stopTagName = endTagElement->getTypeName();
             if (ext::string::strcasecmp(startTagName, stopTagName) != 0)
             {
-                std::u32string message(U"XhtmlParser::parseDocument_checkStartEndTagParity() -> Can't close tag of type '");
+                tgui::String message(U"XhtmlParser::parseDocument_checkStartEndTagParity() -> Can't close tag of type '");
                 message.append(startTagElement->getTypeNameU32()).append(U"' with tag of type '");
                 message.append(endTagElement->getTypeNameU32()).append(U"'!");
                 m_messages.push_back(std::make_tuple(MessageType::WARNING, message));
@@ -384,7 +384,7 @@ namespace tgui
         }
         else
         {
-            std::u32string message(U"XhtmlParser::parseDocument_checkStartEndTagParity() -> Can't find matching open tag of type '");
+            tgui::String message(U"XhtmlParser::parseDocument_checkStartEndTagParity() -> Can't find matching open tag of type '");
             message.append(endTagElement->getTypeNameU32()).append(U"' for current tag of type '");
             message.append(endTagElement->getTypeNameU32()).append(U"'!");
             m_messages.push_back(std::make_tuple(MessageType::WARNING, message));
@@ -400,13 +400,13 @@ namespace tgui
     {
         if (m_buffer.size() == 0)
         {
-            std::u32string message(U"XhtmlParser::parseElement() -> Invalid buffer!");
+            tgui::String message(U"XhtmlParser::parseElement() -> Invalid buffer!");
             m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return nullptr;
         }
         if (m_bufferPos + 4 >= m_buffer.size())
         {
-            std::u32string message(U"XhtmlParser::parseElement() -> Index overrun!");
+            tgui::String message(U"XhtmlParser::parseElement() -> Index overrun!");
             m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return nullptr;
         }
