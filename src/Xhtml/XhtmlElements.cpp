@@ -1314,25 +1314,25 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const std::u32string& XhtmlElement::getClassNames() const
+    const tgui::String& XhtmlElement::getClassNames() const
     {
         if (m_attributes == nullptr)
-            return ext::u32string::emptyString();
+            return ext::String::emptyString();
 
         auto classAttribute = getAttribute(U"class");
-        return (classAttribute != nullptr ? classAttribute->getValue() : ext::u32string::emptyString());
+        return (classAttribute != nullptr ? classAttribute->getValue() : ext::String::emptyString());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    XhtmlAttribute::Ptr XhtmlElement::getAttribute(const std::u32string& name) const
+    XhtmlAttribute::Ptr XhtmlElement::getAttribute(const tgui::String& name) const
     {
         if (m_attributes == nullptr)
             return nullptr;
 
         for (XhtmlAttribute::Ptr attr : *m_attributes)
         {
-            if (ext::u32string::compareNoCase(attr->getName(), name) == 0)
+            if (ext::String::compareIgnoreCase(attr->getName(), name) == 0)
                 return attr;
         }
 
@@ -1492,10 +1492,10 @@ namespace tgui
     void XhtmlElement::trace(std::wstring indent, bool complete)
     {
         XhtmlAttribute::Ptr attribute;
-        std::u32string identity = ((attribute = getAttribute(U"id")) != nullptr ? U", id: '" + (const std::u32string&)(attribute->getValue()) + U"'" :
-            ((attribute = getAttribute(U"class")) != nullptr ? U", class: '" + (const std::u32string&)(attribute->getValue()) + U"'" : U""));
-        std::u32string parent = U", parent: " + (m_parent == nullptr ? U"none" : U"'" + m_parent->getTypeNameU32() + U"'");
-        std::u32string children = (m_children != nullptr ? U", children: " + (wchar_t)(U'0' + m_children->size()) : U"");
+        tgui::String identity = ((attribute = getAttribute(U"id")) != nullptr ? U", id: '" + (const tgui::String&)(attribute->getValue()) + U"'" :
+            ((attribute = getAttribute(U"class")) != nullptr ? U", class: '" + (const tgui::String&)(attribute->getValue()) + U"'" : U""));
+        tgui::String parent = U", parent: " + (m_parent == nullptr ? U"none" : U"'" + m_parent->getTypeNameU32() + U"'");
+        tgui::String children = (m_children != nullptr ? U", children: " + (wchar_t)(U'0' + m_children->size()) : U"");
 
         std::u32string content = U"";
         if (ext::string::strcasecmp(getTypeName(), XhtmlElementType::Text) == 0)
@@ -1524,8 +1524,8 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const XhtmlElement::Ptr XhtmlElement::createElementFromParseStr(std::vector<std::tuple<MessageType, String>>& messages,
-        XhtmlElement::Ptr parent, const std::u32string& buffer, const size_t beginPosition,
+    const XhtmlElement::Ptr XhtmlElement::createElementFromParseStr(std::vector<std::tuple<MessageType, tgui::String>>& messages,
+        XhtmlElement::Ptr parent, const tgui::String& buffer, const size_t beginPosition,
         bool& isOpeningTag, bool& isClosingTag, bool& isInsideScript, size_t& processedLength, bool parseInnerText)
     {
         processedLength = 0;
@@ -1539,14 +1539,14 @@ namespace tgui
 
         bool                             elementOpened = false;
         bool                             elementClosed = false;
-        std::u32string                   typeName;
+        tgui::String                     typeName;
         size_t                           parsedLength = 0;
         size_t                           workPosition = beginPosition;
         size_t                           endPosition = beginPosition;
         std::vector<XhtmlAttribute::Ptr> attributesBuffer;
 
         // skip leading white-space characters
-        while (ext::u32string::isSpace(buffer[workPosition]))
+        while (ext::String::isSpace(buffer[workPosition]))
             workPosition++;
 
         // HTML tags always begin with a less-than symbol
@@ -1561,7 +1561,7 @@ namespace tgui
         workPosition++;
 
         // skip white-space before typename '<     typename>' or '<     >'
-        while (ext::u32string::isSpace(buffer[workPosition]))
+        while (ext::String::isSpace(buffer[workPosition]))
             workPosition++;
 
         // optimization for empty opening tags
@@ -1587,7 +1587,7 @@ namespace tgui
 
 
         // element type names always begin with an alphabet letter
-        if (!ext::u32string::isAlpha(buffer[workPosition]))
+        if (!ext::String::isAlpha(buffer[workPosition]))
         {
             elementClosed = (buffer[workPosition] == U'/');
             if (elementClosed)
@@ -1613,7 +1613,7 @@ namespace tgui
                 endPosition++;
             // element type name may contain letters (a-z, A-Z), digits (0-9),
             // underscores '_', hyphen '-', colons ':', and periods '.'
-            if ((!ext::u32string::isAlnum(buffer[endPosition])) &&
+            if ((!ext::String::isAlnum(buffer[endPosition])) &&
                 (buffer[endPosition] != U'-') && (buffer[endPosition] != U':') &&
                 (buffer[endPosition] != U'_') && (buffer[endPosition] != U'.'))
             {
@@ -1629,7 +1629,7 @@ namespace tgui
                 }
 
                 // determine end of element type name
-                if (buffer[endPosition] == 0 || ext::u32string::isSpace(buffer[endPosition]) ||
+                if (buffer[endPosition] == 0 || ext::String::isSpace(buffer[endPosition]) ||
                     buffer[endPosition] == U'>' ||
                     (buffer[endPosition] == U'/' && (!elementClosed)))
                 {
@@ -1663,7 +1663,7 @@ namespace tgui
                 return nullptr;
             }
 
-            if (ext::u32string::compareNoCase(typeName, U"script"))
+            if (ext::String::compareIgnoreCase(typeName, U"script"))
             {
                 std::u32string message(U"XhtmlElement::createFromParseStr() -> Element of type '");
                 message.append(typeName).append(U"' (anticipated type is script) closing tag expected, but isn't!");
@@ -1674,7 +1674,7 @@ namespace tgui
         }
 
         // skip white-space after typename '</typename     >' or '<typename     >' or '<typename     attribute-list'
-        while (ext::u32string::isSpace(buffer[endPosition]))
+        while (ext::String::isSpace(buffer[endPosition]))
             endPosition++;
 
         // if this is a closing tag (that has no attributes by definition)
@@ -1712,7 +1712,7 @@ namespace tgui
             workPosition = endPosition;
 
             // skip white-space characters after typename
-            while (ext::u32string::isSpace(buffer[workPosition]))
+            while (ext::String::isSpace(buffer[workPosition]))
                 workPosition++;
 
             // parse inner-text or attribute/value pairs
@@ -1727,7 +1727,7 @@ namespace tgui
             if (parsedLength == 0)
             {
                 attributesBuffer.clear();
-                endPosition = workPosition + ext::u32string::find(buffer, U"/>", workPosition);
+                endPosition = workPosition + buffer.find(U"/>", workPosition);
                 if (endPosition == workPosition)
                 {
                     std::u32string message(U"XhtmlElement::createFromParseStr() -> Element of type '");
@@ -1741,7 +1741,7 @@ namespace tgui
                 endPosition = workPosition + parsedLength;
 
                 // skip white-space characters after attribute/value pairs
-                while (ext::u32string::isSpace(buffer[endPosition]))
+                while (ext::String::isSpace(buffer[endPosition]))
                     endPosition++;
 
                 // tag's ending delimiter could not be found?
@@ -1771,7 +1771,7 @@ namespace tgui
             }
         }
         // skip white-space after attribute/value pairs for example '<tagname atrib="xx" /  >'
-        while (ext::u32string::isSpace(buffer[endPosition]))
+        while (ext::String::isSpace(buffer[endPosition]))
             endPosition++;
 
         // elements always end with a greater-than '>' symbol
@@ -1795,25 +1795,24 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     const XhtmlElement::Ptr XhtmlElement::createElementFromParseData(std::vector<std::tuple<MessageType, String>>& messages,
-        bool& isOpeningTag, bool& isClosingTag, bool elementOpened, bool elementClosed, std::u32string& typeName,
+        bool& isOpeningTag, bool& isClosingTag, bool elementOpened, bool elementClosed, tgui::String& typeName,
         XhtmlElement::Ptr& parent, const size_t& beginPosition, const size_t& endPosition,
         std::vector<XhtmlAttribute::Ptr>& attributesBuffer)
     {
         isOpeningTag = elementOpened;
         isClosingTag = elementClosed;
 
-        ext::u32string::trimLeft(typeName);
-        ext::u32string::trimRight(typeName);
-        ext::u32string::remove(typeName, U'\n');
-        ext::u32string::replace(typeName, U'\r', U' ');
-        ext::u32string::replace(typeName, U'\t', U' ');
-        ext::u32string::replace(typeName, U'\v', U' ');
+        typeName = typeName.trim();
+        ext::String::remove(typeName, U'\n');
+        typeName.replace(U'\r', U' ');
+        typeName.replace(U'\t', U' ');
+        typeName.replace(U'\v', U' ');
 
 #ifdef LOG_ELEMENT
         std::wcout << U"Set name '" << typeName << U"' to" << (isOpeningTag ? " opening" : "") << (isClosingTag ? " closing" : "") << " element with " << attributesBuffer.size() << " attributes.\r\n";
 #endif
 
-        auto element = XhtmlElement::createAuto(ext::u32string::stringFromU32string(typeName).c_str(), parent, beginPosition, endPosition, elementClosed && elementOpened);
+        auto element = XhtmlElement::createAuto(ext::String::toCharString(typeName).c_str(), parent, beginPosition, endPosition, elementClosed && elementOpened);
         element->addAttributes(attributesBuffer);
         attributesBuffer.clear();
 
@@ -1830,7 +1829,7 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     size_t XhtmlElement::createAttributesFromParseStr(std::vector<std::tuple<tgui::MessageType, String>>& messages,
-        std::vector<XhtmlAttribute::Ptr>& attributes, const std::u32string& buffer, const size_t beginPosition)
+        std::vector<XhtmlAttribute::Ptr>& attributes, const tgui::String& buffer, const size_t beginPosition)
     {
         if (buffer.empty())
         {
@@ -1877,25 +1876,22 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void XhtmlStyle::createEntriesFromParseData(std::vector<std::tuple<MessageType, String>>& messages, const std::u32string& buffer)
+    void XhtmlStyle::createEntriesFromParseData(std::vector<std::tuple<MessageType, String>>& messages, const tgui::String& buffer)
     {
-        auto styleEntries = ext::u32string::split(buffer, U'}', true);
+        auto styleEntries = ext::String::split(buffer, U'}', true);
         for (auto styleEntry : styleEntries)
         {
-            ext::u32string::trimLeft(styleEntry);
-            ext::u32string::trimRight(styleEntry);
+            styleEntry = styleEntry.trim();
 
             if (styleEntry.size() == 0)
                 continue;
 
-            auto styleEntryParts = ext::u32string::split(styleEntry, U'{', true);
+            auto styleEntryParts = ext::String::split(styleEntry, U'{', true);
             if (styleEntryParts.size() != 2)
                 continue;
 
-            ext::u32string::trimLeft(styleEntryParts[0]);
-            ext::u32string::trimRight(styleEntryParts[0]);
-            ext::u32string::trimLeft(styleEntryParts[1]);
-            ext::u32string::trimRight(styleEntryParts[1]);
+            styleEntryParts[0] = styleEntryParts[0].trim();
+            styleEntryParts[1] = styleEntryParts[1].trim();
 
             if (styleEntryParts[0].size() == 0 || styleEntryParts[1].size() == 0)
                 continue;
@@ -1907,16 +1903,16 @@ namespace tgui
         return;
     }
 
-    XhtmlStyleEntry::Ptr XhtmlStyle::getEntry(const char* typeName, const std::u32string& className)
+    XhtmlStyleEntry::Ptr XhtmlStyle::getEntry(const char* typeName, const tgui::String& className)
     {
         if (typeName != nullptr && strlen(typeName) > 0 && className.size() > 0)
         {
-            auto styleName = ext::u32string::u32stringFromString(typeName) + U"." + className;
+            tgui::String styleName(typeName); styleName += U"."; styleName += className;
             return ( m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);
         }
         else if (typeName != nullptr && (strlen(typeName) > 0 || className.size() > 0))
         {
-            auto styleName = ext::u32string::u32stringFromString(typeName) + className;
+            tgui::String styleName(typeName); styleName += className;
             return (m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);
         }
         return nullptr;
@@ -1927,7 +1923,7 @@ namespace tgui
     {
         for (auto it = m_attributes->begin(); it != m_attributes->end(); it++)
         {
-            if (ext::u32string::compareNoCase((*it)->getName(), XhtmlStyleEntry::TypeName) == 0)
+            if (ext::String::compareIgnoreCase((*it)->getName(), XhtmlStyleEntry::TypeName) == 0)
                 return std::dynamic_pointer_cast<XhtmlStyleEntry>((*it));
         }
         return nullptr;
@@ -1939,7 +1935,7 @@ namespace tgui
     {
         for (auto it = m_attributes->begin(); it != m_attributes->end(); it++)
         {
-            if (ext::u32string::compareNoCase((*it)->getName(), XhtmlStyleEntry::TypeName) == 0)
+            if (ext::String::compareIgnoreCase((*it)->getName(), XhtmlStyleEntry::TypeName) == 0)
                 return std::dynamic_pointer_cast<XhtmlStyleEntry>((*it));
         }
         return nullptr;

@@ -23,9 +23,9 @@ namespace tgui
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    bool XhtmlParser::parseComment(std::u32string& comment)
+    bool XhtmlParser::parseComment(tgui::String& comment)
     {
-        const std::u32string commentEnd(U"--");
+        const tgui::String commentEnd(U"--");
         if (m_bufferPos + 4 > m_buffer.size())
             return false;
 
@@ -36,8 +36,8 @@ namespace tgui
         size_t workPosition = m_buffer.find(commentEnd, startPosition);
         if (workPosition == std::u32string::npos)
         {
-            std::u32string message(U"XhtmlParser::parseComment() -> Probably not closed comment tag, starting at position: ");
-            message.append(String::fromNumber(m_bufferPos));
+            tgui::String message(U"XhtmlParser::parseComment() -> Probably not closed comment tag, starting at position: ");
+            message.append(tgui::String::fromNumber(m_bufferPos));
             m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
 
             comment = m_buffer.substr(startPosition);
@@ -50,20 +50,20 @@ namespace tgui
         workPosition += 2;
         if (workPosition >= m_buffer.size())
         {
-            std::u32string message(U"XhtmlParser::parseComment() -> Probably incomplete character stream at the end of comment tag, starting at position: ");
-            message.append(String::fromNumber(m_bufferPos));
+            tgui::String message(U"XhtmlParser::parseComment() -> Probably incomplete character stream at the end of comment tag, starting at position: ");
+            message.append(tgui::String::fromNumber(m_bufferPos));
             m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
 
             return false;
         }
 
-        while (ext::u32string::isSpace(m_buffer[workPosition]))
+        while (ext::String::isSpace(m_buffer[workPosition]))
             workPosition++;
 
         if(m_buffer[workPosition] != '>')
         {
-            std::u32string message(U"XhtmlParser::parseComment() -> Probably not accurate closed comment tag, starting at position: ");
-            message.append(String::fromNumber(m_bufferPos));
+            tgui::String message(U"XhtmlParser::parseComment() -> Probably not accurate closed comment tag, starting at position: ");
+            message.append(tgui::String::fromNumber(m_bufferPos));
             m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
 
             m_bufferPos = workPosition;
@@ -84,8 +84,8 @@ namespace tgui
         char32_t                       workCharacter = acquireChar(); //!< Current character to evaluate
         size_t	                       workStartPosition = 0;         //!< Start position of character data
         size_t                         workDataLen = 0;               //!< Length of character data
-        std::u32string                 characters;                    //!< Last collection of unassociated characters
-        std::u32string                 comment;                       //!< Last comment text buffer
+        tgui::String                   characters;                    //!< Last collection of unassociated characters
+        tgui::String                   comment;                       //!< Last comment text buffer
         bool                           isOpeningTag = false;          //!< Determine whether current character position is inside opening tag
         bool                           isClosingTag = false;          //!< Determine whether current character position is inside closing tag
         bool                           isInsideScript = false;        //!< Determine whether current character position is between '<script ...>' and '</script>' tags
@@ -95,7 +95,7 @@ namespace tgui
         // set a defined element tree root to prevent problems with parentElements.back()
         parentElements.push_back(nullptr);
 
-        while (ext::u32string::isSpace(workCharacter))
+        while (ext::String::isSpace(workCharacter))
             workCharacter = acquireChar();
         rejectChar();
 
@@ -135,7 +135,7 @@ namespace tgui
                                 isClosingTag = true;
                             }
 #if _DEBUG
-                            std::u32string currentlyParsed = m_buffer.substr(workStartPosition, workDataLen);
+                            tgui::String currentlyParsed = m_buffer.substr(workStartPosition, workDataLen);
 #endif
                             // special script mode handling
                             if (isOpeningTag && !isInsideScript)
@@ -156,7 +156,7 @@ namespace tgui
                             workDataLen++;
                             acquireChar();
 #if _DEBUG
-                            std::u32string currentlyParsed = m_buffer.substr(workStartPosition, workDataLen);
+                            tgui::String currentlyParsed = m_buffer.substr(workStartPosition, workDataLen);
 #endif
                             break;
                         }
@@ -172,8 +172,8 @@ namespace tgui
                         }
                         else
                         {
-                            ext::u32string::replace(characters, U"\r\n", U"\n");
-                            ext::u32string::replace(characters, U"\n", U"<br>");
+                            characters.replace(U"\r\n", U"\n");
+                            characters.replace(U"\n", U"<br>");
                         }
                     }
 
@@ -317,13 +317,13 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void XhtmlParser::parseDocument_cleanBreaksAndSpaces(const XhtmlElement::Ptr parentElement, std::u32string& characters)
+    void XhtmlParser::parseDocument_cleanBreaksAndSpaces(const XhtmlElement::Ptr parentElement, tgui::String& characters)
     {
-        ext::u32string::replace(characters, U"\r\n", U"\n");
-        ext::u32string::replace(characters, U'\n', U' ');
-        ext::u32string::replace(characters, U'\t', U' ');
-        ext::u32string::replace(characters, U'\v', U' ');
-        ext::u32string::replace(characters, U"  ", U" ", true);
+        characters.replace(U"\r\n", U"\n");
+        characters.replace(U'\n', U' ');
+        characters.replace(U'\t', U' ');
+        characters.replace(U'\v', U' ');
+        ext::String::replace(characters, U"  ", U" ", true);
 
         if (parentElement != nullptr && characters.size() > 0 && characters[0] == U' ')
         {
@@ -339,19 +339,18 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void XhtmlParser::parseDocument_createInnerText(XhtmlElement::Ptr parentElement, std::u32string& characters, int preformattedDepth)
+    void XhtmlParser::parseDocument_createInnerText(XhtmlElement::Ptr parentElement, tgui::String& characters, int preformattedDepth)
     {
-        if (ext::u32string::find(characters, U"<br>", 0) != SIZE_MAX)
+        if (characters.find(U"<br>", 0) != SIZE_MAX)
         {
-            auto charactersParts = ext::u32string::split(characters, U"<br>");
+            auto charactersParts = ext::String::split(characters, U"<br>");
             for (size_t index = 0; index < charactersParts.size(); index++)
             {
                 auto charactersPart = charactersParts[index];
 
                 if (preformattedDepth == 0)
                 {
-                    ext::u32string::trimLeft(charactersPart);
-                    ext::u32string::trimRight(charactersPart);
+                    charactersPart = charactersPart.trim();
                 }
 
                 if (charactersPart.size() > 0)

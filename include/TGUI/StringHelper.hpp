@@ -38,14 +38,14 @@ namespace ext
     ///
     /// Provides convenience helper for string manipulation.
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    class TGUI_API u32string
+    class TGUI_API String
     {
     public:
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Provides an empty string
         /// @return An empty string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static const std::u32string& emptyString()
+        static const tgui::String& emptyString()
         {   return m_emptyString;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -122,7 +122,7 @@ namespace ext
         /// @return A value < 0, if left string is lighter than right string, or 0 if left string is equal to right string,
         /// or > 1 if left string is greater than right string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static int compareNoCase(const std::u32string& left, const std::u32string& right);
+        static int compareIgnoreCase(const tgui::String& left, const tgui::String& right);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Determines whether indicated string contains the pattern case insensitive
@@ -132,7 +132,7 @@ namespace ext
         ///
         /// @return The flag indicating whether pattern is contained (true) or not (false)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static bool containsNoCase(const std::u32string& nocaseLeft, const std::u32string& pattern);
+        static bool containsIgnoreCase(const tgui::String& nocaseLeft, const tgui::String& pattern);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Determines whether indicated string contains case insensitive one of the predicates
@@ -142,21 +142,7 @@ namespace ext
         ///
         /// @return The flag indicating whether one of the predicates is contained (true) or not (false)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static bool containsAnyNoCase(const std::u32string& nocaseLeft, const std::vector<std::u32string>& patterns);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Removes leading white space characters in-place
-        ///
-        /// @param text  The string to be trimmed
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static void trimLeft(std::u32string& text);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Removes tailing white space characters in-place
-        ///
-        /// @param text  The string to be trimmed
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static void trimRight(std::u32string& text);
+        static bool containsAnyIgnoreCase(const tgui::String& nocaseLeft, const std::vector<tgui::String>& patterns);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Removes all occurrences of a pattern in-place
@@ -164,16 +150,7 @@ namespace ext
         /// @param text     The string to remove all occurrences of the pattern from
         /// @param pattern  The pattern to be removed
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static void remove(std::u32string& text, char32_t pattern);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Replaces all occurrences of a pattern against a replacer in-place
-        ///
-        /// @param text       The string to replace all occurrences of the pattern in
-        /// @param pattern    The pattern to be replaced
-        /// @param replacer   The replacer for the pattern
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static void replace(std::u32string& text, char32_t pattern, char32_t replacer);
+        static void remove(tgui::String& text, char32_t pattern);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Replaces all occurrences of a pattern against a replacer in-place
@@ -183,31 +160,7 @@ namespace ext
         /// @param replacer   The replacer for the pattern
         /// @param recursive  The flag whether to repeat replacement if application of replacer created a new pattern occurence
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static void replace(std::u32string& text, const std::u32string& pattern, const std::u32string& replacer, bool recursive = false);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Find the first occurrence of the pattern
-        ///
-        /// @param text      The string to find the pattern in
-        /// @param pattern   The pattern to be found
-        /// @param startPos  The search start position in text
-        ///
-        /// @return The zero-based index, including the offset set by startPos, of the first position that matches the pattern
-        ///         on success, or SIZE_MAX otherwise
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static size_t find(const std::u32string& text, const std::u32string& pattern, const size_t startPos = 0);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Find the first occurrence of the pattern
-        ///
-        /// @param text      The string to find the pattern in
-        /// @param pattern   The pattern to be found
-        /// @param startPos  The search start position in text
-        ///
-        /// @return The zero-based index, including the offset set by startPos, of the first position that matches the pattern
-        ///         on success, or SIZE_MAX otherwise
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static size_t find(const std::u32string& text, const char32_t pattern, const size_t startPos = 0);
+        static void replace(tgui::String& text, const tgui::String& pattern, const tgui::String& replacer, bool recursive = false);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Split the indicated text on indicated separator
@@ -218,7 +171,7 @@ namespace ext
         ///
         /// @return The collection of split strings
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::vector<std::u32string> split(const std::u32string& s, char32_t separator, bool suppressEmpty = false);
+        static std::vector<tgui::String> split(const tgui::String& s, char32_t separator, bool suppressEmpty = false);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Split the indicated text on indicated separator
@@ -229,7 +182,7 @@ namespace ext
         ///
         /// @return The collection of split strings
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::vector<std::u32string> split(const std::u32string& s, const std::u32string& separator, bool suppressEmpty = false);
+        static std::vector<tgui::String> split(const tgui::String& s, const tgui::String& separator, bool suppressEmpty = false);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Simplifies a wide character string to a legacy string
@@ -238,26 +191,7 @@ namespace ext
         ///
         /// @return The simplified legacy string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::string stringFromU32string(const std::u32string& text);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Converts a legacy string to a wide character string
-        ///
-        /// @param text  The legacy string to be converted
-        ///
-        /// @return The converted wide character string
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::u32string u32stringFromString(const char* text);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Converts a legacy string to a wide character string
-        ///
-        /// @param text  The legacy string to be converted
-        ///
-        /// @return The converted wide character string
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static inline std::u32string u32stringFromString(const std::string& text)
-        {   return u32stringFromString(text.c_str());   }
+        static std::string toCharString(const tgui::String& text);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Converts a UTF-8 byte stream to a wide character string
@@ -266,7 +200,7 @@ namespace ext
         ///
         /// @return The converted wide character string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::u32string u32stringFromUtf8(const std::vector<char>& data);
+        static tgui::String fromUtf8(const std::vector<char>& data);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Converts an iteger value to a wide character string
@@ -278,16 +212,7 @@ namespace ext
         ///
         /// @return The converted wide character string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::u32string u32stringFromInt(int value);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Interprets a float value in the indicated string
-        ///
-        /// @param value  The string to be interpreted
-        ///
-        /// @return The value converted to float
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static float tof(const char32_t* value);
+        static tgui::String fromInt(int value);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Interprets an unsigned integer value in the indicated string
@@ -297,10 +222,10 @@ namespace ext
         ///
         /// @return The value converted to unsigned integer
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static unsigned long toul(const char32_t* value, int radix = 10);
+        static unsigned long toULong(const char32_t* value, int radix = 10);
 
     private:
-        static const std::u32string m_emptyString;
+        static const tgui::String m_emptyString;
     };
 
     class TGUI_API string

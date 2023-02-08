@@ -1540,15 +1540,15 @@ namespace tgui
         ///
         /// @return The class name of the element
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        const std::u32string& getClassNames() const;
+        const tgui::String& getClassNames() const;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the type name of the element as wide character string
         ///
         /// @return The type name of the element as wide character string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline std::u32string getTypeNameU32() const
-        {   return ext::u32string::u32stringFromString(m_elementType.TypeName);   }
+        inline tgui::String getTypeNameU32() const
+        {   return ext::String::toCharString(m_elementType.TypeName);   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Determines whether the element can contain child elements
@@ -1627,7 +1627,7 @@ namespace tgui
         ///
         /// @return The indicated attribute on success, or nullptr otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        XhtmlAttribute::Ptr getAttribute(const std::u32string& name) const;
+        XhtmlAttribute::Ptr getAttribute(const tgui::String& name) const;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the element's parent element. Can be nullptr
@@ -1827,7 +1827,7 @@ namespace tgui
         /// @return The number of character processes in the buffer
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static size_t createAttributesFromParseStr(std::vector<std::tuple<tgui::MessageType, String>>& messages,
-            std::vector<XhtmlAttribute::Ptr>& attributes, const std::u32string& buffer, const size_t beginPosition);
+            std::vector<XhtmlAttribute::Ptr>& attributes, const tgui::String& buffer, const size_t beginPosition);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates an XHTML element from raw string (on success)
@@ -1844,8 +1844,8 @@ namespace tgui
         ///
         /// @return The XHTML element on success, or nullptr otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static const XhtmlElement::Ptr createElementFromParseStr(std::vector<std::tuple<tgui::MessageType, String>>& messages,
-            XhtmlElement::Ptr parent, const std::u32string& buffer, const size_t beginPosition,
+        static const XhtmlElement::Ptr createElementFromParseStr(std::vector<std::tuple<tgui::MessageType, tgui::String>>& messages,
+            XhtmlElement::Ptr parent, const tgui::String& buffer, const size_t beginPosition,
             bool& isOpeningTag, bool& isClosingTag, bool& isInsideScript, size_t& processedLength, bool parseInnerText = true);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1864,8 +1864,8 @@ namespace tgui
         ///
         /// @return The XHTML element on success, or nullptr otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static const XhtmlElement::Ptr createElementFromParseData(std::vector<std::tuple<MessageType, String>>& messages,
-            bool& isOpeningTag, bool& isClosingTag, bool elementOpened, bool elementClosed, std::u32string& typeName,
+        static const XhtmlElement::Ptr createElementFromParseData(std::vector<std::tuple<MessageType, tgui::String>>& messages,
+            bool& isOpeningTag, bool& isClosingTag, bool elementOpened, bool elementClosed, tgui::String& typeName,
             XhtmlElement::Ptr& parent, const size_t& beginPosition, const size_t& endPosition, std::vector<XhtmlAttribute::Ptr>& attributesBuffer);
 
     protected:
@@ -1923,7 +1923,7 @@ namespace tgui
         /// @param styleName      The name of the style entry
         /// @param styleEntry     The style entry to register
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setEntry(const std::u32string& styleName, XhtmlStyleEntry::Ptr styleEntry)
+        inline void setEntry(const tgui::String& styleName, XhtmlStyleEntry::Ptr styleEntry)
         {   if(styleName.size() != 0 && styleEntry != nullptr) m_styles[styleName] = styleEntry; }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1933,7 +1933,7 @@ namespace tgui
         ///
         /// @return The requested style entry on success, or nullptr otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline XhtmlStyleEntry::Ptr getEntry(const std::u32string& styleName)
+        inline XhtmlStyleEntry::Ptr getEntry(const tgui::String& styleName)
         {   return (styleName.size() != 0 && m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1944,7 +1944,7 @@ namespace tgui
         ///
         /// @return The style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        XhtmlStyleEntry::Ptr getEntry(const char* typeName, const std::u32string& className);
+        XhtmlStyleEntry::Ptr getEntry(const char* typeName, const tgui::String& className);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates XHTML style entries from parsed data
@@ -1952,10 +1952,10 @@ namespace tgui
         /// @param messages         The collection of generated error/warning messages
         /// @param buffer           The string that has to be parsed for style entries
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        void createEntriesFromParseData(std::vector<std::tuple<MessageType, String>>& messages, const std::u32string& buffer);
+        void createEntriesFromParseData(std::vector<std::tuple<MessageType, String>>& messages, const tgui::String& buffer);
 
     private:
-        std::map<std::u32string, XhtmlStyleEntry::Ptr> m_styles;                   //!< The collection of registered styles
+        std::map<tgui::String, XhtmlStyleEntry::Ptr> m_styles;                   //!< The collection of registered styles
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

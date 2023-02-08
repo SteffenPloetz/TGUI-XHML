@@ -10,6 +10,7 @@
 #endif
 #endif
 
+#include "TGUI/String.hpp"
 #include "TGUI/StringHelper.hpp"
 #include "TGUI/Xhtml/XhtmlEntityResolver.hpp"
 #include "TGUI/Xhtml/XhtmlAttributes.hpp"

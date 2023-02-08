@@ -57,7 +57,7 @@ namespace tgui
         /// @param name   The attribute name to initialize
         /// @param value  The attribute value to initialize
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        XhtmlAttribute(const std::u32string& name, const std::u32string& value = U"")
+        XhtmlAttribute(const tgui::String& name, const tgui::String& value = U"")
             : m_name(name), m_value(value)
         {   ;   }
 
@@ -86,7 +86,7 @@ namespace tgui
         ///
         /// @return The attribute on success, or nullptr otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static XhtmlAttribute::Ptr createFromStr(std::vector<std::tuple<MessageType, String>>& messages, const std::u32string& buffer,
+        static XhtmlAttribute::Ptr createFromStr(std::vector<std::tuple<MessageType, String>>& messages, const tgui::String& buffer,
             const size_t beginPosition, size_t& processedLength);
 
     public:
@@ -95,7 +95,7 @@ namespace tgui
         ///
         /// @return The attribute name of this attribute
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline const std::u32string& getName() const
+        inline const tgui::String& getName() const
         {   return m_name;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -103,7 +103,7 @@ namespace tgui
         ///
         /// @return The attribute value of this attribute
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline const std::u32string& getValue() const
+        inline const tgui::String& getValue() const
         {   return m_value;   }
 
     protected:
@@ -113,11 +113,11 @@ namespace tgui
         /// @param messages  The collection of error messages, created during the parser run
         /// @param rawValue  The raw string of the value to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        virtual void putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const std::u32string& rawValue);
+        virtual void putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const tgui::String& rawValue);
 
     protected:
-        std::u32string m_name;   //!< This attribute's name
-        std::u32string m_value;  //!< This attribute's value
+        tgui::String m_name;   //!< This attribute's name
+        tgui::String m_value;  //!< This attribute's value
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -260,12 +260,12 @@ namespace tgui
         ///
         /// @return The size type
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static inline SizeType determineSizeType(std::u32string sizePart)
+        static inline SizeType determineSizeType(tgui::String sizePart)
         {
-            if (ext::u32string::find(sizePart, U"px") != SIZE_MAX)        return SizeType::Pixel;
-            else if (ext::u32string::find(sizePart, U"pt") != SIZE_MAX)   return SizeType::Point;
-            else if (ext::u32string::find(sizePart, U"em") != SIZE_MAX)   return SizeType::EquivalentOfM;
-            else if (ext::u32string::find(sizePart, U"%") != SIZE_MAX)    return SizeType::Relative;
+            if (sizePart.find(U"px") != SIZE_MAX)        return SizeType::Pixel;
+            else if (sizePart.find(U"pt") != SIZE_MAX)   return SizeType::Point;
+            else if (sizePart.find(U"em") != SIZE_MAX)   return SizeType::EquivalentOfM;
+            else if (sizePart.find(U"%") != SIZE_MAX)    return SizeType::Relative;
             else                                                          return SizeType::Pixel;
         }
 
@@ -274,32 +274,32 @@ namespace tgui
         ///
         /// @param sizeParts  The string array that should contain information about the size values
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void parse(std::vector<std::u32string> sizeParts)
+        inline void parse(std::vector<tgui::String> sizeParts)
         {
             if (sizeParts.size() == 1)
             {
-                top      = left = bottom = right = ext::u32string::tof(sizeParts[0].c_str());
+                top      = left = bottom = right = sizeParts[0].toFloat();
                 sizeType = FourDimSize::determineSizeType(sizeParts[0]);
             }
             if (sizeParts.size() == 2)
             {
-                top      = bottom = ext::u32string::tof(sizeParts[0].c_str());
-                left     = right = ext::u32string::tof(sizeParts[1].c_str());
+                top      = bottom = sizeParts[0].toFloat();
+                left     = right  = sizeParts[1].toFloat();
                 sizeType = FourDimSize::determineSizeType(sizeParts[0]);
             }
             if (sizeParts.size() == 3)
             {
-                top      = ext::u32string::tof(sizeParts[0].c_str());
-                left     = right = ext::u32string::tof(sizeParts[1].c_str());
-                bottom   = ext::u32string::tof(sizeParts[2].c_str());
+                top      = sizeParts[0].toFloat();
+                left     = right = sizeParts[1].toFloat();
+                bottom   = sizeParts[2].toFloat();
                 sizeType = FourDimSize::determineSizeType(sizeParts[0]);
             }
             if (sizeParts.size() == 4)
             {
-                top      = ext::u32string::tof(sizeParts[0].c_str());
-                right    = ext::u32string::tof(sizeParts[1].c_str());
-                bottom   = ext::u32string::tof(sizeParts[2].c_str());
-                left     = ext::u32string::tof(sizeParts[3].c_str());
+                top      = sizeParts[0].toFloat();
+                right    = sizeParts[1].toFloat();
+                bottom   = sizeParts[2].toFloat();
+                left     = sizeParts[3].toFloat();
                 sizeType = FourDimSize::determineSizeType(sizeParts[0]);
             }
         }
@@ -360,7 +360,7 @@ namespace tgui
         using Ptr = std::shared_ptr<XhtmlStyleEntry>; //!< Shared style entry pointer
         using ConstPtr = std::shared_ptr<const XhtmlStyleEntry>; //!< Shared constant style entry pointer
 
-        static const std::u32string TypeName;   //!< The tag name of an style entry
+        static const tgui::String TypeName;   //!< The tag name of an style entry
 
     public:
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -671,7 +671,7 @@ namespace tgui
         /// @param messages  The collection of error messages, created during the parser run
         /// @param rawValue  The raw string of the value to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        void putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const std::u32string& rawValue) override;
+        void putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const tgui::String& rawValue) override;
 
     private:
         Color            m_color;             //!< The foreground/text color

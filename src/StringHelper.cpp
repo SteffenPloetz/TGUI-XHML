@@ -22,13 +22,13 @@ namespace ext
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const std::u32string u32string::m_emptyString = U"";
+    const tgui::String String::m_emptyString = U"";
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    int u32string::compareNoCase(const std::u32string& nocaseLeft, const std::u32string& caseRight)
+    int String::compareIgnoreCase(const tgui::String& nocaseLeft, const tgui::String& caseRight)
     {
-        std::u32string buffLeft = nocaseLeft;
+        tgui::String buffLeft = nocaseLeft;
         std::transform(buffLeft.begin(), buffLeft.end(), buffLeft.begin(), ::tolower);
 
         return buffLeft.compare(caseRight);
@@ -36,20 +36,20 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    bool u32string::containsNoCase(const std::u32string& nocaseLeft, const std::u32string& pattern)
+    bool String::containsIgnoreCase(const tgui::String& nocaseLeft, const tgui::String& pattern)
     {
-        std::u32string buffLeft = nocaseLeft;
+        tgui::String buffLeft = nocaseLeft;
         std::transform(buffLeft.begin(), buffLeft.end(), buffLeft.begin(), ::tolower);
 
-        return buffLeft.find(pattern, 0) != std::u32string::npos;
+        return buffLeft.find(pattern, 0) != tgui::String::npos;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    bool u32string::containsAnyNoCase(const std::u32string& nocaseLeft, const std::vector<std::u32string>& patterns)
+    bool String::containsAnyIgnoreCase(const tgui::String& nocaseLeft, const std::vector<tgui::String>& patterns)
     {
         for (auto pattern : patterns)
-            if (u32string::containsNoCase(nocaseLeft, pattern) == 0)
+            if (String::containsIgnoreCase(nocaseLeft, pattern) == 0)
                 return true;
 
         return false;
@@ -57,44 +57,17 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // trim from start (in place)
-    void u32string::trimLeft(std::u32string& text)
-    {
-        text.erase(text.begin(), std::find_if(text.begin(), text.end(), [](char32_t ch) {
-            return !u32string::isSpace(ch);
-            }));
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // trim from end (in place)
-    void u32string::trimRight(std::u32string& text)
-    {
-        text.erase(std::find_if(text.rbegin(), text.rend(), [](char32_t ch) {
-            return !u32string::isSpace(ch);
-            }).base(), text.end());
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    void u32string::remove(std::u32string& text, char32_t pattern)
+    void String::remove(tgui::String& text, char32_t pattern)
     {
         text.erase(std::remove(text.begin(), text.end(), pattern), text.end());
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void u32string::replace(std::u32string& text, char32_t pattern, char32_t replacer)
+    void String::replace(tgui::String& text, const tgui::String& pattern, const tgui::String& replacer, bool recursive)
     {
-        std::replace(text.begin(), text.end(), pattern, replacer);
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    void u32string::replace(std::u32string& text, const std::u32string& pattern, const std::u32string& replacer, bool recursive)
-    {
-        std::u32string::size_type pos = 0;
-        while ((pos = text.find(pattern, pos)) != std::u32string::npos)
+        std::size_t pos = 0;
+        while ((pos = text.find(pattern, pos)) != tgui::String::npos)
         {
             text.replace(pos, pattern.length(), replacer);
             if (recursive)
@@ -106,36 +79,14 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    size_t u32string::find(const std::u32string& text, const std::u32string& pattern, const size_t startPos)
+    std::vector<tgui::String> String::split(const tgui::String& s, char32_t separator, bool suppressEmpty)
     {
-        auto offset = text.find(pattern, startPos);
-        if (offset == std::u32string::npos)
-            return SIZE_MAX;
-        else
-            return offset;
-    }
+        std::vector<tgui::String> output;
+        std::size_t prev_pos = 0, pos = 0;
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    size_t u32string::find(const std::u32string& text, const char32_t pattern, const size_t startPos)
-    {
-        auto offset = text.find(pattern, startPos);
-        if (offset == std::u32string::npos)
-            return SIZE_MAX;
-        else
-            return offset;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::vector<std::u32string> u32string::split(const std::u32string& s, char32_t separator, bool suppressEmpty)
-    {
-        std::vector<std::u32string> output;
-        std::u32string::size_type prev_pos = 0, pos = 0;
-
-        while((pos = s.find(separator, pos)) != std::u32string::npos)
+        while((pos = s.find(separator, pos)) != tgui::String::npos)
         {
-            std::u32string substring(s.substr(prev_pos, pos-prev_pos));
+            tgui::String substring(s.substr(prev_pos, pos-prev_pos));
             if (substring.size() > 0 || !suppressEmpty)
                 output.push_back(substring.c_str());
             prev_pos = ++pos;
@@ -150,14 +101,14 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::vector<std::u32string> u32string::split(const std::u32string& s, const std::u32string& separator, bool suppressEmpty)
+    std::vector<tgui::String> String::split(const tgui::String& s, const tgui::String& separator, bool suppressEmpty)
     {
-        std::vector<std::u32string> output;
-        std::u32string::size_type prev_pos = 0, pos = 0;
+        std::vector<tgui::String> output;
+        std::size_t prev_pos = 0, pos = 0;
 
-        while((pos = s.find(separator, pos)) != std::u32string::npos)
+        while((pos = s.find(separator, pos)) != tgui::String::npos)
         {
-            std::u32string substring(s.substr(prev_pos, pos - prev_pos));
+            tgui::String substring(s.substr(prev_pos, pos - prev_pos));
             if (substring.size() > 0 || !suppressEmpty)
                 output.push_back(substring.c_str());
             pos += separator.size();
@@ -174,7 +125,7 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::string u32string::stringFromU32string(const std::u32string& text)
+    std::string String::toCharString(const tgui::String& text)
     {
         size_t textLen = text.size();
         if (textLen == 0)
@@ -189,25 +140,7 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::u32string u32string::u32stringFromString(const char* text)
-    {
-        if (text == 0)
-            return U"";
-
-        size_t textLen = strlen(text);
-        if (textLen == 0)
-            return U"";
-
-        auto result = std::u32string(textLen, U'\0');
-        for (size_t index = 0; index < textLen; index++)
-            result[index] = static_cast<char32_t>(text[index]);
-
-        return result;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::u32string u32string::u32stringFromUtf8(const std::vector<char>& data)
+    tgui::String String::fromUtf8(const std::vector<char>& data)
     {
 #if _MSC_VER >= 1900
 #if _MSVC_LANG < 201703L
@@ -222,7 +155,7 @@ namespace ext
 #endif
 #else
         if (data.size() == 0)
-            return u32string::m_emptyString;
+            return String::m_emptyString;
 
         std::shared_ptr<char32_t> spResult(new char32_t[data.size() + 1], std::default_delete<char32_t[]>());
 
@@ -261,32 +194,18 @@ namespace ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::u32string u32string::u32stringFromInt(int value)
+    tgui::String String::fromInt(int value)
     {
         std::ostringstream s;
         s << value;
-        std::u32string result = u32stringFromString(s.str().c_str());
+        tgui::String result(s.str().c_str());
 
         return result;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    float u32string::tof(const char32_t* value)
-    {
-        std::string buffer;
-        while (*value == U'-' || *value == U'0' || *value == U'1' || *value == U'2' || *value == U'3' || *value == U'4' ||
-               *value == U'5' || *value == U'6' || *value == U'7' || *value == U'8' || *value == U'9' || *value == U'.')
-        {
-            buffer.push_back((char)*value);
-            value++;
-        }
-        return std::stof(buffer, nullptr);
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    unsigned long u32string::toul(const char32_t* value, int radix)
+    unsigned long String::toULong(const char32_t* value, int radix)
     {
         std::string buffer;
         while (*value == U'-' || *value == U'0' || *value == U'1' || *value == U'2' || *value == U'3' || *value == U'4' ||

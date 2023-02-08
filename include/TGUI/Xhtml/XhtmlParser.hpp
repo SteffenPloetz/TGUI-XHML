@@ -56,7 +56,7 @@ namespace tgui
     class TGUI_API XhtmlParser
     {
     public:
-        using MsgType = std::tuple<MessageType, String>; //!< The type of error/warning messages to use while parsing
+        using MsgType = std::tuple<MessageType, tgui::String>; //!< The type of error/warning messages to use while parsing
 
     private:
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +72,7 @@ namespace tgui
         ///
         /// @param buffer  The buffer of the character stream to parse
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        XhtmlParser(const std::u32string& buffer)
+        XhtmlParser(const tgui::String& buffer)
             : m_buffer(buffer), m_bufferPos(0), m_messages(), m_rootElements()
         {}
 
@@ -97,7 +97,7 @@ namespace tgui
         ///
         /// @param comment  The parsed comment text
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        bool parseComment(std::u32string& comment);
+        bool parseComment(tgui::String& comment);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Parses the complete XHTML document
@@ -116,7 +116,7 @@ namespace tgui
         ///                       - complete cleaning otherwise (breaks and all spaces)
         /// @param characters     The cuurently parsed string to clean
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static void parseDocument_cleanBreaksAndSpaces(const XhtmlElement::Ptr parentElement, std::u32string& characters);
+        static void parseDocument_cleanBreaksAndSpaces(const XhtmlElement::Ptr parentElement, tgui::String& characters);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Processes breaks ('<br>') and spaces (' ') from characters string, depending on the preformattedDepth
@@ -125,7 +125,7 @@ namespace tgui
         /// @param characters         The cuurently parsed string to process regarding breaks and spaces
         /// @param preformattedDepth  The number of not closed '<pre>' tags (inside a '<pre>' tag the spaces should not be suppressed)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        void parseDocument_createInnerText(XhtmlElement::Ptr parentElement, std::u32string& characters, int preformattedDepth);
+        void parseDocument_createInnerText(XhtmlElement::Ptr parentElement, tgui::String& characters, int preformattedDepth);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Checks the parity of XHTML start tag and XHTML end tag
@@ -171,7 +171,7 @@ namespace tgui
         ///
         /// @return The complete collection of parser (error/warning) messages. Can be empty
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline std::vector<std::tuple<tgui::MessageType, String>> getMessages() const
+        inline std::vector<std::tuple<tgui::MessageType, tgui::String>> getMessages() const
         {   return m_messages;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -179,17 +179,17 @@ namespace tgui
         ///
         /// @return The collection of parser error messages. Can be empty
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        std::shared_ptr<std::vector<String>> getErrorMessages() const;
+        std::shared_ptr<std::vector<tgui::String>> getErrorMessages() const;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the collection of parser warning messages. Can be empty (if o parser warnings occurred)
         ///
         /// @return The collection of parser warning messages. Can be empty
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        std::shared_ptr<std::vector<String>> getWarningMessages() const;
+        std::shared_ptr<std::vector<tgui::String>> getWarningMessages() const;
 
     private:
-        std::u32string                 m_buffer;       //!< The UTF character stream to parse
+        tgui::String                   m_buffer;       //!< The UTF character stream to parse
         size_t                         m_bufferPos;    //!< The actual cursor position within the UTF character stream to parse
         std::vector<MsgType>           m_messages;     //!< The error/warning messages that occurred when parsing the UTF character stream
         std::vector<XhtmlElement::Ptr> m_rootElements; //!< The collection of root elements, parsed from the UTF character stream

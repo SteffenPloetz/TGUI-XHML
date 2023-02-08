@@ -24,7 +24,7 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief The list of known web color names mapped to their color value
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    std::map<std::u32string, std::u32string> WebColorMap = {
+    std::map<tgui::String, tgui::String> WebColorMap = {
         {  U"maroon"                ,	U"#800000"   },
         {  U"darkred"               ,	U"#8B0000"   },
         {  U"brown"                 ,	U"#A52A2A"   },
@@ -170,7 +170,7 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    XhtmlAttribute::Ptr XhtmlAttribute::createFromStr(std::vector<std::tuple<MessageType, String>>& messages, const std::u32string& buffer,
+    XhtmlAttribute::Ptr XhtmlAttribute::createFromStr(std::vector<std::tuple<MessageType, tgui::String>>& messages, const tgui::String& buffer,
         const size_t beginPosition, size_t& processedLength)
     {
         processedLength = 0;
@@ -180,7 +180,7 @@ namespace tgui
 #endif
         if (buffer.empty())
         {
-            std::u32string message(U"XhtmlAttribute::createFromStr() -> Invalid buffer!");
+            tgui::String message(U"XhtmlAttribute::createFromStr() -> Invalid buffer!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return nullptr;
         }
@@ -191,11 +191,11 @@ namespace tgui
         char32_t workCharacter = 0;
 
         // skip leading white-space characters
-        while (ext::u32string::isSpace(buffer[workPosition]))
+        while (ext::String::isSpace(buffer[workPosition]))
             workPosition++;
 
         // name always begins with an alpha character - otherwise we have empty content or we are done with the attributes
-        if (!ext::u32string::isAlpha(buffer[workPosition]))
+        if (!ext::String::isAlpha(buffer[workPosition]))
             return nullptr;
 
         endPosition = workPosition;
@@ -205,7 +205,7 @@ namespace tgui
             // digits (0-9), underscores '_', hyphen '-', colons ':', and periods '.'
             // otherwise we have to determine whether we have a valid end of the name
             // or an inner text, that does not establish an attribute
-            if ((!ext::u32string::isAlnum(buffer[endPosition])) &&
+            if ((!ext::String::isAlnum(buffer[endPosition])) &&
                 (buffer[endPosition] != U'-') &&
                 (buffer[endPosition] != U':') &&
                 (buffer[endPosition] != U'_') &&
@@ -213,7 +213,7 @@ namespace tgui
             {
                 if (endPosition == workPosition)
                 {
-                    std::u32string message(U"XhtmlAttribute::createFromStr() -> Attribute is of length 0, but shouldn't!");
+                    tgui::String message(U"XhtmlAttribute::createFromStr() -> Attribute is of length 0, but shouldn't!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
 
                     // probably no attribute but an inner text
@@ -225,7 +225,7 @@ namespace tgui
                 // can act as as a separator between an attribute and
                 // its value or  an inner-text delimiter
                 if (buffer[endPosition] == 0 ||
-                    ext::u32string::isSpace(buffer[endPosition]) ||
+                    ext::String::isSpace(buffer[endPosition]) ||
                     buffer[endPosition] == U'=' ||
                     buffer[endPosition] == U'>' ||
                     buffer[endPosition] == U'/')
@@ -241,8 +241,8 @@ namespace tgui
         } while (true);
 
         // success
-        std::u32string attributeString = buffer.substr(workPosition, endPosition - workPosition);
-        if (ext::u32string::compareNoCase(attributeString, XhtmlStyleEntry::TypeName) == 0)
+        tgui::String attributeString = buffer.substr(workPosition, endPosition - workPosition);
+        if (ext::String::compareIgnoreCase(attributeString, XhtmlStyleEntry::TypeName) == 0)
             attribute = std::make_shared<XhtmlStyleEntry>();
         else
             attribute = std::make_shared<XhtmlAttribute>(attributeString);
@@ -264,7 +264,7 @@ namespace tgui
             do
             {
                 endPosition++;
-            } while (ext::u32string::isSpace(buffer[endPosition]));
+            } while (ext::String::isSpace(buffer[endPosition]));
 
             workPosition = endPosition;
             workCharacter = buffer[endPosition];
@@ -294,7 +294,7 @@ namespace tgui
                 // white-space character, or until we reach at the
                 // end of the string buffer.
                 while (buffer[endPosition] != 0 &&
-                    !ext::u32string::isSpace(buffer[endPosition]) &&
+                    !ext::String::isSpace(buffer[endPosition]) &&
                     buffer[endPosition] != U'/' &&
                     buffer[endPosition] != U'>');
             }
@@ -317,11 +317,11 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void XhtmlAttribute::putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const std::u32string& rawValue)
+    void XhtmlAttribute::putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const tgui::String& rawValue)
     {
         if (rawValue.empty())
         {
-            std::u32string message(U"XhtmlAttribute::putValue() -> Invalid rawValue!");
+            tgui::String message(U"XhtmlAttribute::putValue() -> Invalid rawValue!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return;
         }
@@ -329,12 +329,11 @@ namespace tgui
         m_value = rawValue;
 
         // clean the value
-        ext::u32string::trimLeft(m_value);
-        ext::u32string::trimRight(m_value);
-        ext::u32string::remove(m_value, U'\n');
-        ext::u32string::replace(m_value, U'\r', U' ');
-        ext::u32string::replace(m_value, U'\t', U' ');
-        ext::u32string::replace(m_value, U'\v', U' ');
+        m_value = m_value.trim();
+        ext::String::remove(m_value, U'\n');
+        m_value.replace(U'\r', U' ');
+        m_value.replace(U'\t', U' ');
+        m_value.replace(U'\v', U' ');
 
         /** resolve entity reference(s) */
         size_t    workPosition = -1;
@@ -348,8 +347,8 @@ namespace tgui
             substitutionLength = XhtmlEntityResolver::resolveEntity(messages, (char32_t*)m_value.substr(workPosition).c_str(), substituteCharacter);
             if (substitutionLength)
             {
-                std::u32string strSubst; strSubst += substituteCharacter;
-                ext::u32string::replace(m_value, m_value.substr(workPosition, substitutionLength), strSubst);
+                tgui::String strSubst; strSubst += substituteCharacter;
+                m_value.replace(m_value.substr(workPosition, substitutionLength), strSubst);
             }
         } while (true);
     }
@@ -358,7 +357,7 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    const std::u32string XhtmlStyleEntry::TypeName = U"style";
+    const tgui::String XhtmlStyleEntry::TypeName = U"style";
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -406,55 +405,52 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void XhtmlStyleEntry::putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const std::u32string& rawValue)
+    void XhtmlStyleEntry::putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const tgui::String& rawValue)
     {
         XhtmlAttribute::putValue(messages, rawValue);
-        auto styleEntryValues = ext::u32string::split(m_value, U';', true);
+        auto styleEntryValues = ext::String::split(m_value, U';', true);
         for (auto styleEntryValue : styleEntryValues)
         {
-            ext::u32string::remove(styleEntryValue, U';');
-            ext::u32string::trimLeft(styleEntryValue);
-            ext::u32string::trimRight(styleEntryValue);
+            ext::String::remove(styleEntryValue, U';');
+            styleEntryValue = styleEntryValue.trim();
 
             if (styleEntryValue.size() == 0)
                 continue;
             if (styleEntryValue.size() <= 3)
             {
-                std::u32string message(U"XhtmlAttribute::putValue() -> Unable to recognize style value from '" + styleEntryValue + U"'!");
+                tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize style value from '" + styleEntryValue + U"'!");
                 messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 continue;
             }
 
-            auto styleEntryParts = ext::u32string::split(styleEntryValue, U':', true);
+            auto styleEntryParts = ext::String::split(styleEntryValue, U':', true);
             if (styleEntryParts.size() != 2)
             {
-                std::u32string message(U"XhtmlAttribute::putValue() -> Unable to split style value '" + styleEntryValue + U"' into key and value(s)!");
+                tgui::String message(U"XhtmlAttribute::putValue() -> Unable to split style value '" + styleEntryValue + U"' into key and value(s)!");
                 messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 continue;
             }
 
-            ext::u32string::trimLeft(styleEntryParts[0]);
-            ext::u32string::trimRight(styleEntryParts[0]);
-            ext::u32string::trimLeft(styleEntryParts[1]);
-            ext::u32string::trimRight(styleEntryParts[1]);
+            styleEntryParts[0] = styleEntryParts[0].trim();
+            styleEntryParts[1] = styleEntryParts[1].trim();
             std::transform(styleEntryParts[0].begin(), styleEntryParts[0].end(), styleEntryParts[0].begin(), ::tolower);
             std::transform(styleEntryParts[1].begin(), styleEntryParts[1].end(), styleEntryParts[1].begin(), ::tolower);
 
             if (styleEntryParts[0].size() <= 1 || styleEntryParts[1].size() <= 1)
             {
-                std::u32string message(U"XhtmlAttribute::putValue() -> Unable to recognize  key and value from style value '" + styleEntryValue + U"'!");
+                tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  key and value from style value '" + styleEntryValue + U"'!");
                 messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 continue;
             }
 
-            if      (ext::u32string::compareNoCase(styleEntryParts[0], U"opacity") == 0)
+            if      (ext::String::compareIgnoreCase(styleEntryParts[0], U"opacity") == 0)
             {
-                auto opacity = ext::u32string::tof(styleEntryParts[1].c_str());
+                auto opacity = styleEntryParts[1].toFloat();
                 setOpacity(opacity);
                 continue;
             }
-            else if (ext::u32string::compareNoCase(styleEntryParts[0], U"background") == 0 ||
-                ext::u32string::compareNoCase(styleEntryParts[0], U"background-color") == 0)
+            else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"background") == 0 ||
+                ext::String::compareIgnoreCase(styleEntryParts[0], U"background-color") == 0)
             {
                 try
                 {
@@ -466,12 +462,12 @@ namespace tgui
                 }
                 catch(...)
                 {
-                    std::u32string message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
+                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 }
                 continue;
             }
-            else if (ext::u32string::compareNoCase(styleEntryParts[0], U"color") == 0)
+            else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"color") == 0)
             {
                 try
                 {
@@ -483,12 +479,12 @@ namespace tgui
                 }
                 catch(...)
                 {
-                    std::u32string message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
+                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 }
                 continue;
             }
-            else if (ext::u32string::compareNoCase(styleEntryParts[0], U"border-color") == 0)
+            else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"border-color") == 0)
             {
                 try
                 {
@@ -500,88 +496,88 @@ namespace tgui
                 }
                 catch(...)
                 {
-                    std::u32string message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
+                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 }
                 continue;
             }
-            else if (ext::u32string::compareNoCase(styleEntryParts[0], U"font-style") == 0)
+            else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"font-style") == 0)
             {
-                if (ext::u32string::find(styleEntryParts[1], U"italic") != SIZE_MAX || ext::u32string::find(styleEntryParts[1], U"oblique") != SIZE_MAX)
+                if (styleEntryParts[1].find(U"italic") != SIZE_MAX || styleEntryParts[1].find(U"oblique") != SIZE_MAX)
                     setItalic(true);
                 else
                 {
-                    std::u32string message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
+                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 }
                 continue;
             }
-            else if (ext::u32string::compareNoCase(styleEntryParts[0], U"font-weight") == 0)
+            else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"font-weight") == 0)
             {
-                if (ext::u32string::find(styleEntryParts[1], U"bold") != SIZE_MAX)
+                if (styleEntryParts[1].find(U"bold") != SIZE_MAX)
                     setBold(true);
                 else
                 {
-                    std::u32string message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
+                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 }
                 continue;
             }
-            else if (ext::u32string::compareNoCase(styleEntryParts[0], U"border-width") == 0)
+            else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"border-width") == 0)
             {
-                ext::u32string::replace(styleEntryParts[1], U"thin", U"1px");
-                ext::u32string::replace(styleEntryParts[1], U"medium", U"3px");
-                ext::u32string::replace(styleEntryParts[1], U"thick", U"5px");
+                styleEntryParts[1].replace(U"thin", U"1px");
+                styleEntryParts[1].replace(U"medium", U"3px");
+                styleEntryParts[1].replace(U"thick", U"5px");
                 FourDimSize borderWidth = getBorderWidth();
-                borderWidth.parse(ext::u32string::split(styleEntryParts[1], U' '));
+                borderWidth.parse(ext::String::split(styleEntryParts[1], U' '));
                 setBorderWidth(borderWidth);
                 continue;
             }
-            else if (ext::u32string::containsAnyNoCase(styleEntryParts[0],
+            else if (ext::String::containsAnyIgnoreCase(styleEntryParts[0],
                         {U"margin", U"margin-top", U"margin-left", U"margin-bottom", U"margin-right"}))
             {
                 FourDimSize margin = getMargin();
-                if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin") == 0)
-                    margin.parse(ext::u32string::split(styleEntryParts[1], U' ', true));
+                if (ext::String::compareIgnoreCase(styleEntryParts[0], U"margin") == 0)
+                    margin.parse(ext::String::split(styleEntryParts[1], U' ', true));
                 else
                 {
-                    if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-top") == 0)
-                        margin.top = ext::u32string::tof(styleEntryParts[1].c_str());
-                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-left") == 0)
-                        margin.left = ext::u32string::tof(styleEntryParts[1].c_str());
-                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-bottom") == 0)
-                        margin.bottom = ext::u32string::tof(styleEntryParts[1].c_str());
-                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"margin-right") == 0)
-                        margin.right = ext::u32string::tof(styleEntryParts[1].c_str());
+                    if (ext::String::compareIgnoreCase(styleEntryParts[0], U"margin-top") == 0)
+                        margin.top = styleEntryParts[1].toFloat();
+                    else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"margin-left") == 0)
+                        margin.left = styleEntryParts[1].toFloat();
+                    else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"margin-bottom") == 0)
+                        margin.bottom = styleEntryParts[1].toFloat();
+                    else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"margin-right") == 0)
+                        margin.right = styleEntryParts[1].toFloat();
 
                     margin.sizeType = FourDimSize::determineSizeType(styleEntryParts[1]);
                 }
                 setMargin(margin);
                 continue;
             }
-            else if (ext::u32string::containsAnyNoCase(styleEntryParts[0],
+            else if (ext::String::containsAnyIgnoreCase(styleEntryParts[0],
                         {U"padding", U"padding-top", U"padding-left", U"padding-bottom", U"padding-right"}))
             {
                 FourDimSize padding = getPadding();
-                if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding") == 0)
-                    padding.parse(ext::u32string::split(styleEntryParts[1], U' ', true));
+                if (ext::String::compareIgnoreCase(styleEntryParts[0], U"padding") == 0)
+                    padding.parse(ext::String::split(styleEntryParts[1], U' ', true));
                 else
                 {
-                    if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-top") == 0)
-                        padding.top = ext::u32string::tof(styleEntryParts[1].c_str());
-                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-left") == 0)
-                        padding.left = ext::u32string::tof(styleEntryParts[1].c_str());
-                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-bottom") == 0)
-                        padding.bottom = ext::u32string::tof(styleEntryParts[1].c_str());
-                    else if (ext::u32string::compareNoCase(styleEntryParts[0], U"padding-right") == 0)
-                        padding.right = ext::u32string::tof(styleEntryParts[1].c_str());
+                    if (ext::String::compareIgnoreCase(styleEntryParts[0], U"padding-top") == 0)
+                        padding.top = styleEntryParts[1].toFloat();
+                    else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"padding-left") == 0)
+                        padding.left = styleEntryParts[1].toFloat();
+                    else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"padding-bottom") == 0)
+                        padding.bottom = styleEntryParts[1].toFloat();
+                    else if (ext::String::compareIgnoreCase(styleEntryParts[0], U"padding-right") == 0)
+                        padding.right = styleEntryParts[1].toFloat();
 
                     padding.sizeType = FourDimSize::determineSizeType(styleEntryParts[1]);
                 }
                 setPadding(padding);
                 continue;
             }
-            std::u32string message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
+            tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             continue;
         }

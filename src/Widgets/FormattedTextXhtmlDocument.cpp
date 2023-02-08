@@ -69,7 +69,7 @@ namespace tgui
         auto styleElement = getStyleElement();
         if (styleElement != nullptr)
         {
-            auto classNames = ext::u32string::split(xhtmlElement->getClassNames(), U' ', true);
+            auto classNames = ext::String::split(xhtmlElement->getClassNames(), U' ', true);
             for (auto className : classNames)
             {
                 auto globalStyleEntry = styleElement->getEntry(xhtmlElement->getTypeName(), className);
@@ -715,7 +715,7 @@ namespace tgui
             if ((attribute = xhtmlElement->getAttribute(U"src")) != nullptr && attribute->getValue().size() > 0)
             {
                 std::hash<std::u32string> hashString;
-                auto hash = hashString(attribute->getValue());
+                auto hash = hashString(attribute->getValue().c_str());
 
                 auto iterator = m_textures.find(hash);
                 if (iterator != m_textures.end())
@@ -736,11 +736,11 @@ namespace tgui
                 {
                     try
                     {
-                        std::u32string uri(attribute->getValue());
-                        if (!ext::u32string::containsNoCase(uri, U"data:"))
+                        tgui::String uri(attribute->getValue());
+                        if (!ext::String::containsIgnoreCase(uri, U"data:"))
                         {
-                            if (ext::u32string::containsNoCase(uri, U"file://"))
-                                ext::u32string::replace(uri, U"file://", U"");
+                            if (ext::String::containsIgnoreCase(uri, U"file://"))
+                                uri.replace(U"file://", U"");
                         }
                         auto textureWrapper = tgui::Deserializer::deserialize(tgui::ObjectConverter::Type::Texture, uri);
                         const Texture& texture = textureWrapper.getTexture();
@@ -767,9 +767,9 @@ namespace tgui
             if ((attribute = xhtmlElement->getAttribute(U"alt")) != nullptr)
                 formattedImage->setAltText(attribute->getValue());
             if ((attribute = xhtmlElement->getAttribute(U"width")) != nullptr)
-                logicSize.x = ext::u32string::toul(attribute->getValue().c_str(), 10);
+                logicSize.x = ext::String::toULong(attribute->getValue().c_str(), 10);
             if ((attribute = xhtmlElement->getAttribute(U"height")) != nullptr)
-                logicSize.y = ext::u32string::toul(attribute->getValue().c_str(), 10);
+                logicSize.y = ext::String::toULong(attribute->getValue().c_str(), 10);
             formattedImage->setLogicalSize(logicSize);
 
             m_evolvingLineRunLength += m_formattingState.TextHeight / 8;

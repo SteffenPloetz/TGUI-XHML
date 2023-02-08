@@ -157,7 +157,7 @@ namespace tgui
             return 0; // throw "TinyXhtmlEntityResolver::resolveEntity() -> No end marker found!"
 
         // skip leading white-space characters
-        while (ext::u32string::isSpace(*begin) && length > 0)
+        while (ext::String::isSpace(*begin) && length > 0)
         {
             begin++; length--;
         }
@@ -185,7 +185,7 @@ namespace tgui
                 if (radix == 16)
                     begin++;
 
-                unsigned long	ulNum = ext::u32string::toul(begin, radix);
+                unsigned long	ulNum = ext::String::toULong(begin, radix);
                 substitute = (char32_t)ulNum;
                 length++;
                 return length;
@@ -199,20 +199,20 @@ namespace tgui
 
             // because some character entity references are
             // case-sensitive, we must fix them manually
-            if (!ext::u32string::compareNoCase(strKey, U"eth") ||
-                !ext::u32string::compareNoCase(strKey, U"thorn"))
+            if (!ext::String::compareIgnoreCase(strKey, U"eth") ||
+                !ext::String::compareIgnoreCase(strKey, U"thorn"))
             {
-                if (ext::u32string::isUpper(strKey[0]))
+                if (ext::String::isUpper(strKey[0]))
                     std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::toupper);
                 else
                     std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::tolower);
             }
-            else if (!ext::u32string::compareNoCase(strKey, U"Oslash"))
+            else if (!ext::String::compareIgnoreCase(strKey, U"Oslash"))
             {
                 std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::tolower);
                 strKey[0] = U'O';
             }
-            else if (!ext::u32string::compareNoCase(strKey, U"AElig"))
+            else if (!ext::String::compareIgnoreCase(strKey, U"AElig"))
             {
                 std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::tolower);
                 strKey[0] = U'A';
@@ -223,13 +223,13 @@ namespace tgui
                 char32_t chTemp = strKey[0];
                 std::u32string	strT = strKey.substr(1);
                 std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::tolower);
-                if (ext::u32string::compareNoCase(strT, U"grave") == 0 ||
-                    ext::u32string::compareNoCase(strT, U"acute") == 0 ||
-                    ext::u32string::compareNoCase(strT, U"circ") == 0 ||
-                    ext::u32string::compareNoCase(strT, U"uml") == 0 ||
-                    ext::u32string::compareNoCase(strT, U"tilde") == 0 ||
-                    ext::u32string::compareNoCase(strT, U"cedil") == 0 ||
-                    ext::u32string::compareNoCase(strT, U"ring") == 0)
+                if (ext::String::compareIgnoreCase(strT, U"grave") == 0 ||
+                    ext::String::compareIgnoreCase(strT, U"acute") == 0 ||
+                    ext::String::compareIgnoreCase(strT, U"circ") == 0 ||
+                    ext::String::compareIgnoreCase(strT, U"uml") == 0 ||
+                    ext::String::compareIgnoreCase(strT, U"tilde") == 0 ||
+                    ext::String::compareIgnoreCase(strT, U"cedil") == 0 ||
+                    ext::String::compareIgnoreCase(strT, U"ring") == 0)
                 {
                     strKey[0] = chTemp; // strT[0];
                 }
