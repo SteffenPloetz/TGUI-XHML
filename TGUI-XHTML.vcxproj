@@ -119,7 +119,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>C:\Projects\TGUI-0.10\x64\Debug;C:\Projects\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Projects\TGUI-0.10\build\lib\Debug;C:\Projects\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>tgui-d.lib;sfml-graphics-d.lib;sfml-window-d.lib;sfml-system-d.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -142,16 +142,16 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>C:\Projects\TGUI-0.10\x64\Release;C:\Projects\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Projects\TGUI-0.10\build\lib\Release;C:\Projects\SFML-2.5.1\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>tgui.lib;sfml-graphics.lib;sfml-window.lib;sfml-system.lib;$(CoreLibraryDependencies);%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\TGUI\FileHelper.hpp" />
     <ClInclude Include="include\TGUI\Renderers\FormattedTextRenderer.hpp" />
     <ClInclude Include="include\TGUI\StringHelper.hpp" />
     <ClInclude Include="include\TGUI\UtfHelper.hpp" />
     <ClInclude Include="include\TGUI\Widgets\FormattedElements.hpp" />
+    <ClInclude Include="include\TGUI\Widgets\FormattedTextDocument.hpp" />
     <ClInclude Include="include\TGUI\Widgets\FormattedTextView.hpp" />
     <ClInclude Include="include\TGUI\Widgets\FormattedTextXhtmlDocument.hpp" />
     <ClInclude Include="include\TGUI\Xhtml\XhtmlAttributes.hpp" />

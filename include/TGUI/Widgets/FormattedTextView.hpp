@@ -1,3 +1,28 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//
+// Formatted text view (zlib license) provided for TGUI - Texus' Graphical User Interface
+// Copyright (C) 2023 Steffen Ploetz (Steffen.Ploetz@cityweb.de)
+//
+// This software is provided 'as-is', without any express or implied warranty.
+// In no event will the authors be held liable for any damages arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it freely,
+// subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented;
+//    you must not claim that you wrote the original software.
+//    If you use this software in a product, an acknowledgment
+//    in the product documentation would be appreciated but is not required.
+//
+// 2. Altered source versions must be plainly marked as such,
+//    and must not be misrepresented as being the original software.
+//
+// 3. This notice may not be removed or altered from any source distribution.
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 #ifndef TGUI_FORMATTED_TEXT_VIEW_HPP
 #define TGUI_FORMATTED_TEXT_VIEW_HPP
 
@@ -9,6 +34,8 @@ namespace tgui
     ///
     /// A formatted text view widget is a multi-line formatted text output field which supports word-wrap and scrollbars.
     /// If you are looking for a multi-line text input field then check out the TextArea class (that doesn't support format).
+    ///
+    /// It displays the content of a FormattedTextDocument
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     class TGUI_API FormattedTextView : public ClickableWidget
     {
@@ -123,7 +150,7 @@ namespace tgui
         ///
         /// @return The underlying XHTML document
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline FormattedTextXhtmlDocument::Ptr getDocument()
+        inline FormattedTextDocument::Ptr getDocument()
         {   return m_document;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -349,7 +376,7 @@ namespace tgui
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private:
 
-        FormattedTextXhtmlDocument::Ptr         m_document;              //!< The formatted document to display
+        FormattedTextDocument::Ptr              m_document;              //!< The formatted document to display
         float                                   m_zoom = 1.0f;           //!< The zoom
 
         Borders                                 m_bordersCached;

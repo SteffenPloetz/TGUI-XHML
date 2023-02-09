@@ -51,11 +51,11 @@
     <ClInclude Include="include\TGUI\UtfHelper.hpp">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="include\TGUI\FileHelper.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="include\TGUI\StringHelper.hpp">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Widgets\FormattedTextDocument.hpp">
+      <Filter>Widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

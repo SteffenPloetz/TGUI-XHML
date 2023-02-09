@@ -254,7 +254,6 @@ namespace tgui
 #else
         UNUSED(beginPosition);
         UNUSED(endPosition);
-        UNUSED(isInline);
 #endif
         return element;
     }
