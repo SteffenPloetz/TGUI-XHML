@@ -57,7 +57,7 @@ namespace tgui
             return false;
         }
 
-        while (ext::String::isSpace(m_buffer[workPosition]))
+        while (ext::isSpace(m_buffer[workPosition]))
             workPosition++;
 
         if(m_buffer[workPosition] != '>')
@@ -95,7 +95,7 @@ namespace tgui
         // set a defined element tree root to prevent problems with parentElements.back()
         parentElements.push_back(nullptr);
 
-        while (ext::String::isSpace(workCharacter))
+        while (ext::isSpace(workCharacter))
             workCharacter = acquireChar();
         rejectChar();
 
@@ -323,7 +323,8 @@ namespace tgui
         characters.replace(U'\n', U' ');
         characters.replace(U'\t', U' ');
         characters.replace(U'\v', U' ');
-        ext::String::replace(characters, U"  ", U" ", true);
+        while(characters.contains(U"  "))
+            characters.replace(U"  ", U" ");
 
         if (parentElement != nullptr && characters.size() > 0 && characters[0] == U' ')
         {

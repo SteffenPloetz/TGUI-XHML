@@ -197,66 +197,30 @@ namespace tgui
                 {
                     if     (nestingDepth % 3 == 1)
                     {
-                        if (ItemType == ListItemType::InheritOrDefault || ItemType == ListItemType::Disc)
-#if _WIN32
-                            bullet.push_back(static_cast<wchar_t>(8226));
-#else
-                            bullet = L"•";
-#endif
+                        if ((ItemType == ListItemType::InheritOrDefault) || (ItemType == ListItemType::Disc))
+                            bullet.push_back(U'\u25CF'); // ●
                         else if (ItemType == ListItemType::Circle)
-#if _WIN32
-                            bullet.push_back(static_cast<wchar_t>(9702));
-#else
-                            bullet = L"∘";
-#endif
+                            bullet.push_back(U'\u25CB'); // ○
                         else if (ItemType == ListItemType::Square)
-#if _WIN32
-                            bullet.push_back(static_cast<wchar_t>(9642));
-#else
-                            bullet = L"▪";
-#endif
+                            bullet.push_back(U'\u25A0'); // ■
                     }
                     else if (nestingDepth % 3 == 2)
                     {
                         if (ItemType == ListItemType::InheritOrDefault || ItemType == ListItemType::Circle)
-#if _WIN32
-                            bullet.push_back(static_cast<wchar_t>(9702));
-#else
-                            bullet = L"∘";
-#endif
+                            bullet.push_back(U'\u25CB'); // ○
                         else if (ItemType == ListItemType::Disc)
-#if _WIN32
-                            bullet.push_back(static_cast<wchar_t>(8226));
-#else
-                            bullet = L"•";
-#endif
+                            bullet.push_back(U'\u25CF'); // ●
                         else if (ItemType == ListItemType::Square)
-#if _WIN32
-                            bullet.push_back(static_cast<wchar_t>(9642));
-#else
-                            bullet = L"▪";
-#endif
+                            bullet.push_back(U'\u25A0'); // ■
                     }
                     else
                     {
                         if (ItemType == ListItemType::InheritOrDefault || ItemType == ListItemType::Square)
-#if _WIN32
-                            bullet.push_back(static_cast<wchar_t>(9642));
-#else
-                            bullet = L"▪";
-#endif
+                            bullet.push_back(U'\u25A0'); // ■
                         else if (ItemType == ListItemType::Disc)
-#if _WIN32
-                            bullet.push_back(static_cast<wchar_t>(8226));
-#else
-                            bullet = L"•";
-#endif
+                            bullet.push_back(U'\u25CF'); // ●
                         else if (ItemType == ListItemType::Circle)
-#if _WIN32
-                            bullet.push_back(static_cast<wchar_t>(9702));
-#else
-                            bullet = L"∘";
-#endif
+                            bullet.push_back(U'\u25CB'); // ○
                     }
                 }
                 else

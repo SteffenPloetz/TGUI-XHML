@@ -1,0 +1,486 @@
+# depslib dependency file v1.0
+1667022566 source:/home/steffen/Projects/CodeBlocks/XHTMLStaticTGUI/main.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Backend/SFML-Graphics.hpp>
+	<TGUI/Backend/SFML-OpenGL3.hpp>
+	"../TGUI-0.10-Extensions/ImageBytes.hpp"
+	"../TGUI-0.10-Extensions/RibbonButton.hpp"
+	"../TGUI-0.10-Extensions/PortableFileDialogsWrapper.hpp"
+	"../TGUI-0.10-Extensions/MainFrame.hpp"
+	<iostream>
+	<fstream>
+	<thread>
+	<cmath>
+
+1672902077 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/ImageBytes.hpp
+
+1671730948 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/RibbonButton.hpp
+
+1671720944 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/PortableFileDialogsWrapper.hpp
+
+1671720948 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/MainFrame.hpp
+
+1671731156 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/GuiExSFMLGraphics.cpp
+	<TGUI/Config.hpp>
+	<TGUI/Backend/SFML-Graphics.hpp>
+	<TGUI/Timer.hpp>
+	<thread>
+	"GuiExSFMLGraphics.hpp"
+
+1665725822 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/GuiExSFMLGraphics.hpp
+
+1671731156 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/ImageBytes_Action28.cpp
+	<cstdint>
+	"ImageBytes.hpp"
+
+1671731244 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/ImageBytes_App28.cpp
+	<cstdint>
+	"ImageBytes.hpp"
+
+1671731156 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/MainFrame.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Backend/SFML-Graphics.hpp>
+	<TGUI/Backend/SFML-OpenGL3.hpp>
+	"MainFrame.hpp"
+
+1671731156 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/PortableFileDialogsWrapper.cpp
+	<TGUI/TGUI.hpp>
+	"PortableFileDialogs.hpp"
+	"PortableFileDialogsWrapper.hpp"
+
+1670830856 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/PortableFileDialogs.hpp
+	<windows.h>
+	<commdlg.h>
+	<shlobj.h>
+	<shobjidl.h>
+	<shellapi.h>
+	<strsafe.h>
+	<future>
+	<userenv.h>
+	<emscripten.h>
+	<cstdio>
+	<cstdlib>
+	<fcntl.h>
+	<unistd.h>
+	<csignal>
+	<sys/stat.h>
+	<sys/wait.h>
+	<pwd.h>
+	<string>
+	<memory>
+	<iostream>
+	<map>
+	<set>
+	<regex>
+	<thread>
+	<chrono>
+
+1671731156 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/RibbonButton.cpp
+	<TGUI/TGUI.hpp>
+	<TGUI/Texture.hpp>
+	"RibbonButton.hpp"
+
+1669156643 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XHTMLStatic.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Backend/SFML-Graphics.hpp>
+	<TGUI/Backend/SFML-OpenGL3.hpp>
+	"XHTMLElements.hpp"
+	"XHTMLStatic.hpp"
+
+1669156070 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XHTMLStatic.hpp
+	"Renderers/XHTMLStaticRenderer.hpp"
+
+1675838476 source:/home/steffen/Projects/CodeBlocks/XHTMLViewerTGUI/main.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Base64.hpp>
+	<TGUI/Backend/SFML-Graphics.hpp>
+	<TGUI/Backend/SFML-OpenGL3.hpp>
+	"TGUI/FileHelper.hpp"
+	"TGUI/StringHelper.hpp"
+	"TGUI/Xhtml/XhtmlEntityResolver.hpp"
+	"TGUI/Xhtml/XhtmlAttributes.hpp"
+	"TGUI/Xhtml/XhtmlElements.hpp"
+	"TGUI/Widgets/FormattedElements.hpp"
+	"TGUI/Widgets/FormattedTextXhtmlDocument.hpp"
+	"TGUI/Renderers/FormattedTextRenderer.hpp"
+	"TGUI/Widgets/FormattedTextView.hpp"
+	"TGUI/Xhtml/XhtmlParser.hpp"
+	"TGUI/UtfHelper.hpp"
+	<filesystem>
+	<experimental/filesystem>
+	<iostream>
+	<fstream>
+	<thread>
+	<cmath>
+
+1669068540 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/Renderers/XHTMLStaticRenderer.hpp
+	<TGUI/Renderers/WidgetRenderer.hpp>
+
+1669075203 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/Renderers/XHTMLStaticRenderer.cpp
+	"XHTMLStaticRenderer.hpp"
+	<TGUI/RendererDefines.hpp>
+
+1670363294 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XHTMLElements.hpp
+	<cstddef>
+	<memory>
+	<vector>
+	<TGUI/String.hpp>
+	"XhtmlStyle.hpp"
+
+1670085682 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XHTMLElements.cpp
+	<list>
+	"XHTMLElements.hpp"
+
+1673423496 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/FormattedElements.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	"StringHelper.hpp"
+	"XhtmlEntityResolver.hpp"
+	"XhtmlAttributes.hpp"
+	"XhtmlElements.hpp"
+	"FormattedElements.hpp"
+
+1670826704 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/Renderers/FormattedTextAreaRenderer.cpp
+	"FormattedTextAreaRenderer.hpp"
+	<TGUI/RendererDefines.hpp>
+
+1672251757 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/Renderers/FormattedTextAreaRenderer.hpp
+	<TGUI/Renderers/WidgetRenderer.hpp>
+
+1671347972 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/FormattedTextArea.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Keyboard.hpp>
+	"XhtmlElements.hpp"
+	"FormattedTextArea.hpp"
+
+1672837582 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/FormattedElements.hpp
+
+1672251870 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/FormattedTextArea.hpp
+	"Renderers/FormattedTextRenderer.hpp"
+	"FormattedElements.hpp"
+	"FormattedTextXhtmlDocument.hpp"
+
+1673665131 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/FormattedTextXhtmlDocument.hpp
+
+1674020244 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/FormattedTextXhtmlDocument.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<list>
+	<map>
+	"XhtmlEntityResolver.hpp"
+	"XhtmlAttributes.hpp"
+	"StringHelper.hpp"
+	"XhtmlElements.hpp"
+	"FormattedElements.hpp"
+	"FormattedTextXhtmlDocument.hpp"
+
+1670743509 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XhtmlStyle.hpp
+	"TGUI/Color.hpp"
+
+1670146933 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/geometry.hpp
+
+1670147608 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/geometry.h
+
+1674021130 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XhtmlElements.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Vector2.hpp>
+	<fstream>
+	"StringHelper.hpp"
+	"XhtmlEntityResolver.hpp"
+	"XhtmlAttributes.hpp"
+	"XhtmlElements.hpp"
+
+1674108061 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XhtmlElements.hpp
+	<cstddef>
+	<memory>
+	<vector>
+	<TGUI/String.hpp>
+
+1672249526 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/Renderers/FormattedTextRenderer.cpp
+	<TGUI/Config.hpp>
+	<TGUI/RendererDefines.hpp>
+	<TGUI/Renderers/WidgetRenderer.hpp>
+	"FormattedTextRenderer.hpp"
+
+1672249526 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/Renderers/FormattedTextRenderer.hpp
+
+1673789089 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/FormattedTextView.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Keyboard.hpp>
+	"StringHelper.hpp"
+	"XhtmlEntityResolver.hpp"
+	"XhtmlAttributes.hpp"
+	"XhtmlElements.hpp"
+	"FormattedElements.hpp"
+	"FormattedTextXhtmlDocument.hpp"
+	"Renderers/FormattedTextRenderer.hpp"
+	"FormattedTextView.hpp"
+
+1672298072 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/FormattedTextView.hpp
+
+1674108201 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XhtmlAttributes.hpp
+	<cwctype>
+	<string>
+	<vector>
+
+1674111267 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XhtmlAttributes.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Vector2.hpp>
+	<algorithm>
+	"StringHelper.hpp"
+	"XhtmlEntityResolver.hpp"
+	"XhtmlAttributes.hpp"
+
+1673423451 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/TinyXhtmlParser.hpp
+	<tuple>
+	<vector>
+	<map>
+	<algorithm>
+
+1673423451 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/TinyXhtmlParser.cpp
+	<TGUI/TGUI.hpp>
+	<iostream>
+	<memory>
+	"StringHelper.hpp"
+	"XhtmlEntityResolver.hpp"
+	"XhtmlAttributes.hpp"
+	"XhtmlElements.hpp"
+	"TinyXhtmlParser.hpp"
+
+1672744878 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/Base64.hpp
+	<string>
+
+1674112176 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/StringHelper.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Vector2.hpp>
+	<codecvt>
+	<locale>
+	"StringHelper.hpp"
+
+1674111267 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/StringHelper.hpp
+	<cwctype>
+	<string>
+	<vector>
+	<stdint.h>
+
+1673078209 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/StringHelper.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Vector2.hpp>
+	"StringHelper.hpp"
+
+1673079773 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/UtfHelper.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	"UtfHelper.hpp"
+
+1673078947 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/UtfHelper.hpp
+	<cwctype>
+	<string>
+	<vector>
+
+1673296067 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/FileHelper.hpp
+	<iostream>
+	<fstream>
+	<vector>
+
+1673466308 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XhtmlEntityResolver.hpp
+	<tuple>
+	<vector>
+
+1673465871 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XhtmlEntityResolver.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<algorithm>
+	"StringHelper.hpp"
+	"XhtmlEntityResolver.hpp"
+
+1674285710 /home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XhtmlParser.hpp
+	<tuple>
+	<vector>
+	<map>
+	<algorithm>
+
+1674111985 source:/home/steffen/Projects/CodeBlocks/TGUI-0.10-Extensions/XhtmlParser.cpp
+	<TGUI/TGUI.hpp>
+	<iostream>
+	<memory>
+	"StringHelper.hpp"
+	"XhtmlEntityResolver.hpp"
+	"XhtmlAttributes.hpp"
+	"XhtmlElements.hpp"
+	"XhtmlParser.hpp"
+
+1675410186 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Renderers/FormattedTextRenderer.cpp
+	<TGUI/Config.hpp>
+	<TGUI/RendererDefines.hpp>
+	<TGUI/Renderers/WidgetRenderer.hpp>
+	"TGUI/Renderers/FormattedTextRenderer.hpp"
+
+1675922724 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Renderers/FormattedTextRenderer.hpp
+
+1676403746 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/StringHelper.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Vector2.hpp>
+	<cuchar>
+	<codecvt>
+	<locale>
+	<string>
+	"TGUI/StringHelper.hpp"
+
+1676403746 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/StringHelper.hpp
+	<cwctype>
+	<string>
+	<vector>
+	<stdint.h>
+
+1675410186 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/UtfHelper.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	"TGUI/UtfHelper.hpp"
+
+1675410186 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/UtfHelper.hpp
+	<cwctype>
+	<string>
+	<vector>
+
+1675804284 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Widgets/FormattedElements.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	"TGUI/String.hpp"
+	"TGUI/StringHelper.hpp"
+	"TGUI/Xhtml/XhtmlEntityResolver.hpp"
+	"TGUI/Xhtml/XhtmlAttributes.hpp"
+	"TGUI/Xhtml/XhtmlElements.hpp"
+	"TGUI/Widgets/FormattedElements.hpp"
+
+1676397730 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/XhtmlEntityResolver.hpp
+	<tuple>
+	<vector>
+
+1676394182 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/XhtmlAttributes.hpp
+	<cwctype>
+	<string>
+	<vector>
+
+1676395289 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/XhtmlElements.hpp
+	<cstddef>
+	<memory>
+	<vector>
+	<TGUI/String.hpp>
+
+1675922724 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedElements.hpp
+
+1675797424 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Widgets/FormattedTextView.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Keyboard.hpp>
+	"TGUI/StringHelper.hpp"
+	"TGUI/Xhtml/XhtmlEntityResolver.hpp"
+	"TGUI/Xhtml/XhtmlAttributes.hpp"
+	"TGUI/Xhtml/XhtmlElements.hpp"
+	"TGUI/Widgets/FormattedElements.hpp"
+	"TGUI/Widgets/FormattedTextXhtmlDocument.hpp"
+	"TGUI/Renderers/FormattedTextRenderer.hpp"
+	"TGUI/Widgets/FormattedTextView.hpp"
+
+1675923420 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedTextXhtmlDocument.hpp
+	"FormattedTextDocument.hpp"
+
+1675923308 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedTextView.hpp
+
+1676395669 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Widgets/FormattedTextXhtmlDocument.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<list>
+	<map>
+	"TGUI/StringHelper.hpp"
+	"TGUI/Xhtml/XhtmlEntityResolver.hpp"
+	"TGUI/Xhtml/XhtmlAttributes.hpp"
+	"TGUI/StringHelper.hpp"
+	"TGUI/Xhtml/XhtmlElements.hpp"
+	"TGUI/Widgets/FormattedElements.hpp"
+	"TGUI/Widgets/FormattedTextXhtmlDocument.hpp"
+
+1676407346 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/XhtmlAttributes.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Vector2.hpp>
+	<algorithm>
+	"TGUI/StringHelper.hpp"
+	"TGUI/Xhtml/XhtmlEntityResolver.hpp"
+	"TGUI/Xhtml/XhtmlAttributes.hpp"
+
+1676398374 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/XhtmlEntityResolver.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<algorithm>
+	"TGUI/StringHelper.hpp"
+	"TGUI/Xhtml/XhtmlEntityResolver.hpp"
+
+1676394872 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/XhtmlParser.cpp
+	<TGUI/TGUI.hpp>
+	<iostream>
+	<memory>
+	"TGUI/StringHelper.hpp"
+	"TGUI/Xhtml/XhtmlEntityResolver.hpp"
+	"TGUI/Xhtml/XhtmlAttributes.hpp"
+	"TGUI/Xhtml/XhtmlElements.hpp"
+	"TGUI/Xhtml/XhtmlParser.hpp"
+
+1675806136 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/XhtmlParser.hpp
+	<tuple>
+	<vector>
+	<map>
+	<algorithm>
+
+1676395289 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/XhtmlElements.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Vector2.hpp>
+	<fstream>
+	"TGUI/StringHelper.hpp"
+	"TGUI/Xhtml/XhtmlEntityResolver.hpp"
+	"TGUI/Xhtml/XhtmlAttributes.hpp"
+	"TGUI/Xhtml/XhtmlElements.hpp"
+
+1675923921 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/FileHelper.hpp
+	<iostream>
+	<fstream>
+	<vector>
+
+1676399162 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedTextDocument.hpp
+
+1676407346 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/sample-app/main.cpp
+	<TGUI/Config.hpp>
+	<TGUI/TGUI.hpp>
+	<TGUI/Base64.hpp>
+	<TGUI/Backend/SFML-Graphics.hpp>
+	<TGUI/Backend/SFML-OpenGL3.hpp>
+	"TGUI/StringHelper.hpp"
+	"TGUI/Xhtml/XhtmlEntityResolver.hpp"
+	"TGUI/Xhtml/XhtmlAttributes.hpp"
+	"TGUI/Xhtml/XhtmlElements.hpp"
+	"TGUI/Widgets/FormattedElements.hpp"
+	"TGUI/Widgets/FormattedTextXhtmlDocument.hpp"
+	"TGUI/Renderers/FormattedTextRenderer.hpp"
+	"TGUI/Widgets/FormattedTextView.hpp"
+	"TGUI/Xhtml/XhtmlParser.hpp"
+	"TGUI/UtfHelper.hpp"
+	<filesystem>
+	<experimental/filesystem>
+	<iostream>
+	<fstream>
+	<thread>
+	<cmath>
+

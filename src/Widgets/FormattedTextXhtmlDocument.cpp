@@ -737,9 +737,9 @@ namespace tgui
                     try
                     {
                         tgui::String uri(attribute->getValue());
-                        if (!ext::String::containsIgnoreCase(uri, U"data:"))
+                        if (!uri.toLower().contains(U"data:"))
                         {
-                            if (ext::String::containsIgnoreCase(uri, U"file://"))
+                            if (uri.toLower().contains(U"file://"))
                                 uri.replace(U"file://", U"");
                         }
                         auto textureWrapper = tgui::Deserializer::deserialize(tgui::ObjectConverter::Type::Texture, uri);
@@ -767,9 +767,9 @@ namespace tgui
             if ((attribute = xhtmlElement->getAttribute(U"alt")) != nullptr)
                 formattedImage->setAltText(attribute->getValue());
             if ((attribute = xhtmlElement->getAttribute(U"width")) != nullptr)
-                logicSize.x = ext::String::toULong(attribute->getValue().c_str(), 10);
+                logicSize.x = attribute->getValue().toUInt();
             if ((attribute = xhtmlElement->getAttribute(U"height")) != nullptr)
-                logicSize.y = ext::String::toULong(attribute->getValue().c_str(), 10);
+                logicSize.y = attribute->getValue().toUInt();
             formattedImage->setLogicalSize(logicSize);
 
             m_evolvingLineRunLength += m_formattingState.TextHeight / 8;

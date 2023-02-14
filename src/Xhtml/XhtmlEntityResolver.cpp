@@ -14,6 +14,45 @@
 
 #include "TGUI/StringHelper.hpp"
 #include "TGUI/Xhtml/XhtmlEntityResolver.hpp"
+namespace ext
+{
+    int isSpace(char32_t character)
+    {
+#if _WIN32
+        return std::iswspace((wchar_t)character);
+#else
+        return std::iswspace(character);
+#endif
+    }
+
+    int isAlpha(char32_t character)
+    {
+#if _WIN32
+        return std::iswalpha((wchar_t)character);
+#else
+        return std::iswalpha(character);
+#endif
+    }
+
+    int isAlnum(char32_t character)
+    {
+#if _WIN32
+        return std::iswalnum((wchar_t)character);
+#else
+        return std::iswalnum(character);
+#endif
+    }
+
+    int isUpper(char32_t character)
+    {
+#if _WIN32
+        return std::iswupper((wchar_t)character);
+#else
+        return std::iswupper(character);
+#endif
+    }
+}
+
 
 namespace tgui
 {
@@ -157,7 +196,7 @@ namespace tgui
             return 0; // throw "TinyXhtmlEntityResolver::resolveEntity() -> No end marker found!"
 
         // skip leading white-space characters
-        while (ext::String::isSpace(*begin) && length > 0)
+        while (ext::isSpace(*begin) && length > 0)
         {
             begin++; length--;
         }
@@ -185,7 +224,7 @@ namespace tgui
                 if (radix == 16)
                     begin++;
 
-                unsigned long	ulNum = ext::String::toULong(begin, radix);
+                unsigned long ulNum = toULong(begin, radix);
                 substitute = (char32_t)ulNum;
                 length++;
                 return length;
@@ -199,20 +238,20 @@ namespace tgui
 
             // because some character entity references are
             // case-sensitive, we must fix them manually
-            if (!ext::String::compareIgnoreCase(strKey, U"eth") ||
-                !ext::String::compareIgnoreCase(strKey, U"thorn"))
+            if (strKey.equalIgnoreCase(U"eth") ||
+                strKey.equalIgnoreCase(U"thorn"))
             {
-                if (ext::String::isUpper(strKey[0]))
+                if (ext::isUpper(strKey[0]))
                     std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::toupper);
                 else
                     std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::tolower);
             }
-            else if (!ext::String::compareIgnoreCase(strKey, U"Oslash"))
+            else if (strKey.equalIgnoreCase(U"Oslash"))
             {
                 std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::tolower);
                 strKey[0] = U'O';
             }
-            else if (!ext::String::compareIgnoreCase(strKey, U"AElig"))
+            else if (strKey.equalIgnoreCase(U"AElig"))
             {
                 std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::tolower);
                 strKey[0] = U'A';
@@ -220,18 +259,18 @@ namespace tgui
             }
             else
             {
-                char32_t chTemp = strKey[0];
-                tgui::String	strT = strKey.substr(1);
+                char32_t     chrHead = strKey[0];
+                tgui::String strTail = strKey.substr(1);
                 std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::tolower);
-                if (ext::String::compareIgnoreCase(strT, U"grave") == 0 ||
-                    ext::String::compareIgnoreCase(strT, U"acute") == 0 ||
-                    ext::String::compareIgnoreCase(strT, U"circ") == 0 ||
-                    ext::String::compareIgnoreCase(strT, U"uml") == 0 ||
-                    ext::String::compareIgnoreCase(strT, U"tilde") == 0 ||
-                    ext::String::compareIgnoreCase(strT, U"cedil") == 0 ||
-                    ext::String::compareIgnoreCase(strT, U"ring") == 0)
+                if (strTail.equalIgnoreCase(U"grave") ||
+                    strTail.equalIgnoreCase(U"acute") ||
+                    strTail.equalIgnoreCase(U"circ")  ||
+                    strTail.equalIgnoreCase(U"uml")   ||
+                    strTail.equalIgnoreCase(U"tilde") ||
+                    strTail.equalIgnoreCase(U"cedil") ||
+                    strTail.equalIgnoreCase(U"ring")     )
                 {
-                    strKey[0] = chTemp; // strT[0];
+                    strKey[0] = chrHead; // strTail[0];
                 }
             }
 
@@ -246,6 +285,20 @@ namespace tgui
         }
 
         return 0;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    unsigned long XhtmlEntityResolver::toULong(const char32_t* value, int radix)
+    {
+        std::string buffer;
+        while (*value == U'-' || *value == U'0' || *value == U'1' || *value == U'2' || *value == U'3' || *value == U'4' ||
+            *value == U'5' || *value == U'6' || *value == U'7' || *value == U'8' || *value == U'9')
+        {
+            buffer.push_back((char)*value);
+            value++;
+        }
+        return std::stoul(buffer, nullptr, radix);
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

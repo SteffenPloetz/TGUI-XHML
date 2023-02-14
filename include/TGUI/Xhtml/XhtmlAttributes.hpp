@@ -32,7 +32,6 @@
 
 namespace tgui
 {
-
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief Generic XHTML attribute
     ///
@@ -672,6 +671,17 @@ namespace tgui
         /// @param rawValue  The raw string of the value to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const tgui::String& rawValue) override;
+
+    public:
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Determines whether indicated string contains case insensitive one of the predicates
+        ///
+        /// @param left      The string to be compared with the predicates
+        /// @param patterns  The strings to check containment
+        ///
+        /// @return The flag indicating whether one of the predicates is contained (true) or not (false)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static bool containsAnyIgnoreCase(const tgui::String& nocaseLeft, const std::vector<tgui::String>& patterns);
 
     private:
         Color            m_color;             //!< The foreground/text color

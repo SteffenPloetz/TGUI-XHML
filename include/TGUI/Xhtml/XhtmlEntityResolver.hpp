@@ -41,6 +41,61 @@
 #include <tuple>
 #include <vector>
 
+namespace ext
+{
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief Checks if the given wide character is a white-space character as classified by the currently installed C locale
+    ///
+    /// ATTENTION: Since Win32 stores unicode charater using a wchar_t of 16 bit width (while all other operating systems
+    /// use a wchar_t of 32 bit width), data loss can happen when using these functions (depending on their implementation
+    /// in Win32 C++ library)!
+    ///
+    /// @param character  The character to be checked
+    ///
+    /// @return Non-zero value if the wide character is a whitespace character, zero otherwise
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    int isSpace(char32_t character);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief Checks if the given wide character is an alphabetic character (either upper case or lower case)
+    ///
+    /// ATTENTION: Since Win32 stores unicode charater using a wchar_t of 16 bit width (while all other operating systems
+    /// use a wchar_t of 32 bit width), data loss can happen when using these functions (depending on their implementation
+    /// in Win32 C++ library)!
+    ///
+    /// @param character  The character to be checked
+    ///
+    /// @return Non-zero value if the wide character is an alphabetic character, zero otherwise
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    int isAlpha(char32_t character);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief Checks if the given wide character is an alphabetic (either upper case or lower case) or numeric character
+    ///
+    /// ATTENTION: Since Win32 stores unicode charater using a wchar_t of 16 bit width (while all other operating systems
+    /// use a wchar_t of 32 bit width), data loss can happen when using these functions (depending on their implementation
+    /// in Win32 C++ library)!
+    ///
+    /// @param character  The character to be checked
+    ///
+    /// @return Non-zero value if the wide character is an alphabetic or numeric character, zero otherwise
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    int isAlnum(char32_t character);
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief Checks if the given wide character is an upper case character
+    ///
+    /// ATTENTION: Since Win32 stores unicode charater using a wchar_t of 16 bit width (while all other operating systems
+    /// use a wchar_t of 32 bit width), data loss can happen when using these functions (depending on their implementation
+    /// in Win32 C++ library)!
+    ///
+    /// @param character  The character to be checked
+    ///
+    /// @return Non-zero value if the wide character is an upper case character, zero otherwise
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    int isUpper(char32_t character);
+}
+
 namespace tgui
 {
 
@@ -73,6 +128,17 @@ namespace tgui
         /// @return The number of processed character in encode on success, or 0 otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static unsigned int resolveEntity(std::vector<std::tuple<tgui::MessageType, String>>& messages, char32_t* encode, char32_t& substitute);
+
+    private:
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Interprets an unsigned long integer value in the indicated string
+        ///
+        /// @param value  The string to be interpreted
+        /// @param radix  The number base
+        ///
+        /// @return The value converted to unsigned long integer
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static unsigned long toULong(const char32_t* value, int radix = 10);
 
     private:
         static std::map<tgui::String, char32_t> m_charEntityRefs; /**< The map of encoded entity names to decoded entities */

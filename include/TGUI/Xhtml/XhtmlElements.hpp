@@ -1548,7 +1548,7 @@ namespace tgui
         /// @return The type name of the element as wide character string
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline tgui::String getTypeNameU32() const
-        {   return ext::String::toCharString(m_elementType.TypeName);   }
+        {   return m_elementType.TypeName;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Determines whether the element can contain child elements

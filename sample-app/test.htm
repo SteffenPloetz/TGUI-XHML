@@ -1,0 +1,97 @@
+<html>
+ <head testUtf8="A©←😂B®✅🥳">
+  <style>
+   pre.highlight{background-color:#f0f0f0; border-color:#a0a0a0; border-width:1px; padding:0px 4px;}
+   span.cp{color:#666666; font-style: italic; font-weight: bold;}
+   span.kt{color:#666666; font-weight: bold;}
+   span.nf{color:#aa4400; font-weight: bold;}
+   span.p{color:#666666;}
+   span.n{color:#666666;}
+   span.o{color:#666666; font-weight: bold;}
+   span.mi{color:#009999;}
+   span.s{color:#cc4444;}
+   span.cl{color:#aaaaaa;}
+  </style>
+ </head>
+ <body style="background-color:#D0D0D0; color:#363636;">
+  <h1>FormattedTextArea - XHTML markup <span style="color:green">tests</span> (h1)</h1>
+  <h2>Introduction to the <span style="color:brown">FormattedTextArea</span> widget (h2)</h2>
+  The <span style="color:brown">FormattedTextArea</span> widget displays markup formatted text.
+  Currently supported is a sub-set of XHTML, that includes the HTML block elements
+   <span style="color:#884400">&lt;header&gt;</span>header<span style="color:#884400">&lt;/header&gt;</span>,
+   <span style="color:#884400">&lt;body&gt;</span>body<span style="color:#884400">&lt;/body&gt;</span>,
+   <span style="color:#884400">&lt;p&gt;</span>paragraph<span style="color:#884400">&lt;/p&gt;</span>,
+   <span style="color:#884400">&lt;div&gt;</span>division<span style="color:#884400">&lt;/div&gt;</span>,
+   <span style="color:#884400">&lt;span&gt;</span>span<span style="color:#884400">&lt;/span&gt;</span>,
+   <span style="color:#884400">&lt;h1&gt;</span>headline 1<span style="color:#884400">&lt;/h1&gt;</span> ...
+   <span style="color:#884400">&lt;h6&gt;</span>headline 6<span style="color:#884400">&lt;/h6&gt;</span>,
+   <span style="color:#884400">&lt;em&gt;</span>emphasized<span style="color:#884400">&lt;/em&gt;</span>,
+   <span style="color:#884400">&lt;strong&gt;</span>strong<span style="color:#884400">&lt;/strong&gt;</span>,
+   <span style="color:#884400">&lt;i&gt;</span>italic<span style="color:#884400">&lt;/i&gt;</span>,
+   <span style="color:#884400">&lt;b&gt;</span>bold<span style="color:#884400">&lt;/b&gt;</span>,
+   <span style="color:#884400">&lt;u&gt;</span>underline<span style="color:#884400">&lt;/u&gt;</span>,
+   <span style="color:#884400">&lt;sup&gt;</span>superscript<span style="color:#884400">&lt;/sup&gt;</span> for <sup>superscript text</sup>,
+   <span style="color:#884400">&lt;sub&gt;</span>subscript<span style="color:#884400">&lt;/sub&gt;</span> for <sub>subscript text</sub>,
+  the XHTML empty elements <span style="color:#884400">&lt;br/&gt;</span> for line break and
+  <span style="color:#884400">&lt;image/&gt;</span> for images like
+  <img src="data:image/png;base64,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"/>
+  (100%) and XHTML <em>inner text</em> of any block. In addition to that, all block elements support the <em>style</em> attribute (currently the color style only)
+  and the images can be zoomed like this
+  <img src="data:image/png;base64,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" width="24" height="24"/>
+  (67%) or this
+  <img src="data:image/png;base64,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" width="48" height="48"/>
+  (133%).
+  <h2>Various text <span style="color:green">tests</span> (h2)</h2>
+  <h3>Floating text and block text <span style="color:green">tests</span> (h3)</h3>
+  <h4>Change the witdth of the window to <span style="color:green">test</span> automatic line break functionality. (h4)</h4>
+  This is the first <u>floating</u> text line (not embedded in a <span style="color:#884400">&lt;span&gt;</span>span<span style="color:#884400">&lt;/span&gt;</span>, <span style="color:#884400">&lt;div&gt;</span>division<span style="color:#884400">&lt;/div&gt;</span> or <span style="color:#884400">&lt;p&gt;</span>paragraph<span style="color:#884400">&lt;/p&gt;</span>). It is followed by a line break.<br>
+  This is the second <u>floating</u> text line (not embedded in a <span style="color:#884400">&lt;span&gt;</span>span<span style="color:#884400">&lt;/span&gt;</span>, <span style="color:#884400">&lt;div&gt;</span>division<span style="color:#884400">&lt;/div&gt;</span> or <span style="color:#884400">&lt;p&gt;</span>paragraph<span style="color:#884400">&lt;/p&gt;</span>).
+  <div style="color:#0000ff">This is the first <u>block</u> text (embedded in a <span style="color:#884400">&lt;div&gt;</span>division<span style="color:#884400">&lt;/div&gt;</span>).
+  It shall demonstrate no vertical spacing around this block and automatic line breaks.</div>
+  <p style="color:#880088">This is the second <u>block</u> text (embedded in a <span style="color:#884400">&lt;p&gt;</span>paragraph<span style="color:#884400">&lt;/p&gt;</span>).
+  It shall demonstrate vertical spacing around this block and a floating text and besides automatic line breaks.</p>
+  This is the <span style="color:#00ff00">final <u>floating</u> text line</span> with a <span style="color:#884400">&lt;span&gt;</span>span<span style="color:#884400">&lt;/span&gt;</span> (inline-style = color:green).
+  <p>While the images so far have been set from a base64 memory stream, this image is loaded from a PNG file (which might not work in browsers): <img src="file://./url-icon.png" width="32" height="32"/></p>
+
+  <h3>List <span style="color:green">tests</span> (h3)</h3>
+  <h4>Nested list <span style="color:green">tests</span> (h4)</h4>
+  Example of unordered lists:
+  <ul style="background-color:#ffff00;">
+   <li>First unordered list item</li>
+   <li>Second unordered list item
+       <ul style="background-color:#ff00ff; opacity:0.6;">
+        <li>Coffee</li>
+        <li>Tea</li>
+       </ul>
+   </li>
+   <li>Third unordered list item</li>
+  </ul>
+  Example of ordered lists:
+  <ol style="background-color:#ff00ff;">
+   <li>First ordered list item</li>
+   <li>Second ordered list item</li>
+   <ol style="background-color:#ffff00; opacity:0.6;">
+    <li>Coffee</li>
+    <li>Tea</li>
+   </ol>
+   <li>Third ordered list item</li>
+  </ol>
+
+  <h3>Code and style-sheet <span style="color:green">tests</span> (h3)</h3>
+  <h4>Code with style sheet <span style="color:green">test</span> (h4)</h4>
+  <div class="language-c++ highlighter-rouge">
+   <pre class="highlight" style="border-style:solid;">
+<code><span class="cp">#include &lt;TGUI/TGUI.hpp&gt;
+#include &lt;TGUI/Backend/SFML-Graphics.hpp&gt;
+</span>
+<span class="kt">int</span> <span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">sf</span><span class="o">::</span><span class="n">RenderWindow</span> <span class="n">window</span><span class="p">{{</span><span class="mi">800</span><span class="p">,</span> <span class="mi">600</span><span class="p">},</span> <span class="s">"TGUI example - SFML_GRAPHICS backend"</span><span class="p">};</span>
+    <span class="n">tgui</span><span class="o">::</span><span class="n">Gui</span> <span class="n">gui</span><span class="p">{</span><span class="n">window</span><span class="p">};</span>
+    <span class="n">gui</span><span class="p">.</span><span class="n">mainLoop</span><span class="p">();</span> <span class="cl">// See below for how to use your own main loop</span>
+<span class="p">}</span>
+</code></pre>
+  </div>
+
+ </body>
+</html>
