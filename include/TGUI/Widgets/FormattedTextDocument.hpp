@@ -115,29 +115,22 @@ namespace tgui
         class TGUI_API FontPack
         {
         public:
-            std::shared_ptr<Font> Regular;    //!< The regular font of this font pack
-            std::shared_ptr<Font> Bold;       //!< The bold font of this font pack. A dedicated bold font provides better display quality than an widened regular font
-            std::shared_ptr<Font> Italic;     //!< The italic font of this font pack. A dedicated italic font provides better display quality than an slanted regular font
-            std::shared_ptr<Font> BoldItalic; //!< The bold italic font of this font pack. A dedicated bold italic font provides better display quality than an widened and slanted regular font
+            Font Regular;    //!< The regular font of this font pack
+            Font Bold;       //!< The bold font of this font pack. A dedicated bold font provides better display quality than an widened regular font
+            Font Italic;     //!< The italic font of this font pack. A dedicated italic font provides better display quality than an slanted regular font
+            Font BoldItalic; //!< The bold italic font of this font pack. A dedicated bold italic font provides better display quality than an widened and slanted regular font
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             /// @brief The default constructor
+            ///
+            /// Initializes with the global font. Application should override initialization
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             FontPack()
-                : Regular(), Bold(), Italic(), BoldItalic()
-            { ; }
-
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            /// @brief Asserts the validity of this font pack
-            ///
-            /// @return Either true on a valid font pack, or false otherwise
-            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            bool inline assertValid() const
             {
-                return Regular != nullptr &&
-                       Bold != nullptr &&
-                       Italic != nullptr &&
-                       BoldItalic != nullptr;
+                Regular    = tgui::Font::getGlobalFont();
+                Bold       = tgui::Font::getGlobalFont();
+                Italic     = tgui::Font::getGlobalFont();
+                BoldItalic = tgui::Font::getGlobalFont();
             }
         };
 
@@ -165,9 +158,9 @@ namespace tgui
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             bool inline assertValid() const
             {
-                return Sans != nullptr && Sans->assertValid() &&
-                       Serif != nullptr && Serif->assertValid() &&
-                       Mono != nullptr && Mono->assertValid();
+                return Sans != nullptr &&
+                       Serif != nullptr &&
+                       Mono != nullptr;
             }
         };
 
@@ -323,14 +316,14 @@ namespace tgui
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             inline void setFontToSansFamily(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
-                if      (TextFont == *fontCollection.Sans->Regular    || TextFont == *fontCollection.Serif->Regular    || TextFont == *fontCollection.Mono->Regular)
-                    TextFont = *fontCollection.Sans->Regular;
-                else if (TextFont == *fontCollection.Sans->Italic     || TextFont == *fontCollection.Serif->Italic     || TextFont == *fontCollection.Mono->Italic)
-                    TextFont = *fontCollection.Sans->Italic;
-                else if (TextFont == *fontCollection.Sans->BoldItalic || TextFont == *fontCollection.Serif->BoldItalic || TextFont == *fontCollection.Mono->BoldItalic)
-                    TextFont = *fontCollection.Sans->BoldItalic;
+                if      (TextFont == fontCollection.Sans->Regular    || TextFont == fontCollection.Serif->Regular    || TextFont == fontCollection.Mono->Regular)
+                   TextFont = fontCollection.Sans->Regular;
+                else if (TextFont == fontCollection.Sans->Italic     || TextFont == fontCollection.Serif->Italic     || TextFont == fontCollection.Mono->Italic)
+                    TextFont = fontCollection.Sans->Italic;
+                else if (TextFont == fontCollection.Sans->BoldItalic || TextFont == fontCollection.Serif->BoldItalic || TextFont == fontCollection.Mono->BoldItalic)
+                    TextFont = fontCollection.Sans->BoldItalic;
                 else if (forceOnNoMatch)
-                    TextFont = *fontCollection.Sans->Regular;
+                    TextFont = fontCollection.Sans->Regular;
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,14 +334,14 @@ namespace tgui
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             inline void setFontToSerifFamily(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
-                if      (TextFont == *fontCollection.Sans->Regular    || TextFont == *fontCollection.Serif->Regular    || TextFont == *fontCollection.Mono->Regular)
-                    TextFont = *fontCollection.Serif->Regular;
-                else if (TextFont == *fontCollection.Sans->Italic     || TextFont == *fontCollection.Serif->Italic     || TextFont == *fontCollection.Mono->Italic)
-                    TextFont = *fontCollection.Serif->Italic;
-                else if (TextFont == *fontCollection.Sans->BoldItalic || TextFont == *fontCollection.Serif->BoldItalic || TextFont == *fontCollection.Mono->BoldItalic)
-                    TextFont = *fontCollection.Serif->BoldItalic;
+                if      (TextFont == fontCollection.Sans->Regular    || TextFont == fontCollection.Serif->Regular    || TextFont == fontCollection.Mono->Regular)
+                    TextFont = fontCollection.Serif->Regular;
+                else if (TextFont == fontCollection.Sans->Italic     || TextFont == fontCollection.Serif->Italic     || TextFont == fontCollection.Mono->Italic)
+                    TextFont = fontCollection.Serif->Italic;
+                else if (TextFont == fontCollection.Sans->BoldItalic || TextFont == fontCollection.Serif->BoldItalic || TextFont == fontCollection.Mono->BoldItalic)
+                    TextFont = fontCollection.Serif->BoldItalic;
                 else if (forceOnNoMatch)
-                    TextFont = *fontCollection.Serif->Regular;
+                    TextFont = fontCollection.Serif->Regular;
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -359,14 +352,14 @@ namespace tgui
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             inline void setFontToMonoFamily(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
-                if      (TextFont == *fontCollection.Sans->Regular    || TextFont == *fontCollection.Serif->Regular    || TextFont == *fontCollection.Mono->Regular)
-                    TextFont = *fontCollection.Mono->Regular;
-                else if (TextFont == *fontCollection.Sans->Italic     || TextFont == *fontCollection.Serif->Italic     || TextFont == *fontCollection.Mono->Italic)
-                    TextFont = *fontCollection.Mono->Italic;
-                else if (TextFont == *fontCollection.Sans->BoldItalic || TextFont == *fontCollection.Serif->BoldItalic || TextFont == *fontCollection.Mono->BoldItalic)
-                    TextFont = *fontCollection.Mono->BoldItalic;
+                if      (TextFont == fontCollection.Sans->Regular    || TextFont == fontCollection.Serif->Regular    || TextFont == fontCollection.Mono->Regular)
+                    TextFont = fontCollection.Mono->Regular;
+                else if (TextFont == fontCollection.Sans->Italic     || TextFont == fontCollection.Serif->Italic     || TextFont == fontCollection.Mono->Italic)
+                    TextFont = fontCollection.Mono->Italic;
+                else if (TextFont == fontCollection.Sans->BoldItalic || TextFont == fontCollection.Serif->BoldItalic || TextFont == fontCollection.Mono->BoldItalic)
+                    TextFont = fontCollection.Mono->BoldItalic;
                 else if (forceOnNoMatch)
-                    TextFont = *fontCollection.Mono->Regular;
+                    TextFont = fontCollection.Mono->Regular;
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -393,20 +386,20 @@ namespace tgui
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             inline void setFontToRegularWeight(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
-                if      (TextFont == *fontCollection.Sans->Regular  || TextFont == *fontCollection.Sans->Bold)
-                    TextFont = *fontCollection.Sans->Regular;
-                else if (TextFont == *fontCollection.Sans->Italic   || TextFont == *fontCollection.Sans->BoldItalic)
-                    TextFont = *fontCollection.Sans->Italic;
-                else if (TextFont == *fontCollection.Serif->Regular || TextFont == *fontCollection.Serif->Bold)
-                    TextFont = *fontCollection.Serif->Regular;
-                else if (TextFont == *fontCollection.Serif->Italic  || TextFont == *fontCollection.Serif->BoldItalic)
-                    TextFont = *fontCollection.Serif->Italic;
-                else if (TextFont == *fontCollection.Mono->Regular  || TextFont == *fontCollection.Mono->Bold)
-                    TextFont = *fontCollection.Mono->Regular;
-                else if (TextFont == *fontCollection.Mono->Italic   || TextFont == *fontCollection.Mono->BoldItalic)
-                    TextFont = *fontCollection.Mono->Italic;
+                if      (TextFont == fontCollection.Sans->Regular  || TextFont == fontCollection.Sans->Bold)
+                    TextFont = fontCollection.Sans->Regular;
+                else if (TextFont == fontCollection.Sans->Italic   || TextFont == fontCollection.Sans->BoldItalic)
+                    TextFont = fontCollection.Sans->Italic;
+                else if (TextFont == fontCollection.Serif->Regular || TextFont == fontCollection.Serif->Bold)
+                    TextFont = fontCollection.Serif->Regular;
+                else if (TextFont == fontCollection.Serif->Italic  || TextFont == fontCollection.Serif->BoldItalic)
+                    TextFont = fontCollection.Serif->Italic;
+                else if (TextFont == fontCollection.Mono->Regular  || TextFont == fontCollection.Mono->Bold)
+                    TextFont = fontCollection.Mono->Regular;
+                else if (TextFont == fontCollection.Mono->Italic   || TextFont == fontCollection.Mono->BoldItalic)
+                    TextFont = fontCollection.Mono->Italic;
                 else if (forceOnNoMatch)
-                    TextFont = *fontCollection.Sans->Regular;
+                    TextFont = fontCollection.Sans->Regular;
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -417,20 +410,20 @@ namespace tgui
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             inline void setFontToBold(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
-                if      (TextFont == *fontCollection.Sans->Regular  || TextFont == *fontCollection.Sans->Bold)
-                    TextFont = *fontCollection.Sans->Bold;
-                else if (TextFont == *fontCollection.Sans->Italic   || TextFont == *fontCollection.Sans->BoldItalic)
-                    TextFont = *fontCollection.Sans->BoldItalic;
-                else if (TextFont == *fontCollection.Serif->Regular || TextFont == *fontCollection.Serif->Bold)
-                    TextFont = *fontCollection.Serif->Bold;
-                else if (TextFont == *fontCollection.Serif->Italic  || TextFont == *fontCollection.Serif->BoldItalic)
-                    TextFont = *fontCollection.Serif->BoldItalic;
-                else if (TextFont == *fontCollection.Mono->Regular  || TextFont == *fontCollection.Mono->Bold)
-                    TextFont = *fontCollection.Mono->Bold;
-                else if (TextFont == *fontCollection.Mono->Italic   || TextFont == *fontCollection.Mono->BoldItalic)
-                    TextFont = *fontCollection.Mono->BoldItalic;
+                if      (TextFont == fontCollection.Sans->Regular  || TextFont == fontCollection.Sans->Bold)
+                    TextFont = fontCollection.Sans->Bold;
+                else if (TextFont == fontCollection.Sans->Italic   || TextFont == fontCollection.Sans->BoldItalic)
+                    TextFont = fontCollection.Sans->BoldItalic;
+                else if (TextFont == fontCollection.Serif->Regular || TextFont == fontCollection.Serif->Bold)
+                    TextFont = fontCollection.Serif->Bold;
+                else if (TextFont == fontCollection.Serif->Italic  || TextFont == fontCollection.Serif->BoldItalic)
+                    TextFont = fontCollection.Serif->BoldItalic;
+                else if (TextFont == fontCollection.Mono->Regular  || TextFont == fontCollection.Mono->Bold)
+                    TextFont = fontCollection.Mono->Bold;
+                else if (TextFont == fontCollection.Mono->Italic   || TextFont == fontCollection.Mono->BoldItalic)
+                    TextFont = fontCollection.Mono->BoldItalic;
                 else if (forceOnNoMatch)
-                    TextFont = *fontCollection.Sans->Bold;
+                    TextFont = fontCollection.Sans->Bold;
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -450,20 +443,20 @@ namespace tgui
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             inline void setFontToRegularSlant(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
-                if      (TextFont == *fontCollection.Sans->Regular  || TextFont == *fontCollection.Sans->Italic)
-                    TextFont = *fontCollection.Sans->Regular;
-                else if (TextFont == *fontCollection.Sans->Bold     || TextFont == *fontCollection.Sans->BoldItalic)
-                    TextFont = *fontCollection.Sans->Bold;
-                else if (TextFont == *fontCollection.Serif->Regular || TextFont == *fontCollection.Serif->Italic)
-                    TextFont = *fontCollection.Serif->Regular;
-                else if (TextFont == *fontCollection.Serif->Bold    || TextFont == *fontCollection.Serif->BoldItalic)
-                    TextFont = *fontCollection.Serif->Bold;
-                else if (TextFont == *fontCollection.Mono->Regular  || TextFont == *fontCollection.Mono->Italic)
-                    TextFont = *fontCollection.Mono->Regular;
-                else if (TextFont == *fontCollection.Mono->Bold     || TextFont == *fontCollection.Mono->BoldItalic)
-                    TextFont = *fontCollection.Mono->Bold;
+                if      (TextFont == fontCollection.Sans->Regular  || TextFont == fontCollection.Sans->Italic)
+                    TextFont = fontCollection.Sans->Regular;
+                else if (TextFont == fontCollection.Sans->Bold     || TextFont == fontCollection.Sans->BoldItalic)
+                    TextFont = fontCollection.Sans->Bold;
+                else if (TextFont == fontCollection.Serif->Regular || TextFont == fontCollection.Serif->Italic)
+                    TextFont = fontCollection.Serif->Regular;
+                else if (TextFont == fontCollection.Serif->Bold    || TextFont == fontCollection.Serif->BoldItalic)
+                    TextFont = fontCollection.Serif->Bold;
+                else if (TextFont == fontCollection.Mono->Regular  || TextFont == fontCollection.Mono->Italic)
+                    TextFont = fontCollection.Mono->Regular;
+                else if (TextFont == fontCollection.Mono->Bold     || TextFont == fontCollection.Mono->BoldItalic)
+                    TextFont = fontCollection.Mono->Bold;
                 else if (forceOnNoMatch)
-                    TextFont = *fontCollection.Sans->Regular;
+                    TextFont = fontCollection.Sans->Regular;
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -474,20 +467,20 @@ namespace tgui
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             inline void setFontToItalic(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
-                if      (TextFont == *fontCollection.Sans->Regular  || TextFont == *fontCollection.Sans->Italic)
-                    TextFont = *fontCollection.Sans->Italic;
-                else if (TextFont == *fontCollection.Sans->Bold     || TextFont == *fontCollection.Sans->BoldItalic)
-                    TextFont = *fontCollection.Sans->BoldItalic;
-                else if (TextFont == *fontCollection.Serif->Regular || TextFont == *fontCollection.Serif->Italic)
-                    TextFont = *fontCollection.Serif->Italic;
-                else if (TextFont == *fontCollection.Serif->Bold    || TextFont == *fontCollection.Serif->BoldItalic)
-                    TextFont = *fontCollection.Serif->BoldItalic;
-                else if (TextFont == *fontCollection.Mono->Regular  || TextFont == *fontCollection.Mono->Italic)
-                    TextFont = *fontCollection.Mono->Italic;
-                else if (TextFont == *fontCollection.Mono->Bold     || TextFont == *fontCollection.Mono->BoldItalic)
-                    TextFont = *fontCollection.Mono->BoldItalic;
+                if      (TextFont == fontCollection.Sans->Regular  || TextFont == fontCollection.Sans->Italic)
+                    TextFont = fontCollection.Sans->Italic;
+                else if (TextFont == fontCollection.Sans->Bold     || TextFont == fontCollection.Sans->BoldItalic)
+                    TextFont = fontCollection.Sans->BoldItalic;
+                else if (TextFont == fontCollection.Serif->Regular || TextFont == fontCollection.Serif->Italic)
+                    TextFont = fontCollection.Serif->Italic;
+                else if (TextFont == fontCollection.Serif->Bold    || TextFont == fontCollection.Serif->BoldItalic)
+                    TextFont = fontCollection.Serif->BoldItalic;
+                else if (TextFont == fontCollection.Mono->Regular  || TextFont == fontCollection.Mono->Italic)
+                    TextFont = fontCollection.Mono->Italic;
+                else if (TextFont == fontCollection.Mono->Bold     || TextFont == fontCollection.Mono->BoldItalic)
+                    TextFont = fontCollection.Mono->BoldItalic;
                 else if (forceOnNoMatch)
-                    TextFont = *fontCollection.Sans->Italic;
+                    TextFont = fontCollection.Sans->Italic;
             }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

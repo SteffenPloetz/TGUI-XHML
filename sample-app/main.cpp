@@ -134,20 +134,20 @@ public:
         if (std::experimental::filesystem::exists(suseSansPath))
 #endif
         {
-            fontCollection->Sans->Regular = std::make_shared<tgui::Font>(fontRoot + L"truetype/Roboto-Regular.ttf");
-            fontCollection->Sans->Bold = std::make_shared<tgui::Font>(fontRoot + L"truetype/Roboto-Bold.ttf");
-            fontCollection->Sans->Italic = std::make_shared<tgui::Font>(fontRoot + L"truetype/Roboto-Italic.ttf");
-            fontCollection->Sans->BoldItalic = std::make_shared<tgui::Font>(fontRoot + L"truetype/Roboto-BoldItalic.ttf");
+            fontCollection->Sans->Regular = tgui::Font(fontRoot + L"truetype/Roboto-Regular.ttf");
+            fontCollection->Sans->Bold = tgui::Font(fontRoot + L"truetype/Roboto-Bold.ttf");
+            fontCollection->Sans->Italic = tgui::Font(fontRoot + L"truetype/Roboto-Italic.ttf");
+            fontCollection->Sans->BoldItalic = tgui::Font(fontRoot + L"truetype/Roboto-BoldItalic.ttf");
 
-            fontCollection->Serif->Regular = std::make_shared<tgui::Font>(fontRoot + L"truetype/DejaVuSerif.ttf");
-            fontCollection->Serif->Bold = std::make_shared<tgui::Font>(fontRoot + L"truetype/DejaVuSerif-Bold.ttf");
-            fontCollection->Serif->Italic = std::make_shared<tgui::Font>(fontRoot + L"truetype/DejaVuSerif-Italic.ttf");
-            fontCollection->Serif->BoldItalic = std::make_shared<tgui::Font>(fontRoot + L"truetype/DejaVuSerif-BoldItalic.ttf");
+            fontCollection->Serif->Regular = tgui::Font(fontRoot + L"truetype/DejaVuSerif.ttf");
+            fontCollection->Serif->Bold = tgui::Font(fontRoot + L"truetype/DejaVuSerif-Bold.ttf");
+            fontCollection->Serif->Italic = tgui::Font(fontRoot + L"truetype/DejaVuSerif-Italic.ttf");
+            fontCollection->Serif->BoldItalic = tgui::Font(fontRoot + L"truetype/DejaVuSerif-BoldItalic.ttf");
 
-            fontCollection->Mono->Regular = std::make_shared<tgui::Font>(fontRoot + L"truetype/DejaVuSansMono.ttf");
-            fontCollection->Mono->Bold = std::make_shared<tgui::Font>(fontRoot + L"truetype/DejaVuSansMono-Bold.ttf");
-            fontCollection->Mono->Italic = std::make_shared<tgui::Font>(fontRoot + L"truetype/DejaVuSansMono-Oblique.ttf");
-            fontCollection->Mono->BoldItalic = std::make_shared<tgui::Font>(fontRoot + L"truetype/DejaVuSansMono-BoldOblique.ttf");
+            fontCollection->Mono->Regular = tgui::Font(fontRoot + L"truetype/DejaVuSansMono.ttf");
+            fontCollection->Mono->Bold = tgui::Font(fontRoot + L"truetype/DejaVuSansMono-Bold.ttf");
+            fontCollection->Mono->Italic = tgui::Font(fontRoot + L"truetype/DejaVuSansMono-Oblique.ttf");
+            fontCollection->Mono->BoldItalic = tgui::Font(fontRoot + L"truetype/DejaVuSansMono-BoldOblique.ttf");
         }
         // Manjaro
 #if TGUI_COMPILED_WITH_CPP_VER >= 17
@@ -156,42 +156,24 @@ public:
         if (std::experimental::filesystem::exists(manjaroSansPath))
 #endif
         {
-            fontCollection->Sans->Regular = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSans.ttf");
-            fontCollection->Sans->Bold = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSans-Bold.ttf");
-            fontCollection->Sans->Italic = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSans-Oblique.ttf");
-            fontCollection->Sans->BoldItalic = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSans-BoldOblique.ttf");
+            fontCollection->Sans->Regular = tgui::Font(fontRoot + L"TTF/DejaVuSans.ttf");
+            fontCollection->Sans->Bold = tgui::Font(fontRoot + L"TTF/DejaVuSans-Bold.ttf");
+            fontCollection->Sans->Italic = tgui::Font(fontRoot + L"TTF/DejaVuSans-Oblique.ttf");
+            fontCollection->Sans->BoldItalic = tgui::Font(fontRoot + L"TTF/DejaVuSans-BoldOblique.ttf");
 
-            fontCollection->Serif->Regular = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSerif.ttf");
-            fontCollection->Serif->Bold = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSerif-Bold.ttf");
-            fontCollection->Serif->Italic = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSerif-Italic.ttf");
-            fontCollection->Serif->BoldItalic = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSerif-BoldItalic.ttf");
+            fontCollection->Serif->Regular = tgui::Font(fontRoot + L"TTF/DejaVuSerif.ttf");
+            fontCollection->Serif->Bold = tgui::Font(fontRoot + L"TTF/DejaVuSerif-Bold.ttf");
+            fontCollection->Serif->Italic = tgui::Font(fontRoot + L"TTF/DejaVuSerif-Italic.ttf");
+            fontCollection->Serif->BoldItalic = tgui::Font(fontRoot + L"TTF/DejaVuSerif-BoldItalic.ttf");
 
-            fontCollection->Mono->Regular = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSansMono.ttf");
-            fontCollection->Mono->Bold = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSansMono-Bold.ttf");
-            fontCollection->Mono->Italic = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSansMono-Oblique.ttf");
-            fontCollection->Mono->BoldItalic = std::make_shared<tgui::Font>(fontRoot + L"TTF/DejaVuSansMono-BoldOblique.ttf");
+            fontCollection->Mono->Regular = tgui::Font(fontRoot + L"TTF/DejaVuSansMono.ttf");
+            fontCollection->Mono->Bold = tgui::Font(fontRoot + L"TTF/DejaVuSansMono-Bold.ttf");
+            fontCollection->Mono->Italic = tgui::Font(fontRoot + L"TTF/DejaVuSansMono-Oblique.ttf");
+            fontCollection->Mono->BoldItalic = tgui::Font(fontRoot + L"TTF/DejaVuSansMono-BoldOblique.ttf");
         }
         else
         {
             std::cerr << "ERROR: The fonts can not be loaded.\n";
-
-            std::shared_ptr<tgui::Font> fallbackFont = std::make_shared<tgui::Font>(std::move(this->getGui().getFont()));
-            fontCollection->Sans->Regular = fallbackFont;
-            fontCollection->Sans->Bold = fallbackFont;
-            fontCollection->Sans->Italic = fallbackFont;
-            fontCollection->Sans->BoldItalic = fallbackFont;
-
-
-            fontCollection->Serif->Regular = fallbackFont;
-            fontCollection->Serif->Bold = fallbackFont;
-            fontCollection->Serif->Italic = fallbackFont;
-            fontCollection->Serif->BoldItalic = fallbackFont;
-
-
-            fontCollection->Mono->Regular = fallbackFont;
-            fontCollection->Mono->Bold = fallbackFont;
-            fontCollection->Mono->Italic = fallbackFont;
-            fontCollection->Mono->BoldItalic = fallbackFont;
         }
 #elif defined(TGUI_SYSTEM_IOS)
         throw "IOS fonts currently not supported.";
@@ -204,10 +186,10 @@ public:
 #endif
 
         fontCollection->assertValid();
-        fontCollection->Sans->Regular->setSmooth(false);
-        fontCollection->Sans->Bold->setSmooth(false);
-        fontCollection->Sans->Italic->setSmooth(false);
-        fontCollection->Sans->BoldItalic->setSmooth(false);
+        fontCollection->Sans->Regular.setSmooth(false);
+        fontCollection->Sans->Bold.setSmooth(false);
+        fontCollection->Sans->Italic.setSmooth(false);
+        fontCollection->Sans->BoldItalic.setSmooth(false);
 
         return fontCollection;
     }

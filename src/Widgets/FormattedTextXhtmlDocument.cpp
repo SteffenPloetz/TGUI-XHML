@@ -124,13 +124,13 @@ namespace tgui
         m_defaultTextSize = defaultTextSize;
         m_defaultOpacity = defaultOpacity;
         m_defaultForeColor = defaultForeColor;
-        m_defaultFont = *fontCollection.Sans->Regular;
+        m_defaultFont = fontCollection.Sans->Regular;
 
         m_evolvingLayoutArea = FloatRect(0, 0, clientSize.x, clientSize.y);
         m_formattingState.TextHeight = defaultTextSize;
         m_formattingState.Opacity = defaultOpacity;
         m_formattingState.ForeColor = defaultForeColor;
-        m_formattingState.TextFont = *fontCollection.Sans->Regular;
+        m_formattingState.TextFont = fontCollection.Sans->Regular;
 
         for (size_t index = 0; index < m_rootElement->countChildren(); index++)
             layout(predecessorWasStructuringBlockElement, parentIsBlockElement, lastchildWasRunLengtElement,
@@ -175,7 +175,7 @@ namespace tgui
             // -------------------------------
             if (typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3)
             {
-                m_formattingState.TextFont = *fontCollection.Sans->Bold;
+                m_formattingState.TextFont = fontCollection.Sans->Bold;
                 m_formattingState.TextHeight = (typeName == XhtmlElementType::H1 ? 28 * m_defaultTextSize / 14 :
                                                (typeName == XhtmlElementType::H2 ? 20 * m_defaultTextSize / 14 :
                                                                                    16 * m_defaultTextSize / 14));
@@ -183,7 +183,7 @@ namespace tgui
             }
             else if (typeName == XhtmlElementType::H4 || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6)
             {
-                m_formattingState.TextFont = *fontCollection.Sans->Bold;
+                m_formattingState.TextFont = fontCollection.Sans->Bold;
                 m_formattingState.TextHeight = (typeName == XhtmlElementType::H4 ? 14 * m_defaultTextSize / 14 :
                                                (typeName == XhtmlElementType::H5 ? 12 * m_defaultTextSize / 14 :
                                                                                    10 * m_defaultTextSize / 14));
@@ -309,7 +309,7 @@ namespace tgui
                 }
 
                 String bullet = listMetrics->calculateBullet(m_formattingState.ListMetrics.size());
-                tgui::Font font = (listMetrics->Ordered ? m_formattingState.TextFont : *fontCollection.Mono->Regular);
+                tgui::Font font = (listMetrics->Ordered ? m_formattingState.TextFont : fontCollection.Mono->Regular);
                 auto runLengt = Text::getLineWidth(bullet, font, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
 
                 auto formattedTextSection = createFormattedTextSectionWithFontAndPosition(xhtmlElement, font, -(m_backPadding + runLengt), m_formattingState.Subscript - m_formattingState.Superscript);
@@ -338,7 +338,7 @@ namespace tgui
                     m_preformattedText++;
                 else if (typeName == XhtmlElementType::Code)
                 {
-                    m_formattingState.TextFont  = *fontCollection.Mono->Regular;
+                    m_formattingState.TextFont    = fontCollection.Mono->Regular;
                     m_formattingState.TextHeight -= m_formattingState.TextHeight / 4;
                 }
 
