@@ -368,7 +368,7 @@
 	<tuple>
 	<vector>
 
-1676394182 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/XhtmlAttributes.hpp
+1676439477 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/XhtmlAttributes.hpp
 	<cwctype>
 	<string>
 	<vector>
@@ -399,7 +399,7 @@
 
 1675923308 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedTextView.hpp
 
-1676395669 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Widgets/FormattedTextXhtmlDocument.cpp
+1676440752 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Widgets/FormattedTextXhtmlDocument.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<list>
@@ -412,7 +412,7 @@
 	"TGUI/Widgets/FormattedElements.hpp"
 	"TGUI/Widgets/FormattedTextXhtmlDocument.hpp"
 
-1676407346 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/XhtmlAttributes.cpp
+1676439155 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/XhtmlAttributes.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<TGUI/Vector2.hpp>
@@ -461,7 +461,7 @@
 
 1676399162 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedTextDocument.hpp
 
-1676407346 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/sample-app/main.cpp
+1676438973 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/sample-app/main.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<TGUI/Base64.hpp>

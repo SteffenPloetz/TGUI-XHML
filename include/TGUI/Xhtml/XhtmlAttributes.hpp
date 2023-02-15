@@ -265,7 +265,7 @@ namespace tgui
             else if (sizePart.find(U"pt") != SIZE_MAX)   return SizeType::Point;
             else if (sizePart.find(U"em") != SIZE_MAX)   return SizeType::EquivalentOfM;
             else if (sizePart.find(U"%") != SIZE_MAX)    return SizeType::Relative;
-            else                                                          return SizeType::Pixel;
+            else                                         return SizeType::Pixel;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

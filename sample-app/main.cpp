@@ -466,7 +466,7 @@ public:
             tgui::XhtmlElement::createH4(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Code with style sheet "),
                                                    tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#008800"), tgui::XhtmlElement::createInnerText(nullptr, U"test")),
                                                    tgui::XhtmlElement::createInnerText(nullptr, U" (h4)")}),
-            tgui::XhtmlElement::createDivision(nullptr, tgui::XhtmlElement::createPreformatted(nullptr, silverBG, { tgui::XhtmlElement::createBreak(), code01, tgui::XhtmlElement::createInnerText(nullptr, U"   ") })) });
+            tgui::XhtmlElement::createDivision(nullptr, tgui::XhtmlElement::createPreformatted(nullptr, silverBG, { tgui::XhtmlElement::createBreak(), code01})) });
         tgui::XhtmlElement::addChildrenAndSetPatent(code01, {
             tgui::XhtmlElement::createSpan(nullptr, thmlStyle->getEntry(U"cp"), tgui::XhtmlElement::createInnerText(nullptr, U"#include <TGUI/TGUI.hpp>")),
             tgui::XhtmlElement::createBreak(),

@@ -342,7 +342,7 @@ namespace tgui
                     m_formattingState.TextHeight -= m_formattingState.TextHeight / 4;
                 }
 
-                // reduce one line break, if it is direct predecessor of 'front of'<code>'
+                // reduce one line break, if line break is direct predecessor of '<code>'
                 // (typically '<code>' is inside '<pre>' and '<pre>' forces linebrak fom source code to visual tree)
                 if (typeName == XhtmlElementType::Code)
                 {
@@ -409,8 +409,7 @@ namespace tgui
                             formattedRectSection->setBoderWidth(styleEntry->getBorderWidth());
                         if ((styleEntryFlags & StyleEntryFlags::BorderColor) == StyleEntryFlags::BorderColor)
                             formattedRectSection->setBorderColor(styleEntry->getBorderColor());
-                        auto formattedElement = std::static_pointer_cast<FormattedElement>(formattedRectSection);
-                        m_content.push_back(formattedElement);
+                        m_content.push_back(formattedRectSection);
                     }
                 }
             }
@@ -610,10 +609,10 @@ namespace tgui
                 size_t formerCharCnt = remainingText.size() + 1;
 
                 // distribute, if text exceeds available width
-                while ((m_preformattedText > 0 && remainingText.contains('\r')) || // preformatted text has a line bereak
-                       (formerCharCnt > remainingText.size() &&                    // there must be a chance to distribute the text to multiple lines
+                while ((m_preformattedText > 0 && remainingText.contains('\r')) ||         // preformatted text has a line bereak
+                       (formerCharCnt > remainingText.size() &&                            // there must be a chance to distribute the text to multiple lines
                         m_evolvingLayoutArea.width - m_evolvingLineRunLength < runLengt && // there must be a need to distribute the text to multiple lines
-                        remainingText.size() > 0))                                 // there must be remaining text to distribute to multiple lines
+                        remainingText.size() > 0))                                         // there must be remaining text to distribute to multiple lines
                 {
                     formerCharCnt = remainingText.size();
 

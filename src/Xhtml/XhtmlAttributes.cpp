@@ -589,7 +589,7 @@ namespace tgui
     {
         auto left = nocaseLeft.toLower();
         for (auto pattern : patterns)
-            if (left.contains(pattern) == 0)
+            if (left.contains(pattern))
                 return true;
 
         return false;
