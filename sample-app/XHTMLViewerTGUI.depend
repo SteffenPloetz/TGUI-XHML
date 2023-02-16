@@ -379,7 +379,7 @@
 	<vector>
 	<TGUI/String.hpp>
 
-1675922724 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedElements.hpp
+1676527771 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedElements.hpp
 
 1675797424 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Widgets/FormattedTextView.cpp
 	<TGUI/Config.hpp>
@@ -399,11 +399,12 @@
 
 1675923308 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedTextView.hpp
 
-1676519104 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Widgets/FormattedTextXhtmlDocument.cpp
+1676531293 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Widgets/FormattedTextXhtmlDocument.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<list>
 	<map>
+	<typeinfo>
 	"TGUI/StringHelper.hpp"
 	"TGUI/Xhtml/XhtmlEntityResolver.hpp"
 	"TGUI/Xhtml/XhtmlAttributes.hpp"

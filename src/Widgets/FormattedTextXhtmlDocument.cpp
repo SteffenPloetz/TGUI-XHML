@@ -3,6 +3,7 @@
 
 #include <list>
 #include <map>
+#include <typeinfo>
 
 // MSC needs a clear distiction between "__declspec(dllimport)" (above) and "__declspec(dllexport)" (below) this comment.
 // So in the case of direct source file integration (in contrast to library creation and linking), the API must be 'dllexport'.
@@ -96,10 +97,14 @@ namespace tgui
         auto formattedTextSection = std::make_shared<FormattedTextSection>(m_formattingState.ForeColor, m_formattingState.Style);
         formattedTextSection->setContentOrigin(xhtmlElement);
         formattedTextSection->setFont(font);
-        formattedTextSection->setRenderLeftTop(Vector2f(m_evolvingLayoutArea.left, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top), indentOffset, std::max(0.0f, superscriptOrSubsciptTextHeightReduction));
-        float unscriptedTextHeight = m_formattingState.TextHeight + std::abs(superscriptOrSubsciptTextHeightReduction); // for superscript / subscript - the text height is already adjusted
-        formattedTextSection->setRenderRightBottom(Vector2f(formattedTextSection->getRenderLeft(), m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + unscriptedTextHeight), 0.0f, std::min(0.0f, superscriptOrSubsciptTextHeightReduction));
         formattedTextSection->setOpacity(m_formattingState.Opacity);
+
+        // for superscript / subscript - the text height is already adjusted
+        float unscriptedTextHeight = m_formattingState.TextHeight + std::abs(superscriptOrSubsciptTextHeightReduction);
+        auto leftTop = Vector2f(m_evolvingLayoutArea.left, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top);
+        auto rightBottom = Vector2f(formattedTextSection->getRenderLeft(), m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + unscriptedTextHeight);
+        formattedTextSection->setRenderLeftTop(leftTop, indentOffset, std::max(0.0f, superscriptOrSubsciptTextHeightReduction));
+        formattedTextSection->setRenderRightBottom(rightBottom, 0.0f, std::min(0.0f, superscriptOrSubsciptTextHeightReduction));
 
         return formattedTextSection;
     }
@@ -636,6 +641,7 @@ namespace tgui
                     // There might be no way to add the remaining text (without any possibility to auto-line-break) to the end of the current run length.
                     if (linebreakPosition < 1 || linebreakPosition > delimiterPosition)
                     {
+                        // for superscript / subscript - the text height is already adjusted
                         float unscriptedTextHeight = m_formattingState.TextHeight + m_formattingState.Subscript + m_formattingState.Superscript;
                         m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + unscriptedTextHeight + unscriptedTextHeight / 4;
 
@@ -668,6 +674,7 @@ namespace tgui
                         auto formattedElement = std::static_pointer_cast<FormattedElement>(formattedTextSection);
                         m_content.push_back(formattedElement);
 
+                        // for superscript / subscript - the text height is already adjusted
                         float unscriptedTextHeight = m_formattingState.TextHeight + m_formattingState.Subscript + m_formattingState.Superscript;
                         m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + unscriptedTextHeight + unscriptedTextHeight / 4;
 
@@ -810,7 +817,11 @@ namespace tgui
                 {
                     float oldReferenceLine = rit->get()->getRenderRefLine();
                     if (oldReferenceLine == renderReferenceLine)
-                        rit->get()->setRenderTop(rit->get()->getRenderTop() + additionalExtraHeight);
+                    {
+                        auto rect = rit->get()->getRenderArea();
+                        rect.top += additionalExtraHeight;
+                        rit->get()->setRenderArea(rect.getPosition(), rect.getSize());
+                    }
                     else
                         break;
                 }
