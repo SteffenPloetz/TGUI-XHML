@@ -96,9 +96,9 @@ namespace tgui
         auto formattedTextSection = std::make_shared<FormattedTextSection>(m_formattingState.ForeColor, m_formattingState.Style);
         formattedTextSection->setContentOrigin(xhtmlElement);
         formattedTextSection->setFont(font);
-        formattedTextSection->setRenderLeftTop(Vector2f(m_evolvingLayoutArea.left, m_evolvingLayoutArea.top + m_evolvingLineExtraHeight), indentOffset, std::max(0.0f, superscriptOrSubsciptTextHeightReduction));
+        formattedTextSection->setRenderLeftTop(Vector2f(m_evolvingLayoutArea.left, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top), indentOffset, std::max(0.0f, superscriptOrSubsciptTextHeightReduction));
         float unscriptedTextHeight = m_formattingState.TextHeight + std::abs(superscriptOrSubsciptTextHeightReduction); // for superscript / subscript - the text height is already adjusted
-        formattedTextSection->setRenderRightBottom(Vector2f(formattedTextSection->getRenderLeft(), m_evolvingLayoutArea.top + unscriptedTextHeight + m_evolvingLineExtraHeight), 0.0f, std::min(0.0f, superscriptOrSubsciptTextHeightReduction));
+        formattedTextSection->setRenderRightBottom(Vector2f(formattedTextSection->getRenderLeft(), m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + unscriptedTextHeight), 0.0f, std::min(0.0f, superscriptOrSubsciptTextHeightReduction));
         formattedTextSection->setOpacity(m_formattingState.Opacity);
 
         return formattedTextSection;
@@ -204,11 +204,11 @@ namespace tgui
             else if (typeName == XhtmlElementType::Superscript)
             {
                 m_formattingState.Superscript = m_formattingState.TextHeight / 3;
-                m_formattingState.TextHeight = m_formattingState.TextHeight - m_formattingState.Superscript;
+                m_formattingState.TextHeight  = m_formattingState.TextHeight - m_formattingState.Superscript;
             }
             else if (typeName == XhtmlElementType::Subscript)
             {
-                m_formattingState.Subscript = m_formattingState.TextHeight / 3;
+                m_formattingState.Subscript  = m_formattingState.TextHeight / 3;
                 m_formattingState.TextHeight = m_formattingState.TextHeight - m_formattingState.Subscript;
             }
 
@@ -312,7 +312,8 @@ namespace tgui
                 tgui::Font font = (listMetrics->Ordered ? m_formattingState.TextFont : fontCollection.Mono->Regular);
                 auto runLengt = Text::getLineWidth(bullet, font, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
 
-                auto formattedTextSection = createFormattedTextSectionWithFontAndPosition(xhtmlElement, font, -(m_backPadding + runLengt), m_formattingState.Subscript - m_formattingState.Superscript);
+                auto formattedTextSection = createFormattedTextSectionWithFontAndPosition(xhtmlElement, font, -(m_backPadding + runLengt),
+                                                                                          m_formattingState.Subscript - m_formattingState.Superscript);
                 formattedTextSection->setString(bullet);
                 formattedTextSection->setRunLength(runLengt + 0.49f);
                 formattedTextSection->setColor(m_formattingState.ForeColor);
@@ -589,7 +590,8 @@ namespace tgui
         if (typeName == XhtmlElementType::Break || typeName == XhtmlElementType::Text)
         {
             // prepare text section to accommodate the text
-            auto formattedTextSection = createFormattedTextSectionWithFontAndPosition(xhtmlElement, m_formattingState.TextFont, m_evolvingLineRunLength, m_formattingState.Subscript - m_formattingState.Superscript);
+            auto formattedTextSection = createFormattedTextSectionWithFontAndPosition(xhtmlElement, m_formattingState.TextFont, m_evolvingLineRunLength,
+                                                                                      m_formattingState.Subscript - m_formattingState.Superscript);
 
             if (typeName == XhtmlElementType::Break)
             {
@@ -634,14 +636,17 @@ namespace tgui
                     // There might be no way to add the remaining text (without any possibility to auto-line-break) to the end of the current run length.
                     if (linebreakPosition < 1 || linebreakPosition > delimiterPosition)
                     {
-                        m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_formattingState.TextHeight + m_formattingState.TextHeight / 4;
+                        float unscriptedTextHeight = m_formattingState.TextHeight + m_formattingState.Subscript + m_formattingState.Superscript;
+                        m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + unscriptedTextHeight + unscriptedTextHeight / 4;
 
                         // act like a "\r\n"
                         m_evolvingLineRunLength = 0;
                         m_evolvingLineExtraHeight = 0;
 
-                        formattedTextSection->setRenderLeftTop(Vector2f(m_evolvingLayoutArea.left, m_evolvingLayoutArea.top + m_evolvingLineExtraHeight), m_evolvingLineRunLength, m_formattingState.Subscript);
-                        formattedTextSection->setRenderRightBottom(Vector2f(formattedTextSection->getRenderLeft(), m_evolvingLayoutArea.top + m_formattingState.TextHeight + m_evolvingLineExtraHeight), 0.0f, -m_formattingState.Superscript);
+                        // Since the internal coordinates of formattedTextSection are not in initial state and would falsify the result, reset the internal coordinates!
+                        formattedTextSection->setRenderArea({0.0f, 0.0f});
+                        formattedTextSection->setRenderLeftTop(Vector2f(m_evolvingLayoutArea.left, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top), m_evolvingLineRunLength, m_formattingState.Subscript);
+                        formattedTextSection->setRenderRightBottom(Vector2f(formattedTextSection->getRenderLeft(), m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + unscriptedTextHeight), 0.0f, -m_formattingState.Superscript);
                         break;
                     }
                     delimiterPosition = linebreakPosition;
@@ -663,7 +668,8 @@ namespace tgui
                         auto formattedElement = std::static_pointer_cast<FormattedElement>(formattedTextSection);
                         m_content.push_back(formattedElement);
 
-                        m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_formattingState.TextHeight + m_formattingState.TextHeight / 4;
+                        float unscriptedTextHeight = m_formattingState.TextHeight + m_formattingState.Subscript + m_formattingState.Superscript;
+                        m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + unscriptedTextHeight + unscriptedTextHeight / 4;
 
                         // act like a "\r\n"
                         m_evolvingLineRunLength = 0;
@@ -781,7 +787,7 @@ namespace tgui
                 m_evolvingLineRunLength = m_formattingState.TextHeight / 8;
                 m_evolvingLineExtraHeight = 0;
 
-                if (m_formattingState.TextHeight + m_evolvingLineExtraHeight < logicSize.y)
+                if (m_evolvingLineExtraHeight + m_formattingState.TextHeight < logicSize.y)
                 {
                     // line hight has to be adjusted
                     float additionalExtraHeight = logicSize.y - (m_formattingState.TextHeight + m_evolvingLineExtraHeight);
@@ -791,7 +797,7 @@ namespace tgui
             else
             {
                 float additionalExtraHeight = 0.0f;
-                float renderReferenceLine = m_evolvingLayoutArea.top + m_formattingState.TextHeight + m_evolvingLineExtraHeight;
+                float renderReferenceLine = m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight;
                 if (m_formattingState.TextHeight + m_evolvingLineExtraHeight < logicSize.y)
                 {
                     // line hight has to be adjusted
@@ -811,7 +817,7 @@ namespace tgui
             }
 
             formattedImage->setRenderLeftTop(m_evolvingLayoutArea.getPosition(), m_evolvingLineRunLength);
-            formattedImage->setRenderRightBottom(Vector2f(formattedImage->getRenderLeft() + m_evolvingLineRunLength + logicSize.x, m_evolvingLayoutArea.top + m_formattingState.TextHeight + m_evolvingLineExtraHeight));
+            formattedImage->setRenderRightBottom(Vector2f(formattedImage->getRenderLeft() + m_evolvingLineRunLength + logicSize.x, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight));
             m_content.push_back(formattedImage);
             m_evolvingLineRunLength += logicSize.x + m_formattingState.TextHeight / 8;
         }
