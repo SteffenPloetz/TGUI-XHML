@@ -136,9 +136,9 @@ List od supported XHTML features
 * `<s>` for strong `<b>` for bold
 * `<u>` for underline
 * `<sup>` for superscript and `<sub>` for subscript
-* `<ul>` for unordered list, `<ol>` for ordered list and `<li>` for list item
+* `<ul>`<sup>[1]</sup> for unordered list, `<ol>`<sup>[1]</sup> for ordered list and `<li>`<sup>[1]</sup> for list item
 * `<span>`<sup>[1]</sup>, `<div>`<sup>[1]</sup> for division and `<p>`<sup>[1]</sup> for paragraph
-* `<pre>`<sup>[1]</sup> for preformatted and `<code>`<sup>1</sup> for code
+* `<pre>`<sup>[1]</sup> for preformatted and `<code>`<sup>[1]</sup> for code
 * `<br/>` for line break
 * `<img>` for image
 
@@ -173,4 +173,4 @@ The sample application has (like the XHTML viewer widget) been developed and tes
 * Windows 11 x64, Visual Studio 2022 community edition
 
 The sample application is based on a TGUI build for the **SFML_GRAPHICS** backend. It tests all the currently available functionality and therefore has sample code for all the currently available functionality.<br/>
-The sample application contains a **TabContainer** widget with two tabs: The first tab contains a **FormattedTextView** (XHTML viewer) widget, that displays the content of a **FormattedTextXhtmlDocument** (rich text) document created from DOM element C++ constructor calls. The second tab contains another **FormattedTextView** (XHTML viewer) widget, that displays the content of another **FormattedTextXhtmlDocument** (rich text) document created from parsing an HTML file.
+The sample application contains a `TabContainer` widget with two tabs: The first tab contains a `FormattedTextView` (XHTML viewer) widget, that displays the content of a `FormattedTextXhtmlDocument` (rich text) document created from DOM element C++ constructor calls. The second tab contains another `FormattedTextView` (XHTML viewer) widget, that displays the content of another `FormattedTextXhtmlDocument` (rich text) document created from parsing an HTML file.
