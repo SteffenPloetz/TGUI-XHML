@@ -100,49 +100,49 @@ List od supported XHTML features
 ***&lt;div*** **class**="silverBG"&gt; test style ***&lt;/div&gt;***<br/>
 
 # <a name="supported-style-attributes">Supported style attributes</a>
-* background-color<sup>1</sup>
-* border-color<sup>1</sup>
-* color<sup>1</sup>
-* opacity<sup>2</sup>
-* border-width<sup>3</sup><sup>5</sup><sup>6</sup>
-* padding<sup>4</sup><sup>5</sup><sup>6</sup>
-* margin<sup>4</sup><sup>5</sup><sup>6</sup>
-* font-style<sup>7</sup>
-* font-weight<sup>8</sup>
+* background-color<sup>[1]</sup>
+* border-color<sup>[1]</sup>
+* color<sup>[1]</sup>
+* opacity<sup>[2]</sup>
+* border-width<sup>[356]</sup>
+* padding<sup>[456]</sup>
+* margin<sup>[456]</sup>
+* font-style<sup>[7]</sup>
+* font-weight<sup>[8]</sup>
 
-<sup>1</sup> supported are all 142 web [color names](https://www.w3schools.com/colors/colors_names.asp) and values with *#RRGGBB* syntax<br/>
-<sup>2</sup> values between *0.0* = full transparency and *1.0* = full opacity<br/>
-<sup>3</sup> supported are the alias names *thin* translated to 1px, *medium* translated to 3px and *thick* translated to 5px as well as 1...4 numeric values, optionally with prefix for the measuring unit<br/>
-<sup>4</sup> supported are 1...4 numeric values, optionally with prefix for the measuring unit<br/>
-<sup>5</sup> if one numeric value is provided, it is applied to top, right, bottom and left<br/>
+<sup>[1]</sup> supported are all 142 web [color names](https://www.w3schools.com/colors/colors_names.asp) and values with *#RRGGBB* syntax<br/>
+<sup>[2]</sup> values between *0.0* = full transparency and *1.0* = full opacity<br/>
+<sup>[3]</sup> supported are the alias names *thin* translated to 1px, *medium* translated to 3px and *thick* translated to 5px as well as 1...4 numeric values, optionally with prefix for the measuring unit<br/>
+<sup>[4]</sup> supported are 1...4 numeric values, optionally with prefix for the measuring unit<br/>
+<sup>[5]</sup> if one numeric value is provided, it is applied to top, right, bottom and left<br/>
 &nbsp; &nbsp;if two numeric values are provided, they are applied to top/bottom and right/left<br/>
 &nbsp; &nbsp;if three numeric values are provided, they are applied to top, right/left and bottom<br/>
 &nbsp; &nbsp;if four numeric values are provided, they are applied to top, right, bottom and left<br/>
-<sup>6</sup> the default measuring unit is pixels, the measuring unit can be defined expilcitly with the appendices *px* for pixels, *pt* for points, *em* for equivalemt of 'M' and *%*, but the behavior of *%* is currently unpredictable<br/>
-<sup>7</sup> supported are *regular* and *italic*<br/>
-<sup>8</sup> supported are *regular* and *bold*
+<sup>[6]</sup> the default measuring unit is pixels, the measuring unit can be defined expilcitly with the appendices *px* for pixels, *pt* for points, *em* for equivalemt of 'M' and *%*, but the behavior of *%* is currently unpredictable<br/>
+<sup>[7]</sup> supported are *regular* and *italic*<br/>
+<sup>[8]</sup> supported are *regular* and *bold*
 
 # <a name="supported-tags">Supported tags</a>
-* ***&lt;!doctype&gt;*** (in that way, that it doesn't create errors or warnings)
-* ***&lt;document&gt;*** (in that way, that it doesn't create errors or warnings)
-* ***&lt;html&gt;***<sup>1</sup> (ready to contain &lt;head&gt; and &lt;body&gt;)
-* ***&lt;head&gt;*** (ready to contain &lt;meta&gt;, &lt;title&gt; and &lt;style&gt;)
-* ***&lt;meta&gt;*** (in that way, that it doesn't create errors or warnings)
-* ***&lt;title&gt;*** (in that way, that it doesn't create errors or warnings)
-* ***&lt;style&gt;*** (see [CSS styles](#css-styling))
-* ***&lt;body&gt;***<sup>1</sup> (ready to contain all the tags below)
-* ***&lt;h1&gt;*** ... ***&lt;h6&gt;*** for head line 1st order ... 6th order
-* ***&lt;em&gt;*** for emphasized and ***&lt;i&gt;*** for italic
-* ***&lt;s&gt;*** for strong ***&lt;b&gt;*** for bold
-* ***&lt;u&gt;*** for underline
-* ***&lt;sup&gt;*** for superscript and ***&lt;sub&gt;*** for subscript
-* ***&lt;ul&gt;*** for unordered list, ***&lt;ol&gt;*** for ordered list and ***&lt;li&gt;*** for list item
-* ***&lt;span&gt;***<sup>1</sup>, ***&lt;div&gt;***<sup>1</sup> for division and ***&lt;p&gt;***<sup>1</sup> for paragraph
-* ***&lt;pre&gt;***<sup>1</sup> for preformatted and ***&lt;code&gt;***<sup>1</sup>
-* ***&lt;br/&gt;*** for line break
-* ***&lt;img&gt;*** for image
+* `<!doctype>` (in that way, that it doesn't create errors or warnings)
+* `<document>` (in that way, that it doesn't create errors or warnings)
+* `<html>`<sup>[1]</sup> (ready to contain `<head>` and `<body>`)
+* `<head>` (ready to contain `<meta>`, `<title>` and `<style>`)
+* `<meta>` (in that way, that it doesn't create errors or warnings)
+* `<title>` (in that way, that it doesn't create errors or warnings)
+* `<style>` (see [CSS styles](#css-styling))
+* `<body>`<sup>[1]</sup> (ready to contain all the tags below)
+* `<h1>`<sup>[1]</sup> ... `<h6>`<sup>[1]</sup> for head line 1st order ... 6th order
+* `<em>` for emphasized and `<i>` for italic
+* `<s>` for strong `<b>` for bold
+* `<u>` for underline
+* `<sup>` for superscript and `<sub>` for subscript
+* `<ul>` for unordered list, `<ol>` for ordered list and `<li>` for list item
+* `<span>`<sup>[1]</sup>, `<div>`<sup>[1]</sup> for division and `<p>`<sup>[1]</sup> for paragraph
+* `<pre>`<sup>[1]</sup> for preformatted and `<code>`<sup>1</sup> for code
+* `<br/>` for line break
+* `<img>` for image
 
-<sup>1</sup> can be styled with [inline and CSS styling](#inline-styling)
+<sup>[1]</sup> can be styled with [inline and CSS styling](#inline-styling)
 
 # <a name="extension-code">The TGUI-XHTML code</a>
 The XHTML viewer widget has been developed and tested on these environments:
@@ -152,14 +152,15 @@ The XHTML viewer widget has been developed and tested on these environments:
 The code is ready to be compiled as a separate dynamic link library or to be integrated (either into a custom TGUI build or into the target application).<br/>
 Since a DLL on Windows forces the programmer to distinguish between imported and exported API (which Linux does not), a little trick has to be used for Windows, which can be found in every CPP file:
 
-// MSC needs a clear distiction between "__declspec(dllimport)" (above) and "__declspec(dllexport)" (below) this comment.<br/>
+// MSC needs a clear distiction between `__declspec(dllimport)` (above) and `__declspec(dllexport)` (below) this comment.<br/>
 // So in the case of direct source file integration (in contrast to library creation and linking), the API must be 'dllexport'.<br/>
-&num;ifndef TGUI_STATIC<br/>
-&num;ifdef TGUI_SYSTEM_WINDOWS<br/>
-&num;undef TGUI_API<br/>
-&num;define TGUI_API __declspec(dllexport)<br/>
-&num;endif<br/>
-&num;endif<br/>
+```&num;ifndef TGUI_STATIC<br/>
+#ifdef TGUI_SYSTEM_WINDOWS<br/>
+#undef TGUI_API<br/>
+#define TGUI_API __declspec(dllexport)<br/>
+#endif<br/>
+#endif
+```
 
 # <a name="formatted-text-widget">The FormattedTextView widget</a>
 The widget displays static (not editable) formatted text. The widget suppors scroll bars in both directions. By default the policy of the vertical scrollbar is initialized to ***always*** and the visibility is set to ***true*** while the policy of the horizontal scroll bar is set to ***automatic*** and the visibility is set to ***false***.
