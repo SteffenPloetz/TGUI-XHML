@@ -31,7 +31,7 @@ namespace tgui
     FormattedTextView::FormattedTextView(const char* typeName, bool initRenderer) :
         ClickableWidget{typeName, false}, m_document(), m_zoom(1.0f), m_bordersCached(0), m_paddingCached(2),
         m_borderColorCached(Color::Transparent), m_backgroundColorCached(Color::Transparent),
-        m_horizontalScrollbar(), m_verticalScrollbar(), m_fontCollection()
+        m_horizontalScrollbar(), m_verticalScrollbar(), m_fontCollection(), m_anchorSources(), m_anchorTargets()
     {
         m_horizontalScrollbar->setSize(/*Will be updated anyway*/ 18, 18);
         m_horizontalScrollbar->setVisible(false);
@@ -389,6 +389,22 @@ namespace tgui
         {
             m_document->layout(renderSize, m_textSizeCached * m_zoom, getSharedRenderer()->getDefaultTextColor(), m_opacityCached,
                                m_fontCollection, keepSelection);
+        }
+
+        m_anchorSources.clear();
+        m_anchorTargets.clear();
+        if (m_document != nullptr)
+        {
+            for (auto formattedElement : m_document->getContent())
+            {
+                auto originName = formattedElement->getOriginName();
+                auto originId   = formattedElement->getOriginId();
+
+                if (!originName.empty())
+                    m_anchorTargets[originName] = formattedElement;
+                if (!originId.empty())
+                    m_anchorTargets[originId] = formattedElement;
+            }
         }
 
         updateScrollbars();

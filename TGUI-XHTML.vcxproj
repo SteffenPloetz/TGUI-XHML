@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\TGUI\MarkupLanguageElement.hpp" />
     <ClInclude Include="include\TGUI\Renderers\FormattedTextRenderer.hpp" />
     <ClInclude Include="include\TGUI\StringHelper.hpp" />
     <ClInclude Include="include\TGUI\UtfHelper.hpp" />

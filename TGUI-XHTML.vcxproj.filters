@@ -57,6 +57,9 @@
     <ClInclude Include="include\TGUI\Widgets\FormattedTextDocument.hpp">
       <Filter>Widgets</Filter>
     </ClInclude>
+    <ClInclude Include="include\TGUI\MarkupLanguageElement.hpp">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">

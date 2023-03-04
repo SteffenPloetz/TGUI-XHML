@@ -68,7 +68,11 @@ namespace tgui
         {  U"lt",      U'\x3C'  },
         {  U"gt",      U'\x3E'  },
         /** ISO 8859-1 (Latin-1) characters */
+#if defined(TGUI_SYSTEM_WINDOWS)
+        {  U"nbsp",    U'\x20'  },
+#else
         {  U"nbsp",    U'\xA0'  },
+#endif
         {  U"iexcl",   U'\xA1'  },
         {  U"cent",    U'\xA2'  },
         {  U"pound",   U'\xA3'  },
@@ -234,7 +238,7 @@ namespace tgui
         // character entity reference
         else
         {
-            tgui::String	strKey(begin, length);
+            tgui::String	strKey(begin, length - 1);
 
             // because some character entity references are
             // case-sensitive, we must fix them manually

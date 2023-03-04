@@ -376,24 +376,26 @@ namespace tgui
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private:
 
-        FormattedTextDocument::Ptr              m_document;              //!< The formatted document to display
-        float                                   m_zoom = 1.0f;           //!< The zoom
+        FormattedTextDocument::Ptr               m_document;              //!< The formatted document to display
+        float                                    m_zoom = 1.0f;           //!< The zoom
 
-        Borders                                 m_bordersCached;
-        Padding                                 m_paddingCached;
-        Color                                   m_borderColorCached;
-        Color                                   m_backgroundColorCached;
+        Borders                                  m_bordersCached;
+        Padding                                  m_paddingCached;
+        Color                                    m_borderColorCached;
+        Color                                    m_backgroundColorCached;
 
-        CopiedSharedPtr<ScrollbarChildWidget>   m_horizontalScrollbar;   //!< The horizontal scrollbar
-        CopiedSharedPtr<ScrollbarChildWidget>   m_verticalScrollbar;     //!< The vertical scrollbar
-        Scrollbar::Policy                       m_verticalScrollbarPolicy = Scrollbar::Policy::Automatic;
-        Scrollbar::Policy                       m_horizontalScrollbarPolicy = Scrollbar::Policy::Never;
+        CopiedSharedPtr<ScrollbarChildWidget>    m_horizontalScrollbar;   //!< The horizontal scrollbar
+        CopiedSharedPtr<ScrollbarChildWidget>    m_verticalScrollbar;     //!< The vertical scrollbar
+        Scrollbar::Policy                        m_verticalScrollbarPolicy = Scrollbar::Policy::Automatic;
+        Scrollbar::Policy                        m_horizontalScrollbarPolicy = Scrollbar::Policy::Never;
 
         // Is there a possibility that the user is going to double click?
-        bool                                    m_possibleDoubleClick = false;
+        bool                                     m_possibleDoubleClick = false;
 
         // The fonts
-        FormattedTextDocument::FontCollection   m_fontCollection;
+        FormattedTextDocument::FontCollection    m_fontCollection;
+        std::map<Outline, FormattedElement::Ptr> m_anchorSources;
+        std::map<String, FormattedElement::Ptr>  m_anchorTargets;
     };
 
 }

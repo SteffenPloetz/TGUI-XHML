@@ -42,6 +42,7 @@
 			<Add library="sfml-window" />
 			<Add library="sfml-system" />
 		</Linker>
+		<Unit filename="../include/TGUI/MarkupLanguageElement.hpp" />
 		<Unit filename="../include/TGUI/Renderers/FormattedTextRenderer.hpp" />
 		<Unit filename="../include/TGUI/StringHelper.hpp" />
 		<Unit filename="../include/TGUI/UtfHelper.hpp" />

@@ -30,6 +30,50 @@
 
 namespace tgui
 {
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief The enumeration of style category flags, used to filter the style properties to apply
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    enum class StyleCategoryFlags
+    {
+        ForeColor        =  1,  //!< Apply the fore color property
+        BackColor        =  2,  //!< Apply the back color property
+        Opacity          =  4,  //!< Apply the opacity property
+
+        ColorsAndOpacity =  7,  //!< Apply the color and opacity properties
+
+        Fonts            =  8,  //!< Apply the font properties
+
+        BorderWidth      = 16,  //!< Apply the border width property properties
+        BorderColor      = 32   //!< Apply the border color property properties
+    };
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief Combines two style category flags with binary OR operator
+    ///
+    /// @param left  The first style category flag to combine with binary OR operator
+    /// @param right The second style category flag to combine with binary OR operator
+    ///
+    /// @return The combination of the two indicated style flags
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    inline StyleCategoryFlags operator|(StyleCategoryFlags left, StyleCategoryFlags right)
+    {
+        return static_cast<StyleCategoryFlags>(static_cast<int>(left) | static_cast<int>(right));
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief Combines two style category flags with binary AND operator
+    ///
+    /// @param left  The first style category flag to combine with binary AND operator
+    /// @param right The second style category flag to combine with binary AND operator
+    ///
+    /// @return The combination of the two indicated style flags
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    inline StyleCategoryFlags operator&(StyleCategoryFlags left, StyleCategoryFlags right)
+    {
+        return static_cast<StyleCategoryFlags>(static_cast<int>(left) & static_cast<int>(right));
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief The formatted text XHTML document
     ///
@@ -157,6 +201,13 @@ namespace tgui
         XhtmlContainerElement::Ptr getHeadElement() const;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the first body element of the registered XHTML element tree
+        ///
+        /// @return The first body element of the registered XHTML element tree. Can be nullptr
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        XhtmlContainerElement::Ptr getBodyElement() const;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the first head element' style element child of the registered XHTML element tree
         ///
         /// @return The first head element' style element child of the registered XHTML element tree. Can be nullptr
@@ -173,12 +224,54 @@ namespace tgui
         std::vector<XhtmlStyleEntry::Ptr> getApplicableStyleElements(XhtmlElement::Ptr xhtmlElement);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Applies a list of XHTML style entries to the formatting state
+        ///
+        /// @param styleEntries                             The XHTML style entries to apply
+        /// @param styleCategories                          The style categories to apply
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        void applyStyleEntriesToFormattingState(const std::vector<tgui::XhtmlStyleEntry::Ptr> styleEntries,
+            const FormattedTextDocument::FontCollection& fontCollection,
+            StyleCategoryFlags categories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Applies a list of XHTML style entries to the formatted element
+        ///
+        /// @param formattedElement                         The formatted element to apply the style entries to
+        /// @param styleEntries                             The XHTML style entries to apply
+        /// @param styleCategories                          The style categories to apply
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        void applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement, const std::vector<tgui::XhtmlStyleEntry::Ptr> styleEntries,
+            const FormattedTextDocument::FontCollection& fontCollection,
+            StyleCategoryFlags categories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Creates and basically initializes a FormattedRectangle
+        ///
+        /// @param xhtmlElement                             The XHTML element, represented by this formatted text section
+        /// @param applyLineRunLength                       Determine wheter to start at current line run length (true) or very left
+        ///
+        /// @return The newly created FormattedRectangle
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        FormattedRectangle::Ptr createFormattedRectangleWithPosition(XhtmlElement::Ptr xhtmlElement, bool applyLineRunLength = false);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Creates and basically initializes a FormattedImage
+        ///
+        /// @param xhtmlElement                             The XHTML element, represented by this formatted text section
+        ///
+        /// @return The newly created FormattedImage
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        FormattedImage::Ptr createFormattedImageWithPosition(XhtmlElement::Ptr xhtmlElement);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates and basically initializes a FormattedTextSection
         ///
         /// @param xhtmlElement                             The XHTML element, represented by this formatted text section
         /// @param font                                     The font to apply
         /// @param indentOffset                             The horizontal offset (indent) to apply to the current layout position
         /// @param superscriptOrSubsciptTextHeightReduction The text height reduction applied for superscript / subscript
+        ///
+        /// @return The newly created FormattedTextSection
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         FormattedTextSection::Ptr createFormattedTextSectionWithFontAndPosition(XhtmlElement::Ptr xhtmlElement, Font font,
             float indentOffset = 0.0f, float superscriptOrSubsciptTextHeightReduction = 0.0f);

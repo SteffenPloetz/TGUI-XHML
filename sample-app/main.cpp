@@ -86,6 +86,13 @@ public:
     tgui::Color getClearColor() const
     {   return m_clearColor;   }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief Returns the operation system specific font collection (currently specified for Windows, Open Suse and Manjaro)
+    ///
+    /// The font collection includes the font faces sans/serif/mono and font styles regular/bold/italic/bold-italic
+    ///
+    /// @return The operation system specific font collection
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     std::shared_ptr<tgui::FormattedTextDocument::FontCollection> createFontCollection()
     {
         auto fontCollection = std::make_shared<tgui::FormattedTextDocument::FontCollection>();
@@ -102,20 +109,20 @@ public:
 #if defined(TGUI_SYSTEM_WINDOWS)
         tgui::String fontRoot = L"C:\\Windows\\Fonts\\";
 
-        fontCollection->Sans->Regular = std::make_shared<tgui::Font>(fontRoot + L"arial.ttf");
-        fontCollection->Sans->Bold = std::make_shared<tgui::Font>(fontRoot + L"arialbd.ttf");
-        fontCollection->Sans->Italic = std::make_shared<tgui::Font>(fontRoot + L"ariali.ttf");
-        fontCollection->Sans->BoldItalic = std::make_shared<tgui::Font>(fontRoot + L"arialbi.ttf");
+        fontCollection->Sans->Regular = tgui::Font(fontRoot + L"arial.ttf");
+        fontCollection->Sans->Bold = tgui::Font(fontRoot + L"arialbd.ttf");
+        fontCollection->Sans->Italic = tgui::Font(fontRoot + L"ariali.ttf");
+        fontCollection->Sans->BoldItalic = tgui::Font(fontRoot + L"arialbi.ttf");
 
-        fontCollection->Serif->Regular = std::make_shared<tgui::Font>(fontRoot + L"times.ttf");
-        fontCollection->Serif->Bold = std::make_shared<tgui::Font>(fontRoot + L"timesbd.ttf");
-        fontCollection->Serif->Italic = std::make_shared<tgui::Font>(fontRoot + L"timesi.ttf");
-        fontCollection->Serif->BoldItalic = std::make_shared<tgui::Font>(fontRoot + L"timesbi.ttf");
+        fontCollection->Serif->Regular = tgui::Font(fontRoot + L"times.ttf");
+        fontCollection->Serif->Bold = tgui::Font(fontRoot + L"timesbd.ttf");
+        fontCollection->Serif->Italic = tgui::Font(fontRoot + L"timesi.ttf");
+        fontCollection->Serif->BoldItalic = tgui::Font(fontRoot + L"timesbi.ttf");
 
-        fontCollection->Mono->Regular = std::make_shared<tgui::Font>(fontRoot + L"consola.ttf"); // L"cour.ttf");
-        fontCollection->Mono->Bold = std::make_shared<tgui::Font>(fontRoot + L"consolab.ttf"); // L"courbd.ttf");
-        fontCollection->Mono->Italic = std::make_shared<tgui::Font>(fontRoot + L"consolai.ttf"); // L"couri.ttf");
-        fontCollection->Mono->BoldItalic = std::make_shared<tgui::Font>(fontRoot + L"consolaz.ttf"); // L"courbi.ttf");
+        fontCollection->Mono->Regular = tgui::Font(fontRoot + L"consola.ttf"); // L"cour.ttf");
+        fontCollection->Mono->Bold = tgui::Font(fontRoot + L"consolab.ttf"); // L"courbd.ttf");
+        fontCollection->Mono->Italic = tgui::Font(fontRoot + L"consolai.ttf"); // L"couri.ttf");
+        fontCollection->Mono->BoldItalic = tgui::Font(fontRoot + L"consolaz.ttf"); // L"courbi.ttf");
 #elif defined(TGUI_SYSTEM_LINUX)
         tgui::String fontRoot = L"/usr/share/fonts/";
 
@@ -211,15 +218,17 @@ public:
         auto htmlRoot1 = formattedTextDocument1->getRootElement();
         auto htmlHead = tgui::XhtmlElement::createHead(htmlRoot1);
         auto thmlStyle = tgui::XhtmlElement::createStyle(htmlHead);
-        thmlStyle->setEntry(U"cp", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#666666"), U"Monospace", tgui::OneDimSize(tgui::SizeType::Relative, 1.0f), static_cast<tgui::TextStyle>(tgui::TextStyle::Italic  | tgui::TextStyle::Bold)));
-        thmlStyle->setEntry(U"kt", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#666666"), U"Monospace", tgui::OneDimSize(tgui::SizeType::Relative, 1.0f), static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Bold)));
-        thmlStyle->setEntry(U"nf", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#aa4400"), U"Monospace", tgui::OneDimSize(tgui::SizeType::Relative, 1.0f), static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Bold)));
-        thmlStyle->setEntry(U"p",  std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#666666"), U"Monospace", tgui::OneDimSize(tgui::SizeType::Relative, 1.0f), static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Regular)));
-        thmlStyle->setEntry(U"n",  std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#666666"), U"Monospace", tgui::OneDimSize(tgui::SizeType::Relative, 1.0f), static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Regular)));
-        thmlStyle->setEntry(U"o",  std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#666666"), U"Monospace", tgui::OneDimSize(tgui::SizeType::Relative, 1.0f), static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Bold)));
-        thmlStyle->setEntry(U"mi", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#009999"), U"Monospace", tgui::OneDimSize(tgui::SizeType::Relative, 1.0f), static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Regular)));
-        thmlStyle->setEntry(U"s",  std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#cc4444"), U"Monospace", tgui::OneDimSize(tgui::SizeType::Relative, 1.0f), static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Regular)));
-        thmlStyle->setEntry(U"cl", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#aaaaaa"), U"Monospace", tgui::OneDimSize(tgui::SizeType::Relative, 1.0f), static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Regular)));
+
+        thmlStyle->setEntry(U"cp", std::make_shared<tgui::XhtmlStyleEntry>(tgui::XhtmlStyleEntryInitializer().SetForeColor(tgui::Color(U"#666666")).SetFontFamily(U"Monospace").SetFontStyle(static_cast<tgui::TextStyle>(tgui::TextStyle::Italic  | tgui::TextStyle::Bold))));
+        thmlStyle->setEntry(U"kt", std::make_shared<tgui::XhtmlStyleEntry>(tgui::XhtmlStyleEntryInitializer().SetForeColor(tgui::Color(U"#666666")).SetFontFamily(U"Monospace").SetFontStyle(static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Bold))));
+        thmlStyle->setEntry(U"nf", std::make_shared<tgui::XhtmlStyleEntry>(tgui::XhtmlStyleEntryInitializer().SetForeColor(tgui::Color(U"#aa4400")).SetFontFamily(U"Monospace").SetFontStyle(static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Bold))));
+        thmlStyle->setEntry(U"p",  std::make_shared<tgui::XhtmlStyleEntry>(tgui::XhtmlStyleEntryInitializer().SetForeColor(tgui::Color(U"#666666")).SetFontFamily(U"Monospace").SetFontStyle(static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Regular))));
+        thmlStyle->setEntry(U"n",  std::make_shared<tgui::XhtmlStyleEntry>(tgui::XhtmlStyleEntryInitializer().SetForeColor(tgui::Color(U"#666666")).SetFontFamily(U"Monospace").SetFontStyle(static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Regular))));
+        thmlStyle->setEntry(U"o",  std::make_shared<tgui::XhtmlStyleEntry>(tgui::XhtmlStyleEntryInitializer().SetForeColor(tgui::Color(U"#666666")).SetFontFamily(U"Monospace").SetFontStyle(static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Bold))));
+        thmlStyle->setEntry(U"mi", std::make_shared<tgui::XhtmlStyleEntry>(tgui::XhtmlStyleEntryInitializer().SetForeColor(tgui::Color(U"#009999")).SetFontFamily(U"Monospace").SetFontStyle(static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Regular))));
+        thmlStyle->setEntry(U"s",  std::make_shared<tgui::XhtmlStyleEntry>(tgui::XhtmlStyleEntryInitializer().SetForeColor(tgui::Color(U"#cc4444")).SetFontFamily(U"Monospace").SetFontStyle(static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Regular))));
+        thmlStyle->setEntry(U"cl", std::make_shared<tgui::XhtmlStyleEntry>(tgui::XhtmlStyleEntryInitializer().SetForeColor(tgui::Color(U"#aaaaaa")).SetFontFamily(U"Monospace").SetFontStyle(static_cast<tgui::TextStyle>(tgui::TextStyle::Regular | tgui::TextStyle::Regular))));
+
         auto grayBG = std::make_shared<tgui::XhtmlStyleEntry>(); grayBG->setBackgroundColor(tgui::Color(208, 208, 208, 255));
         auto body = tgui::XhtmlElement::createBody(htmlRoot1, grayBG);
 
@@ -243,79 +252,95 @@ public:
         image4->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"alt", U"URL icon"));
         image4->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"width", U"32"));
         image4->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"height", U"32"));
+        auto h1_HTML = tgui::XhtmlElement::createH1(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"FormattedTextArea - XHTML markup "),
+                                                              tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#008800")), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
+                                                              tgui::XhtmlElement::createInnerText(nullptr, U" (h1)")});
+        h1_HTML->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"HTML-MU"));
+        auto h1_BG01 = std::make_shared<tgui::XhtmlStyleEntry>();
+        h1_BG01->setBackgroundColor(tgui::Color(U"#DFD0D0"));
+        h1_HTML->addAttribute(h1_BG01);
+        auto h2_TOC = tgui::XhtmlElement::createH2(nullptr, tgui::XhtmlElement::createInnerText(nullptr, U"Table of contents (h2)"));
+        h2_TOC->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"TOC"));
+        auto h2_BG00 = std::make_shared<tgui::XhtmlStyleEntry>();
+        h2_BG00->setBackgroundColor(tgui::Color(U"#D0DAD0"));
+        h2_TOC->addAttribute(h2_BG00);
+        auto h2_INTRO = tgui::XhtmlElement::createH2(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Introduction to the "),
+                                                               tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#880000")), tgui::XhtmlElement::createInnerText(nullptr, U"FormattedTextArea")),
+                                                               tgui::XhtmlElement::createInnerText(nullptr, U" widget (h2)")});
+        h2_INTRO->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"INTRO"));
+        auto h2_BG01 = std::make_shared<tgui::XhtmlStyleEntry>();
+        h2_BG01->setBackgroundColor(tgui::Color(U"#D0DAD0"));
+        h2_INTRO->addAttribute(h2_BG01);
         tgui::XhtmlElement::addChildrenAndSetPatent(body, {
-           tgui::XhtmlElement::createH1(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"FormattedTextArea - XHTML markup "),
-                                                   tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#008800"), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
-                                                   tgui::XhtmlElement::createInnerText(nullptr, U" (h1)")}),
-            tgui::XhtmlElement::createH2(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Introduction to the "),
-                                                   tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#880000"), tgui::XhtmlElement::createInnerText(nullptr, U"FormattedTextArea")),
-                                                   tgui::XhtmlElement::createInnerText(nullptr, U" widget (h2)")}),
+            h1_HTML,
+            h2_TOC,
+            h2_INTRO,
             tgui::XhtmlElement::createInnerText(nullptr, U"The "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#880000"), tgui::XhtmlElement::createInnerText(nullptr, U"FormattedTextArea")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#880000")), tgui::XhtmlElement::createInnerText(nullptr, U"FormattedTextArea")),
             tgui::XhtmlElement::createInnerText(nullptr, U" widget displays markup formatted text. Currently supported is a sub-set of XHTML, that includes the HTML block elements "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;header&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;header&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"header"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/header&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/header&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;body&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;body&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"body"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/body&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/body&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;p&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;p&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"paragraph"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/p&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/p&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;div&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;div&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"division"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/div&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/div&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;span&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;span&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"span"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/span&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/span&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;h1&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;h1&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"headline 1"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/h1&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/h1&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U" ... "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;h6&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;h6&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"headline 6"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/h6&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/h6&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;em&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;em&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"emphasized"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/em&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/em&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;strong&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;strong&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"strong"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/strong&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/strong&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;i&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;i&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"italic"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/i&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/i&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;b&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;b&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"bold"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/b&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/b&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;u&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;u&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"underline"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/u&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/u&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;sup&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;sup&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"superscript"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/sup&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/sup&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U" for "),
             tgui::XhtmlElement::createSuperscript(nullptr, U"superscript text"),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;sub&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;sub&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"subscript"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/sub&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/sub&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U" for "),
             tgui::XhtmlElement::createSubscript(nullptr, U"subscript text"),
             tgui::XhtmlElement::createInnerText(nullptr, U", the XHTML empty elements "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;br/&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;br/&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U" for line break and "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;image/&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;image/&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U" for images like "),
             image1,
             tgui::XhtmlElement::createInnerText(nullptr, U" (100%) and XHTML "),
@@ -326,86 +351,110 @@ public:
             image2,
             tgui::XhtmlElement::createInnerText(nullptr, U" (67%) or this "),
             image3,
-            tgui::XhtmlElement::createInnerText(nullptr, U" (133%)."),
-            tgui::XhtmlElement::createH2(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Various text "),
-                                                   tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#008800"), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
-                                                   tgui::XhtmlElement::createInnerText(nullptr, U" (h2)")}),
-            tgui::XhtmlElement::createH3(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Floating text and block text "),
-                                                  tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#008800"), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
-                                                   tgui::XhtmlElement::createInnerText(nullptr, U" (h3)")}),
+            tgui::XhtmlElement::createInnerText(nullptr, U" (133%).")});
+
+        auto h2_TEXTS = tgui::XhtmlElement::createH2(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Various text "),
+                                                               tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#008800")), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
+                                                               tgui::XhtmlElement::createInnerText(nullptr, U" (h2)")});
+        h2_TEXTS->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"TEXTS"));
+        auto h2_BG02 = std::make_shared<tgui::XhtmlStyleEntry>();
+        h2_BG02->setBackgroundColor(tgui::Color(U"#D0DAD0"));
+        h2_TEXTS->addAttribute(h2_BG02);
+        auto h3_FLOATING = tgui::XhtmlElement::createH3(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Floating text and block text "),
+                                                                  tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#008800")), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
+                                                                  tgui::XhtmlElement::createInnerText(nullptr, U" (h3)")});
+        h3_FLOATING->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"FLOATING"));
+        auto h3_BG01 = std::make_shared<tgui::XhtmlStyleEntry>();
+        h3_BG01->setBackgroundColor(tgui::Color(U"#D0D0DF"));
+        h3_FLOATING->addAttribute(h3_BG01);
+        tgui::XhtmlElement::addChildrenAndSetPatent(body, {
+            h2_TEXTS,
+            h3_FLOATING,
             tgui::XhtmlElement::createH4(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Change the witdth of the window to "),
-                                                   tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#008800"), tgui::XhtmlElement::createInnerText(nullptr, U"test")),
+                                                   tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#008800")), tgui::XhtmlElement::createInnerText(nullptr, U"test")),
                                                    tgui::XhtmlElement::createInnerText(nullptr, U" automatic line break functionality. (h4)")}),
             tgui::XhtmlElement::createInnerText(nullptr, U"This is the first "),
             tgui::XhtmlElement::createUnderline(nullptr, U"floating"),
             tgui::XhtmlElement::createInnerText(nullptr, U" text line (not embedded in a "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;span&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;span&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"span"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/span&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/span&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;div&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;div&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"division"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/div&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/div&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U" or "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;p&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;p&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"paragraph"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/p&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/p&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"). It is followed by a line break."),
             tgui::XhtmlElement::createBreak(),
             tgui::XhtmlElement::createInnerText(nullptr, U"This is the second "),
             tgui::XhtmlElement::createUnderline(nullptr, U"floating"),
             tgui::XhtmlElement::createInnerText(nullptr, U" text line (not embedded in a "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;span&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;span&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"span"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/span&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/span&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U", "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;div&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;div&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"division"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/div&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/div&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U" or "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;p&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;p&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"paragraph"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/p&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/p&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U").")});
-        auto div01 = tgui::XhtmlElement::createDivision(nullptr, tgui::Color::Blue);
+        auto div_STY = std::make_shared<tgui::XhtmlStyleEntry>(tgui::XhtmlStyleEntryInitializer().SetForeColor(tgui::Color::Blue).SetBackColor(tgui::Color(U"#D8D0D8")));
+        auto div01 = tgui::XhtmlElement::createDivision(nullptr, div_STY);
         tgui::XhtmlElement::addChildrenAndSetPatent(div01, {
             tgui::XhtmlElement::createInnerText(nullptr, U"This is the first "),
             tgui::XhtmlElement::createUnderline(nullptr, U"block"),
             tgui::XhtmlElement::createInnerText(nullptr, U" text (embedded in a "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;div&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr,std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;div&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"division"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/div&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/div&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"). It shall demonstrate no vertical spacing around this block and automatic line breaks.")});
         tgui::XhtmlElement::addChildAndSetPatent(body, div01);
-        auto par01 = tgui::XhtmlElement::createParagraph(nullptr, tgui::Color(U"#880088"));
+        auto par_STY = std::make_shared<tgui::XhtmlStyleEntry>();
+        par_STY->setColor(tgui::Color(U"#880088"));
+        par_STY->setBackgroundColor(tgui::Color(U"#D8D8D0"));
+        auto par01 = tgui::XhtmlElement::createParagraph(nullptr, par_STY);
         tgui::XhtmlElement::addChildrenAndSetPatent(par01, {
             tgui::XhtmlElement::createInnerText(nullptr, U"This is the second "),
             tgui::XhtmlElement::createUnderline(nullptr, U"block"),
             tgui::XhtmlElement::createInnerText(nullptr, U" text (embedded in a "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;p&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;p&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"paragraph"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/p&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/p&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"). It shall demonstrate vertical spacing around this block and a floating text and besides automatic line breaks.")});
         tgui::XhtmlElement::addChildAndSetPatent(body, par01);
         auto par02 = tgui::XhtmlElement::createParagraph(nullptr);
         tgui::XhtmlElement::addChildrenAndSetPatent(par02, {
-            tgui::XhtmlElement::createInnerText(nullptr, U"While the images so far have been set from a base64 memory stream, this image is loaded from a PNG file (which might not work in browsers): "), image4});
+            tgui::XhtmlElement::createInnerText(nullptr, U"While the images so far have been set from a base64 memory stream, this image is loaded from a PNG file (which might not work in browsers): "),
+            image4});
         tgui::XhtmlElement::addChildAndSetPatent(body, par02);
         tgui::XhtmlElement::addChildrenAndSetPatent(body, {
             tgui::XhtmlElement::createInnerText(nullptr, U"This is the "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color::Green, {tgui::XhtmlElement::createInnerText(nullptr, U"final "),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color::Green), {tgui::XhtmlElement::createInnerText(nullptr, U"final "),
                                                     tgui::XhtmlElement::createUnderline(nullptr, U"floating"),
                                                     tgui::XhtmlElement::createInnerText(nullptr, U" text line ")}),
             tgui::XhtmlElement::createInnerText(nullptr, U"with a "),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;span&gt;")),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;span&gt;")),
             tgui::XhtmlElement::createInnerText(nullptr, U"span"),
-            tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#884400"), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/span&gt;")),
-            tgui::XhtmlElement::createInnerText(nullptr, U" (inline-style = color:green)."),
-            tgui::XhtmlElement::createH3(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"List "),
-                                                   tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#008800"), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
-                                                   tgui::XhtmlElement::createInnerText(nullptr, U" (h3)")}),
+            tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#884400")), tgui::XhtmlElement::createInnerText(nullptr, U"&lt;/span&gt;")),
+            tgui::XhtmlElement::createInnerText(nullptr, U" (inline-style = color:green).")});
+
+        auto h3_LISTS = tgui::XhtmlElement::createH3(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"List "),
+                                                               tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#008800")), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
+                                                               tgui::XhtmlElement::createInnerText(nullptr, U" (h3)")});
+        h3_LISTS->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"LISTS"));
+        auto h3_BG02 = std::make_shared<tgui::XhtmlStyleEntry>();
+        h3_BG02->setBackgroundColor(tgui::Color(U"#D0D0DF"));
+        h3_LISTS->addAttribute(h3_BG02);
+        tgui::XhtmlElement::addChildrenAndSetPatent(body, {
+            h3_LISTS,
             tgui::XhtmlElement::createH4(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Nested list "),
-                                                   tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#008800"), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
+                                                   tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#008800")), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
                                                    tgui::XhtmlElement::createInnerText(nullptr, U" (h4)")}),
             tgui::XhtmlElement::createInnerText(nullptr, U"Example of unordered lists:")});
         auto yellowBG = std::make_shared<tgui::XhtmlStyleEntry>();
@@ -433,6 +482,17 @@ public:
             tgui::XhtmlElement::createOrderedList(nullptr, yellowOverlayBG, {tgui::XhtmlElement::createListItem(nullptr, tgui::XhtmlElement::createInnerText(nullptr, U"Apple")),
                                                                              tgui::XhtmlElement::createListItem(nullptr, tgui::XhtmlElement::createInnerText(nullptr, U"Orange"))}),
             tgui::XhtmlElement::createListItem(nullptr, tgui::XhtmlElement::createInnerText(nullptr, U"Third ordered list item"))});
+        auto a_BG01 = std::make_shared<tgui::XhtmlStyleEntry>();
+        a_BG01->setBackgroundColor(tgui::Color(U"#DFD0D0"));
+        auto a01 = tgui::XhtmlElement::createAnchor(nullptr, a_BG01, tgui::XhtmlElement::createInnerText(nullptr, U"Jump to: Top"));
+        a01->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"href", U"#HTML-MU"));
+        auto h3_CODE = tgui::XhtmlElement::createH3(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Code and style-sheet "),
+                                                              tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#008800")), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
+                                                              tgui::XhtmlElement::createInnerText(nullptr, U" (h3)")});
+        h3_CODE->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"CODE"));
+        auto h3_BG03 = std::make_shared<tgui::XhtmlStyleEntry>();
+        h3_BG03->setBackgroundColor(tgui::Color(U"#D0D0DF"));
+        h3_CODE->addAttribute(h3_BG03);
         auto silverBG = std::make_shared<tgui::XhtmlStyleEntry>(); silverBG->setBackgroundColor(tgui::Color(248, 248, 248, 255));
         silverBG->setBorderColor(tgui::Color(160, 160, 160, 192));
         silverBG->setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 1.0f));
@@ -442,11 +502,12 @@ public:
             list01,
             tgui::XhtmlElement::createInnerText(nullptr, U"Example of ordered lists:"),
             list02,
-            tgui::XhtmlElement::createH3(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Code and style-sheet "),
-                                                   tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#008800"), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
-                                                   tgui::XhtmlElement::createInnerText(nullptr, U" (h3)")}),
+            tgui::XhtmlElement::createInnerText(nullptr, U"left-side "),
+            a01,
+            tgui::XhtmlElement::createInnerText(nullptr, U" right-side"),
+            h3_CODE,
             tgui::XhtmlElement::createH4(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Code with style sheet "),
-                                                   tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#008800"), tgui::XhtmlElement::createInnerText(nullptr, U"test")),
+                                                   tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#008800")), tgui::XhtmlElement::createInnerText(nullptr, U"test")),
                                                    tgui::XhtmlElement::createInnerText(nullptr, U" (h4)")}),
             tgui::XhtmlElement::createDivision(nullptr, tgui::XhtmlElement::createPreformatted(nullptr, silverBG, { tgui::XhtmlElement::createBreak(), code01})) });
         tgui::XhtmlElement::addChildrenAndSetPatent(code01, {

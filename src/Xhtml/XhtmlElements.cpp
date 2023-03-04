@@ -68,8 +68,21 @@ namespace tgui
     constexpr const char  XhtmlElementType::Script[];
 #endif
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     const tgui::String emptyString = U"";
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    const tgui::String& MarkupLanguageElement::getEmptyString()
+    {   return emptyString;   }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     XhtmlElementType XhtmlElementType::m_dataTypes[] =
@@ -90,12 +103,12 @@ namespace tgui
         {   XhtmlElementType::Input,         true,         false,      true,       false,             false   },
         {   XhtmlElementType::Label,         false,        true,       true,       false,             false   },
 
-        {   XhtmlElementType::H1,            false,        false,      true,       true,              false   },
-        {   XhtmlElementType::H2,            false,        false,      true,       true,              false   },
-        {   XhtmlElementType::H3,            false,        false,      true,       true,              false   },
-        {   XhtmlElementType::H4,            false,        false,      true,       true,              false   },
-        {   XhtmlElementType::H5,            false,        false,      true,       true,              false   },
-        {   XhtmlElementType::H6,            false,        false,      true,       true,              false   },
+        {   XhtmlElementType::H1,            false,        true,       true,       true,              false   },
+        {   XhtmlElementType::H2,            false,        true,       true,       true,              false   },
+        {   XhtmlElementType::H3,            false,        true,       true,       true,              false   },
+        {   XhtmlElementType::H4,            false,        true,       true,       true,              false   },
+        {   XhtmlElementType::H5,            false,        true,       true,       true,              false   },
+        {   XhtmlElementType::H6,            false,        true,       true,       true,              false   },
 
         {   XhtmlElementType::Emphasized,    false,        false,      true,       false,             false   },
         {   XhtmlElementType::Italic,        false,        false,      true,       false,             false   },
@@ -130,6 +143,28 @@ namespace tgui
             if (ext::string::strcasecmp(m_dataTypes[index].TypeName, typeName) == 0)
                 return m_dataTypes[index];
         return m_dataTypes[size - 1];
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    const tgui::String& XhtmlElement::getId() const
+    {
+        auto attribute = getAttribute(U"id");
+
+        if (attribute != nullptr)
+            return attribute->getValue();
+        return emptyString;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    const tgui::String& XhtmlElement::getName() const
+    {
+        auto attribute = getAttribute(U"name");
+
+        if (attribute != nullptr)
+            return attribute->getValue();
+        return emptyString;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -177,8 +212,8 @@ namespace tgui
         else if (ext::string::strcasecmp(typeName, XhtmlElementType::Head) == 0)
             element = XhtmlElement::createHead(parent);
         else if (ext::string::strcasecmp(typeName, XhtmlElementType::Meta) == 0 ||
-            ext::string::strcasecmp(typeName, XhtmlElementType::Link) == 0 ||
-            ext::string::strcasecmp(typeName, XhtmlElementType::Title) == 0)
+                 ext::string::strcasecmp(typeName, XhtmlElementType::Link) == 0 ||
+                 ext::string::strcasecmp(typeName, XhtmlElementType::Title) == 0)
         {
             element = std::make_shared<XhtmlElement>(typeName);
             addChildAndSetPatent(parent, element);
@@ -234,10 +269,7 @@ namespace tgui
         else if (ext::string::strcasecmp(typeName, XhtmlElementType::Paragraph) == 0)
             element = XhtmlElement::createParagraph(parent);
         else if (ext::string::strcasecmp(typeName, XhtmlElementType::Anchor) == 0)
-        {
-            element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Anchor);
-            addChildAndSetPatent(parent, element);
-        }
+            element = XhtmlElement::createAnchor(parent);
         else if (ext::string::strcasecmp(typeName, XhtmlElementType::Image) == 0)
             element = XhtmlElement::createImage(parent);
         else if (ext::string::strcasecmp(typeName, XhtmlElementType::Script) == 0)
@@ -360,7 +392,7 @@ namespace tgui
 
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child)
     {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
+        std::shared_ptr<XhtmlStyleableContainerElement> element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
         addChildAndSetPatent(element, child);
         return element;
@@ -370,17 +402,16 @@ namespace tgui
 
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children)
     {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
+        std::shared_ptr<XhtmlStyleableContainerElement> element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
     }
-
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH1(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, std::make_shared<XhtmlStyleEntry>(color));
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H1);
         addChildAndSetPatent(parent, element);
         addChildAndSetPatent(element, child);
         return element;
@@ -388,28 +419,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH1(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
     {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildrenAndSetPatent(element, children);
-        return element;
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH1(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
-    {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H1);
-        addChildAndSetPatent(parent, element);
-        addChildAndSetPatent(element, child);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH1(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
-    {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H1);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H1);
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
@@ -417,9 +429,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH1(XhtmlElement::Ptr parent, const String& text)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH1(XhtmlElement::Ptr parent, const String& text)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H1);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H1);
         addChildAndSetPatent(parent, element);
         auto innerText = std::make_shared<XhtmlInnerText>(text);
         addChildAndSetPatent(element, innerText);
@@ -428,9 +440,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH2(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH2(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H2);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H2);
         addChildAndSetPatent(parent, element);
         addChildAndSetPatent(element, child);
         return element;
@@ -438,9 +450,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH2(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH2(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H2);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H2);
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
@@ -448,9 +460,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH2(XhtmlElement::Ptr parent, const String& text)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH2(XhtmlElement::Ptr parent, const String& text)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H2);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H2);
         addChildAndSetPatent(parent, element);
         auto innerText = std::make_shared<XhtmlInnerText>(text);
         addChildAndSetPatent(element, innerText);
@@ -459,9 +471,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH3(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH3(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H3);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H3);
         addChildAndSetPatent(parent, element);
         addChildAndSetPatent(element, child);
         return element;
@@ -469,18 +481,18 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH3(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH3(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H3);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H3);
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
     }
 
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH3(XhtmlElement::Ptr parent, const String& text)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH3(XhtmlElement::Ptr parent, const String& text)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H3);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H3);
         addChildAndSetPatent(parent, element);
         auto innerText = std::make_shared<XhtmlInnerText>(text);
         addChildAndSetPatent(element, innerText);
@@ -489,9 +501,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH4(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH4(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H4);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H4);
         addChildAndSetPatent(parent, element);
         addChildAndSetPatent(element, child);
         return element;
@@ -499,9 +511,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH4(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH4(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H4);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H4);
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
@@ -509,9 +521,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH4(XhtmlElement::Ptr parent, const String& text)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH4(XhtmlElement::Ptr parent, const String& text)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H4);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H4);
         addChildAndSetPatent(parent, element);
         auto innerText = std::make_shared<XhtmlInnerText>(text);
         addChildAndSetPatent(element, innerText);
@@ -520,9 +532,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH5(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH5(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H5);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H5);
         addChildAndSetPatent(parent, element);
         addChildAndSetPatent(element, child);
         return element;
@@ -530,9 +542,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH5(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH5(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H5);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H5);
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
@@ -540,9 +552,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH5(XhtmlElement::Ptr parent, const String& text)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH5(XhtmlElement::Ptr parent, const String& text)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H5);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H5);
         addChildAndSetPatent(parent, element);
         auto innerText = std::make_shared<XhtmlInnerText>(text);
         addChildAndSetPatent(element, innerText);
@@ -551,9 +563,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH6(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH6(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H6);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H6);
         addChildAndSetPatent(parent, element);
         addChildAndSetPatent(element, child);
         return element;
@@ -561,9 +573,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH6(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH6(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H6);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H6);
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
@@ -571,9 +583,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlContainerElement> XhtmlElement::createH6(XhtmlElement::Ptr parent, const String& text)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createH6(XhtmlElement::Ptr parent, const String& text)
     {
-        auto element = std::make_shared<XhtmlContainerElement>(XhtmlElementType::H6);
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::H6);
         addChildAndSetPatent(parent, element);
         auto innerText = std::make_shared<XhtmlInnerText>(text);
         addChildAndSetPatent(element, innerText);
@@ -839,26 +851,6 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createUnorderedList(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::UnorderedList, std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildAndSetPatent(element, child);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createUnorderedList(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::UnorderedList, std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildrenAndSetPatent(element, children);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createOrderedList(XhtmlElement::Ptr parent, const XhtmlElement::Ptr child)
     {
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::OrderedList);
@@ -892,26 +884,6 @@ namespace tgui
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createOrderedList(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children)
     {
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::OrderedList, styleEntry);
-        addChildAndSetPatent(parent, element);
-        addChildrenAndSetPatent(element, children);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createOrderedList(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::OrderedList, std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildAndSetPatent(element, child);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createOrderedList(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::OrderedList, std::make_shared<XhtmlStyleEntry>(color));
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
@@ -957,27 +929,6 @@ namespace tgui
         return element;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlListItem> XhtmlElement::createListItem(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child)
-    {
-        auto element = std::make_shared<XhtmlListItem>(std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildAndSetPatent(element, child);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlListItem> XhtmlElement::createListItem(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children)
-    {
-        auto element = std::make_shared<XhtmlListItem>(std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildrenAndSetPatent(element, children);
-        return element;
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createSpan(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Span);
@@ -1011,26 +962,6 @@ namespace tgui
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createSpan(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children)
     {
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Span, styleEntry);
-        addChildAndSetPatent(parent, element);
-        addChildrenAndSetPatent(element, children);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createSpan(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Span, std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildAndSetPatent(element, child);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createSpan(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Span, std::make_shared<XhtmlStyleEntry>(color));
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
@@ -1078,25 +1009,6 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createDivision(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Division, std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildAndSetPatent(element, child);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createDivision(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Division, std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildrenAndSetPatent(element, children);
-        return element;
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createPreformatted(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Preformatted);
@@ -1130,26 +1042,6 @@ namespace tgui
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createPreformatted(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children)
     {
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Preformatted, styleEntry);
-        addChildAndSetPatent(parent, element);
-        addChildrenAndSetPatent(element, children);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createPreformatted(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Preformatted, std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildAndSetPatent(element, child);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createPreformatted(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Preformatted, std::make_shared<XhtmlStyleEntry>(color));
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
@@ -1197,25 +1089,6 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createCode(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Code, std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildAndSetPatent(element, child);
-        return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createCode(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children)
-    {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Code, std::make_shared<XhtmlStyleEntry>(color));
-        addChildAndSetPatent(parent, element);
-        addChildrenAndSetPatent(element, children);
-        return element;
-    }
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createParagraph(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Paragraph);
@@ -1256,9 +1129,9 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createParagraph(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createAnchor(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Paragraph, std::make_shared<XhtmlStyleEntry>(color));
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Anchor);
         addChildAndSetPatent(parent, element);
         addChildAndSetPatent(element, child);
         return element;
@@ -1266,9 +1139,29 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createParagraph(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children)
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createAnchor(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
     {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Paragraph, std::make_shared<XhtmlStyleEntry>(color));
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Anchor);
+        addChildAndSetPatent(parent, element);
+        addChildrenAndSetPatent(element, children);
+        return element;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createAnchor(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child)
+    {
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Anchor, styleEntry);
+        addChildAndSetPatent(parent, element);
+        addChildAndSetPatent(element, child);
+        return element;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createAnchor(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children)
+    {
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Anchor, styleEntry);
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
@@ -1874,7 +1767,7 @@ namespace tgui
             attributes.push_back(attribute);
         workAttributes.clear();
 
-        return offsetFromBegin;
+       return offsetFromBegin;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1913,13 +1806,20 @@ namespace tgui
             tgui::String styleName(typeName); styleName += U"."; styleName += className;
             return ( m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);
         }
-        else if (typeName != nullptr && (strlen(typeName) > 0 || className.size() > 0))
+        else if (typeName != nullptr && (strlen(typeName) > 0))
         {
-            tgui::String styleName(typeName); styleName += className;
+            tgui::String styleName(typeName);
             return (m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);
         }
+        else if (className.size() > 0)
+        {
+            tgui::String styleName = className;
+            return (m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);
+        }
+
         return nullptr;
     }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     XhtmlStyleEntry::Ptr XhtmlStyleableNoncontainerElement::getStyleEntry()

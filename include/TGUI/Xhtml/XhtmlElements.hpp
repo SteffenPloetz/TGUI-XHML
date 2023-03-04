@@ -31,6 +31,8 @@
 
 #include <TGUI/String.hpp>
 
+#include "TGUI/MarkupLanguageElement.hpp"
+
 namespace tgui
 {
 
@@ -117,7 +119,7 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief Base class for **all** XHTML element (text and node) classes
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    class TGUI_API XhtmlElement
+    class TGUI_API XhtmlElement : public MarkupLanguageElement
     {
     public:
         using Ptr = std::shared_ptr<XhtmlElement>; //!< Shared XHTML element (base implementation) pointer
@@ -159,6 +161,21 @@ namespace tgui
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         virtual ~XhtmlElement()
         {   m_attributes->clear();   }
+
+    public:
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the element ID or an empty string. Implements the abstract MarkupLanguageElement class method
+        ///
+        /// @return The element ID on success or an empty string otherwise
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        const tgui::String& getId() const;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the element name or an empty string. Implements the abstract MarkupLanguageElement class method
+        ///
+        /// @return The element name on success or an empty string otherwise
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        const tgui::String& getName() const;
 
     public:
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -297,308 +314,282 @@ namespace tgui
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Body (container) node
+        /// @brief Creates a new Body (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Body (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Body (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new Body (container) node
+        /// @return The new Body (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createBody(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Body (container) node
+        /// @brief Creates a new Body (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Body (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Body (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new Body (container) node
+        /// @return The new Body (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createBody(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Body (container) node
+        /// @brief Creates a new Body (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Body (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Body (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param child       The optional child to register
         ///
-        /// @return The new Body (container) node
+        /// @return The new Body (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createBody(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Body (container) node
+        /// @brief Creates a new Body (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Body (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Body (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param children    The collection of children to register
         ///
-        /// @return The new Body (container) node
+        /// @return The new Body (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createBody(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children);
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Body (container) node
-        ///
-        /// Prefer the factory method in cases where the Body (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param child   The optional child to register
-        ///
-        /// @return The new Body (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createBody(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child = nullptr);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Body (container) node
-        ///
-        /// Prefer the factory method in cases where the Body (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent    The parent to register. Can be nullptr
-        /// @param color     The color to apply to the current style entry
-        /// @param children  The collection of children to register
-        ///
-        /// @return The new Body (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createBody(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children);
-
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H1 (container) node
+        /// @brief Creates a new H1 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H1 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H1 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new H1 (container) node
+        /// @return The new H1 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH1(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH1(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H1 (container) node
+        /// @brief Creates a new H1 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H1 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H1 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new H1 (container) node
+        /// @return The new H1 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH1(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH1(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H1 (container) node with foreground color initialization
+        /// @brief Creates a new H1 (stylable container) node with foreground color initialization
         ///
-        /// Prefer the factory method in cases where the H1 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H1 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param text    The text to apply
         ///
-        /// @return The new H1 (container) node
+        /// @return The new H1 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH1(XhtmlElement::Ptr parent, const String& text);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH1(XhtmlElement::Ptr parent, const String& text);
 
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H2 (container) node
+        /// @brief Creates a new H2 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H2 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H2 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new H2 (container) node
+        /// @return The new H2 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH2(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH2(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H2 (container) node
+        /// @brief Creates a new H2 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H2 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H2 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new H2 (container) node
+        /// @return The new H2 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH2(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH2(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H2 (container) node with foreground color initialization
+        /// @brief Creates a new H2 (stylable container) node with foreground color initialization
         ///
-        /// Prefer the factory method in cases where the H2 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H2 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param text    The text to apply
         ///
-        /// @return The new H2 (container) node
+        /// @return The new H2 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH2(XhtmlElement::Ptr parent, const String& text);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH2(XhtmlElement::Ptr parent, const String& text);
 
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H3 (container) node
+        /// @brief Creates a new H3 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H3 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H3 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new H3 (container) node
+        /// @return The new H3 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH3(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH3(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H3 (container) node
+        /// @brief Creates a new H3 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H3 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H3 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new H3 (container) node
+        /// @return The new H3 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH3(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH3(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H3 (container) node with foreground color initialization
+        /// @brief Creates a new H3 (stylable container) node with foreground color initialization
         ///
-        /// Prefer the factory method in cases where the H3 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H3 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param text    The text to apply
         ///
-        /// @return The new H3 (container) node
+        /// @return The new H3 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH3(XhtmlElement::Ptr parent, const String& text);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH3(XhtmlElement::Ptr parent, const String& text);
 
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H4 (container) node
+        /// @brief Creates a new H4 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H4 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H4 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new H4 (container) node
+        /// @return The new H4 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH4(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH4(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H4 (container) node
+        /// @brief Creates a new H4 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H4 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H4 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new H4 (container) node
+        /// @return The new H4 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH4(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH4(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H4 (container) node with foreground color initialization
+        /// @brief Creates a new H4 (stylable container) node with foreground color initialization
         ///
-        /// Prefer the factory method in cases where the H4 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H4 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param text    The text to apply
         ///
-        /// @return The new H4 (container) node
+        /// @return The new H4 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH4(XhtmlElement::Ptr parent, const String& text);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH4(XhtmlElement::Ptr parent, const String& text);
 
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H5 (container) node
+        /// @brief Creates a new H5 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H5 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H5 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new H5 (container) node
+        /// @return The new H5 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH5(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH5(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H5 (container) node
+        /// @brief Creates a new H5 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H5 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H5 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new H5 (container) node
+        /// @return The new H5 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH5(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH5(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H5 (container) node with foreground color initialization
+        /// @brief Creates a new H5 (stylable container) node with foreground color initialization
         ///
-        /// Prefer the factory method in cases where the H5 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H5 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param text    The text to apply
         ///
-        /// @return The new H5 (container) node
+        /// @return The new H5 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH5(XhtmlElement::Ptr parent, const String& text);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH5(XhtmlElement::Ptr parent, const String& text);
 
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H6 (container) node
+        /// @brief Creates a new H6 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H6 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H6 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new H6 (container) node
+        /// @return The new H6 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH6(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH6(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H6 (container) node
+        /// @brief Creates a new H6 (stylable container) node
         ///
-        /// Prefer the factory method in cases where the H6 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H6 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new H6 (container) node
+        /// @return The new H6 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH6(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH6(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new H6 (container) node with foreground color initialization
+        /// @brief Creates a new H6 (stylable stylable container) node with foreground color initialization
         ///
-        /// Prefer the factory method in cases where the H6 (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the H6 (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param text    The text to apply
         ///
-        /// @return The new H6 (container) node
+        /// @return The new H6 (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlContainerElement> createH6(XhtmlElement::Ptr parent, const String& text);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createH6(XhtmlElement::Ptr parent, const String& text);
 
         //-----------------------------------------------------------------------------------------------------------------------
 
@@ -869,158 +860,107 @@ namespace tgui
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new unordered List (container) node
+        /// @brief Creates a new unordered List (stylable container) node
         ///
-        /// Prefer the factory method in cases where the unordered List (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the unordered List (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new unordered List (container) node
+        /// @return The new unordered List (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createUnorderedList(XhtmlElement::Ptr parent, const XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new unordered List (container) node
+        /// @brief Creates a new unordered List (stylable container) node
         ///
-        /// Prefer the factory method in cases where the unordered List (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the unordered List (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new unordered List (container) node
+        /// @return The new unordered List (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createUnorderedList(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new unordered List (container) node with style entry initialization
+        /// @brief Creates a new unordered List (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the unordered List (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the unordered List (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param child       The optional child to register
         ///
-        /// @return The new unordered List (container) node
+        /// @return The new unordered List (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createUnorderedList(XhtmlElement::Ptr parent, const XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new unordered List (container) node with style entry initialization
+        /// @brief Creates a new unordered List (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the unordered List (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the unordered List (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param children    The collection of children to register
         ///
-        /// @return The new unordered List (container) node
+        /// @return The new unordered List (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createUnorderedList(XhtmlElement::Ptr parent, const XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new unordered List (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the unordered List (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param child   The optional child to register
-        ///
-        /// @return The new unordered List (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createUnorderedList(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child = nullptr);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new unordered List (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the unordered List (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param children  The collection of children to register
-        ///
-        /// @return The new unordered List (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createUnorderedList(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children);
 
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new ordered List (container) node
+        /// @brief Creates a new ordered List (stylable container) node
         ///
-        /// Prefer the factory method in cases where the ordered List (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the ordered List (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new ordered List (container) node
+        /// @return The new ordered List (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createOrderedList(XhtmlElement::Ptr parent, const XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new ordered List (container) node
+        /// @brief Creates a new ordered List (stylable container) node
         ///
-        /// Prefer the factory method in cases where the ordered List (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the ordered List (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new ordered List (container) node
+        /// @return The new ordered List (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createOrderedList(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new ordered List (container) node with style entry initialization
+        /// @brief Creates a new ordered List (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the ordered List (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the ordered List (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param child       The optional child to register
         ///
-        /// @return The new ordered List (container) node
+        /// @return The new ordered List (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createOrderedList(XhtmlElement::Ptr parent, const XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new ordered List (container) node with style entry initialization
+        /// @brief Creates a new ordered List (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the ordered List (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the ordered List (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param children    The collection of children to register
         ///
-        /// @return The new ordered List (container) node
+        /// @return The new ordered List (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createOrderedList(XhtmlElement::Ptr parent, const XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children);
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new ordered List (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the ordered List (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param child   The optional child to register
-        ///
-        /// @return The new ordered List (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createOrderedList(XhtmlElement::Ptr paren, const Color color, XhtmlElement::Ptr child = nullptr);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new ordered List (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the ordered List (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param children  The collection of children to register
-        ///
-        /// @return The new ordered List (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createOrderedList(XhtmlElement::Ptr paren, const Color color, const std::vector<XhtmlElement::Ptr> children);
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1073,422 +1013,318 @@ namespace tgui
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlListItem> createListItem(XhtmlElement::Ptr parent, const XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children);
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new List item (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the List item (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param child   The optional child to register
-        ///
-        /// @return The new List item (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlListItem> createListItem(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child = nullptr);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new List item (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the List item (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param children  The collection of children to register
-        ///
-        /// @return The new List item (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlListItem> createListItem(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children);
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Span (container) node
+        /// @brief Creates a new Span (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Span (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Span (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new Span (container) node
+        /// @return The new Span (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createSpan(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Span (container) node
+        /// @brief Creates a new Span (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Span (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Span (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new Span (container) node
+        /// @return The new Span (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createSpan(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Span (container) node with style entry initialization
+        /// @brief Creates a new Span (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the Span (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Span (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param child       The optional child to register
         ///
-        /// @return The new Span (container) node
+        /// @return The new Span (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createSpan(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Span (container) node with style entry initialization
+        /// @brief Creates a new Span (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the Span (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Span (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param children    The collection of children to register
         ///
-        /// @return The new Span (container) node
+        /// @return The new Span (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createSpan(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Span (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the Span (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param child   The optional child to register
-        ///
-        /// @return The new Span (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createSpan(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child = nullptr);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Span (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the Span (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent    The parent to register. Can be nullptr
-        /// @param color     The color to apply to the current style entry
-        /// @param children  The collection of children to register
-        ///
-        /// @return The new Span (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createSpan(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children);
 
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Division (container) node
+        /// @brief Creates a new Division (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Division (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Division (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new Division (container) node
+        /// @return The new Division (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createDivision(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Division (container) node
+        /// @brief Creates a new Division (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Division (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Division (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new Division (container) node
+        /// @return The new Division (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createDivision(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Division (container) node with style entry initialization
+        /// @brief Creates a new Division (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the Division (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Division (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param child       The optional child to register
         ///
-        /// @return The new Division (container) node
+        /// @return The new Division (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createDivision(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Division (container) node with style entry initialization
+        /// @brief Creates a new Division (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the Division (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Division (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param children    The collection of children to register
         ///
-        /// @return The new Division (container) node
+        /// @return The new Division (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createDivision(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Division (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the Division (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param child   The optional child to register
-        ///
-        /// @return The new Division (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createDivision(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child = nullptr);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Division (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the Division (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param children  The collection of children to register
-        ///
-        /// @return The new Division (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createDivision(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children);
 
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Preformatted (container) node
+        /// @brief Creates a new Preformatted (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Preformatted (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Preformatted (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new Preformatted (container) node
+        /// @return The new Preformatted (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createPreformatted(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Preformatted (container) node
+        /// @brief Creates a new Preformatted (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Preformatted (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Preformatted (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new Preformatted (container) node
+        /// @return The new Preformatted (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createPreformatted(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Preformatted (container) node with style entry initialization
+        /// @brief Creates a new Preformatted (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the Preformatted (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Preformatted (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param child       The optional child to register
         ///
-        /// @return The new Preformatted (container) node
+        /// @return The new Preformatted (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createPreformatted(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Preformatted (container) node with style entry initialization
+        /// @brief Creates a new Preformatted (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the Preformatted (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Preformatted (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style to register
         /// @param children    The collection of children to register
         ///
-        /// @return The new Preformatted (container) node
+        /// @return The new Preformatted (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createPreformatted(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children);
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Preformatted (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the Preformatted (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param child   The optional child to register
-        ///
-        /// @return The new Preformatted (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createPreformatted(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child = nullptr);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Preformatted (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the Preformatted (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param children  The collection of children to register
-        ///
-        /// @return The new Preformatted (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createPreformatted(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children);
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Code (container) node
+        /// @brief Creates a new Code (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Code (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Code (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new Code (container) node
+        /// @return The new Code (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createCode(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Code (container) node
+        /// @brief Creates a new Code (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Code (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Code (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new Code (container) node
+        /// @return The new Code (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createCode(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Code (container) node with style entry initialization
+        /// @brief Creates a new Code (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the Code (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Code (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param child       The optional child to register
         ///
-        /// @return The new Code (container) node
+        /// @return The new Code (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createCode(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Code (container) node with style entry initialization
+        /// @brief Creates a new Code (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the Code (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Code (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param children    The collection of children to register
         ///
-        /// @return The new Code (container) node
+        /// @return The new Code (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createCode(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Code (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the Code (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param child   The optional child to register
-        ///
-        /// @return The new Code (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createCode(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child = nullptr);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Code (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the Code (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param children  The collection of children to register
-        ///
-        /// @return The new Code (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createCode(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children);
 
         //-----------------------------------------------------------------------------------------------------------------------
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Paragraph (container) node
+        /// @brief Creates a new Paragraph (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Paragraph (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Paragraph (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent  The parent to register. Can be nullptr
         /// @param child   The optional child to register
         ///
-        /// @return The new Paragraph (container) node
+        /// @return The new Paragraph (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createParagraph(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Paragraph (container) node
+        /// @brief Creates a new Paragraph (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Paragraph (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Paragraph (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent    The parent to register. Can be nullptr
         /// @param children  The collection of children to register
         ///
-        /// @return The new Paragraph (container) node
+        /// @return The new Paragraph (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createParagraph(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Paragraph (container) node with style entry initialization
+        /// @brief Creates a new Paragraph (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the Paragraph (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Paragraph (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param child       The optional child to register
         ///
-        /// @return The new Paragraph (container) node
+        /// @return The new Paragraph (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createParagraph(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Paragraph (container) node with style entry initialization
+        /// @brief Creates a new Paragraph (stylable container) node with style entry initialization
         ///
-        /// Prefer the factory method in cases where the Paragraph (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Paragraph (stylable container) node needs to be shared, otherwise prefer the constructor.
         ///
         /// @param parent      The parent to register. Can be nullptr
         /// @param styleEntry  The style entry to register
         /// @param children    The collection of children to register
         ///
-        /// @return The new Paragraph (container) node
+        /// @return The new Paragraph (stylable container) node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::shared_ptr<XhtmlStyleableContainerElement> createParagraph(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Paragraph (container) node with foreground color initialization
+        /// @brief Creates a new Anchor (stylable container) node
         ///
-        /// Prefer the factory method in cases where the Paragraph (container) node needs to be shared, otherwise prefer the constructor.
-        ///
-        /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param child   The optional child to register
-        ///
-        /// @return The new Paragraph (container) node
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createParagraph(XhtmlElement::Ptr parent, const Color color, XhtmlElement::Ptr child = nullptr);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Paragraph (container) node with foreground color initialization
-        ///
-        /// Prefer the factory method in cases where the Paragraph (container) node needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the Image node needs to be shared, otherwise prefer the constructor.
+        /// @param child       The optional child to register
         ///
         /// @param parent  The parent to register. Can be nullptr
-        /// @param color   The color to apply to the current style entry
-        /// @param children  The collection of children to register
         ///
-        /// @return The new Paragraph (container) node
+        /// @return The new Anchor node
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::shared_ptr<XhtmlStyleableContainerElement> createParagraph(XhtmlElement::Ptr parent, const Color color, const std::vector<XhtmlElement::Ptr> children);
+        static std::shared_ptr<XhtmlStyleableContainerElement> createAnchor(XhtmlElement::Ptr parent, XhtmlElement::Ptr child = nullptr);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Image node
+        /// @brief Creates a new Anchor (stylable container) node
+        ///
+        /// Prefer the factory method in cases where the Image node needs to be shared, otherwise prefer the constructor.
+        ///
+        /// @param parent      The parent to register. Can be nullptr
+        /// @param children    The collection of children to register
+        ///
+        /// @return The new Anchor node
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static std::shared_ptr<XhtmlStyleableContainerElement> createAnchor(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Creates a new Anchor (stylable container) node
+        ///
+        /// Prefer the factory method in cases where the Image node needs to be shared, otherwise prefer the constructor.
+        ///
+        /// @param parent  The parent to register. Can be nullptr
+        /// @param styleEntry  The style entry to register
+        /// @param child       The optional child to register
+        ///
+        /// @return The new Anchor node
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static std::shared_ptr<XhtmlStyleableContainerElement> createAnchor(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child = nullptr);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Creates a new Anchor (stylable container) node
+        ///
+        /// Prefer the factory method in cases where the Image node needs to be shared, otherwise prefer the constructor.
+        ///
+        /// @param parent  The parent to register. Can be nullptr
+        /// @param styleEntry  The style entry to register
+        /// @param children    The collection of children to register
+        ///
+        /// @return The new Anchor node
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static std::shared_ptr<XhtmlStyleableContainerElement> createAnchor(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Creates a new Image (stylable) node
         ///
         /// Prefer the factory method in cases where the Image node needs to be shared, otherwise prefer the constructor.
         ///
@@ -1499,7 +1335,7 @@ namespace tgui
         static std::shared_ptr<XhtmlStyleableNoncontainerElement> createImage(XhtmlElement::Ptr parent);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new Image node with style entry initialization
+        /// @brief Creates a new Image (stylable) node with style entry initialization
         ///
         /// Prefer the factory method in cases where the Image node needs to be shared, otherwise prefer the constructor.
         ///

@@ -26,6 +26,8 @@
 #ifndef TGUI_FORMATTED_ELEMENTS_HPP
 #define TGUI_FORMATTED_ELEMENTS_HPP
 
+#include "TGUI/MarkupLanguageElement.hpp"
+
 namespace tgui
 {
 
@@ -63,7 +65,7 @@ namespace tgui
         ///
         /// @param origin  The new content origin data element to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setContentOrigin(XhtmlElement::Ptr origin)
+        inline void setContentOrigin(MarkupLanguageElement::Ptr origin)
         {   m_contentOrigin = origin;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -71,8 +73,24 @@ namespace tgui
         ///
         /// @return The origin data element
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline XhtmlElement::Ptr getContentOrigin() const
+        inline MarkupLanguageElement::Ptr getContentOrigin() const
         {   return m_contentOrigin;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the origin data element ID or an empty string
+        ///
+        /// @return The origin data element ID on success or an empty string otherwise
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline const tgui::String& getOriginId() const
+        {   if (m_contentOrigin != nullptr) return m_contentOrigin->getId(); else return MarkupLanguageElement::getEmptyString();   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the origin data element name or an empty string
+        ///
+        /// @return The origin data element name on success or an empty string otherwise
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline const tgui::String& getOriginName() const
+        {   if (m_contentOrigin != nullptr) return m_contentOrigin->getName(); else return MarkupLanguageElement::getEmptyString();   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the render area (to an empty area at indicated position) of this formatted element
@@ -207,6 +225,14 @@ namespace tgui
         {   m_renderArea.width = right - m_renderArea.left;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the render area right position of this formatted element
+        ///
+        /// @return The render area right position
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline float getRenderRight() const
+        {   return m_renderArea.left + m_renderArea.width;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the render area bottom coordinate (with affecting the size) of this formatted element
         ///
         /// @param bottom  The new render area bottom coordinate (absolute coordinates)
@@ -216,14 +242,6 @@ namespace tgui
             m_renderRefLine = bottom - (m_renderArea.top + m_renderArea.height);
             m_renderArea.height = bottom - m_renderArea.top;
         }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the render area right position of this formatted element
-        ///
-        /// @return The render area right position
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline float getRenderRight() const
-        {   return m_renderArea.left + m_renderArea.width;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the render area bottom position of this formatted element
@@ -267,11 +285,11 @@ namespace tgui
         {   return m_opacity;   }
 
     protected:
-        XhtmlElement::Ptr m_contentOrigin;   //!< The origin data element, that is (partly) represented by this formatted element
-        FloatRect         m_renderArea;      //!< The render area
-        float             m_renderRefLine;   //!< The render area reference line (y position)
-        Color             m_backgroundColor; //!< The background color
-        float             m_opacity;         //!< The background opacity
+        MarkupLanguageElement::Ptr m_contentOrigin;   //!< The origin data element, that is (partly) represented by this formatted element
+        FloatRect                  m_renderArea;      //!< The render area
+        float                      m_renderRefLine;   //!< The render area reference line (y position)
+        Color                      m_backgroundColor; //!< The background color
+        float                      m_opacity;         //!< The background opacity
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

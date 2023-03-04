@@ -3,7 +3,6 @@
 
 #include <list>
 #include <map>
-#include <typeinfo>
 
 // MSC needs a clear distiction between "__declspec(dllimport)" (above) and "__declspec(dllexport)" (below) this comment.
 // So in the case of direct source file integration (in contrast to library creation and linking), the API must be 'dllexport'.
@@ -53,6 +52,20 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    XhtmlContainerElement::Ptr FormattedTextXhtmlDocument::getBodyElement() const
+    {
+        for (size_t index = 0; index < m_rootElement->countChildren(); index++)
+        {
+            auto element = m_rootElement->getChild(index);
+            if (strncmp(element->getTypeName(), XhtmlElementType::Body, strlen(XhtmlElementType::Body)) == 0)
+                return std::dynamic_pointer_cast<XhtmlContainerElement>(element);
+        }
+
+        return nullptr;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     XhtmlStyle::Ptr FormattedTextXhtmlDocument::getStyleElement() const
     {
         auto headElement = getHeadElement();
@@ -91,6 +104,112 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    void FormattedTextXhtmlDocument::applyStyleEntriesToFormattingState(std::vector<tgui::XhtmlStyleEntry::Ptr> styleEntries,
+        const FormattedTextDocument::FontCollection& fontCollection, StyleCategoryFlags categories)
+    {
+        for (auto styleEntry : styleEntries)
+        {
+            auto styleEntryFlags = styleEntry->getStyleEntryFlags();
+            if ((categories & StyleCategoryFlags::ColorsAndOpacity) == StyleCategoryFlags::ColorsAndOpacity)
+            {
+                if ((styleEntryFlags & StyleEntryFlags::ForeColor) == StyleEntryFlags::ForeColor)
+                    m_formattingState.ForeColor = styleEntry->getColor();
+                if ((styleEntryFlags & StyleEntryFlags::BackColor) == StyleEntryFlags::BackColor)
+                    m_formattingState.BackColor = styleEntry->getBackgroundColor();
+                if ((styleEntryFlags & StyleEntryFlags::Opacity) == StyleEntryFlags::Opacity)
+                    m_formattingState.Opacity = styleEntry->getOpacity();
+            }
+            if ((categories & StyleCategoryFlags::ColorsAndOpacity) == StyleCategoryFlags::ColorsAndOpacity)
+            {
+                if ((styleEntryFlags & StyleEntryFlags::FontFamily) == StyleEntryFlags::FontFamily)
+                    m_formattingState.setFontFamily(styleEntry->getFontFamily(), fontCollection);
+                if ((styleEntryFlags & StyleEntryFlags::FontStyle) == StyleEntryFlags::FontStyle)
+                    m_formattingState.setFontWeight(styleEntry->getBold(), fontCollection);
+                if ((styleEntryFlags & StyleEntryFlags::FontStyle) == StyleEntryFlags::FontStyle)
+                    m_formattingState.setFontSlant(styleEntry->getItalic(), fontCollection);
+                if ((styleEntryFlags & StyleEntryFlags::FontSize) == StyleEntryFlags::FontSize)
+                    m_formattingState.setTextSize(styleEntry->getFontSize());
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    void FormattedTextXhtmlDocument::applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement,
+        const std::vector<tgui::XhtmlStyleEntry::Ptr> styleEntries,
+        const FormattedTextDocument::FontCollection& fontCollection, StyleCategoryFlags categories)
+    {
+
+        for (auto styleEntry : styleEntries)
+        {
+            auto styleEntryFlags = styleEntry->getStyleEntryFlags();
+            if ((categories & StyleCategoryFlags::BackColor) == StyleCategoryFlags::BackColor)
+            {
+                if ((styleEntryFlags & StyleEntryFlags::BackColor) == StyleEntryFlags::BackColor)
+                    formattedElement->setBackgroundColor(styleEntry->getBackgroundColor());
+            }
+            if ((categories & StyleCategoryFlags::Opacity) == StyleCategoryFlags::Opacity)
+            {
+                if ((styleEntryFlags & StyleEntryFlags::Opacity) == StyleEntryFlags::Opacity)
+                    formattedElement->setOpacity(styleEntry->getOpacity());
+            }
+
+            FormattedRectangle::Ptr formattedRect = std::dynamic_pointer_cast<tgui::FormattedRectangle>(formattedElement);
+            if (formattedRect == nullptr)
+                continue;
+
+            if ((categories & StyleCategoryFlags::BorderWidth) == StyleCategoryFlags::BorderWidth &&
+                !styleEntry->getBorderWidth().isEmpty(m_availableClientSize))
+            {
+                if ((styleEntryFlags & StyleEntryFlags::BorderWidth) == StyleEntryFlags::BorderWidth)
+                    formattedRect->setBoderWidth(styleEntry->getBorderWidth());
+            }
+            if ((categories & StyleCategoryFlags::BorderColor) == StyleCategoryFlags::BorderColor)
+            {
+                if ((styleEntryFlags & StyleEntryFlags::BorderColor) == StyleEntryFlags::BorderColor)
+                    formattedRect->setBorderColor(styleEntry->getBorderColor());
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    FormattedRectangle::Ptr FormattedTextXhtmlDocument::createFormattedRectangleWithPosition(XhtmlElement::Ptr xhtmlElement, bool applyLineRunLength)
+    {
+        auto formattedRectangle = std::make_shared<FormattedRectangle>();
+        formattedRectangle->setContentOrigin(xhtmlElement);
+
+        auto leftTop = Vector2f(m_evolvingLayoutArea.left,
+                                m_evolvingLineExtraHeight + m_evolvingLayoutArea.top);
+        formattedRectangle->setRenderLeftTop(leftTop, (applyLineRunLength ? m_evolvingLineRunLength : 0));
+        auto rightBottom = Vector2f(formattedRectangle->getRenderLeft(),
+                                    m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight);
+        formattedRectangle->setRenderRightBottom(rightBottom);
+        formattedRectangle->setBackgroundColor(Color(255, 255, 255, 0));
+
+        return formattedRectangle;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    FormattedImage::Ptr FormattedTextXhtmlDocument::createFormattedImageWithPosition(XhtmlElement::Ptr xhtmlElement)
+    {
+        auto formattedImage = std::make_shared<FormattedImage>();
+        formattedImage->setContentOrigin(xhtmlElement);
+
+        auto leftTop = Vector2f(m_evolvingLayoutArea.left,
+                                m_evolvingLineExtraHeight + m_evolvingLayoutArea.top);
+        formattedImage->setRenderLeftTop(leftTop);
+        auto rightBottom = Vector2f(formattedImage->getRenderLeft(),
+                                    m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight);
+        formattedImage->setRenderRightBottom(rightBottom);
+        formattedImage->setBackgroundColor(Color(255, 255, 255, 0));
+
+        return formattedImage;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     FormattedTextSection::Ptr FormattedTextXhtmlDocument::createFormattedTextSectionWithFontAndPosition(XhtmlElement::Ptr xhtmlElement,
         Font font, float indentOffset, float superscriptOrSubsciptTextHeightReduction)
     {
@@ -99,11 +218,13 @@ namespace tgui
         formattedTextSection->setFont(font);
         formattedTextSection->setOpacity(m_formattingState.Opacity);
 
+        auto leftTop = Vector2f(m_evolvingLayoutArea.left,
+                                m_evolvingLineExtraHeight + m_evolvingLayoutArea.top);
+        formattedTextSection->setRenderLeftTop(leftTop, indentOffset, std::max(0.0f, superscriptOrSubsciptTextHeightReduction));
         // for superscript / subscript - the text height is already adjusted
         float unscriptedTextHeight = m_formattingState.TextHeight + std::abs(superscriptOrSubsciptTextHeightReduction);
-        auto leftTop = Vector2f(m_evolvingLayoutArea.left, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top);
-        auto rightBottom = Vector2f(formattedTextSection->getRenderLeft(), m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + unscriptedTextHeight);
-        formattedTextSection->setRenderLeftTop(leftTop, indentOffset, std::max(0.0f, superscriptOrSubsciptTextHeightReduction));
+        auto rightBottom = Vector2f(formattedTextSection->getRenderLeft(),
+                                    m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + unscriptedTextHeight);
         formattedTextSection->setRenderRightBottom(rightBottom, 0.0f, std::min(0.0f, superscriptOrSubsciptTextHeightReduction));
 
         return formattedTextSection;
@@ -119,7 +240,7 @@ namespace tgui
         if(!m_defaultFont)
             std::cerr << "Invalid default font!\n";
 
-        bool predecessorWasStructuringBlockElement = false;
+        bool predecessorWasExtraSpacingBlockElement = false;
         bool parentIsBlockElement = false;
         bool lastchildWasRunLengtElement = false;
 
@@ -138,7 +259,7 @@ namespace tgui
         m_formattingState.TextFont = fontCollection.Sans->Regular;
 
         for (size_t index = 0; index < m_rootElement->countChildren(); index++)
-            layout(predecessorWasStructuringBlockElement, parentIsBlockElement, lastchildWasRunLengtElement,
+            layout(predecessorWasExtraSpacingBlockElement, parentIsBlockElement, lastchildWasRunLengtElement,
                    m_rootElement->getChild(index), fontCollection,keepSelection);
         if (m_content.size() > 0)
         {
@@ -149,7 +270,7 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void FormattedTextXhtmlDocument::layout(bool& predecessorWasStructuringBlockElement, bool parentIsTextBlockElement,
+    void FormattedTextXhtmlDocument::layout(bool& predecessorWasExtraSpacingBlockElement, bool parentIsTextBlockElement,
                                             bool& lastchildWasRunLengtElement, std::shared_ptr<XhtmlElement> xhtmlElement,
                                             const FormattedTextDocument::FontCollection& fontCollection,
                                             bool keepSelection)
@@ -158,16 +279,23 @@ namespace tgui
         if (typeName == XhtmlElementType::Head)
             return;
 
+        std::shared_ptr<FormattedElement> currentFormattedElement = nullptr;
+
         // Block elements always need to start a new line and to lock the current line.
-        if (typeName == XhtmlElementType::Body ||
-            typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3 || typeName == XhtmlElementType::H4 || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6 ||
-            typeName == XhtmlElementType::Emphasized || typeName == XhtmlElementType::Strong || typeName == XhtmlElementType::Italic || typeName == XhtmlElementType::Bold || typeName == XhtmlElementType::Underline ||
-            typeName == XhtmlElementType::Superscript || typeName == XhtmlElementType::Subscript || typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList || typeName == XhtmlElementType::ListItem ||
-            typeName == XhtmlElementType::Span || typeName == XhtmlElementType::Division || typeName == XhtmlElementType::Preformatted || typeName == XhtmlElementType::Code || typeName == XhtmlElementType::Paragraph ||
-            typeName == XhtmlElementType::Image)
+        if (typeName == XhtmlElementType::Body          ||
+            typeName == XhtmlElementType::H1            || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3 ||
+            typeName == XhtmlElementType::H4            || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6 ||
+            typeName == XhtmlElementType::Emphasized    || typeName == XhtmlElementType::Italic ||
+            typeName == XhtmlElementType::Strong        || typeName == XhtmlElementType::Bold ||
+            typeName == XhtmlElementType::Underline     ||
+            typeName == XhtmlElementType::Superscript   || typeName == XhtmlElementType::Subscript    ||
+            typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList  ||
+            typeName == XhtmlElementType::ListItem      ||
+            typeName == XhtmlElementType::Span          || typeName == XhtmlElementType::Anchor       ||
+            typeName == XhtmlElementType::Division      || typeName == XhtmlElementType::Preformatted || typeName == XhtmlElementType::Code ||
+            typeName == XhtmlElementType::Paragraph     || typeName == XhtmlElementType::Image)
         {
             // prepare rect section to accommodate the block
-            std::shared_ptr<FormattedRectangle> formattedRectSection = nullptr;
 
             FormattingState cachedState(m_formattingState);
             auto styleEntries = getApplicableStyleElements(xhtmlElement);
@@ -178,7 +306,7 @@ namespace tgui
             // -------------------------------
             // Apply predefined font style
             // -------------------------------
-            if (typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3)
+            if      (typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3)
             {
                 m_formattingState.TextFont = fontCollection.Sans->Bold;
                 m_formattingState.TextHeight = (typeName == XhtmlElementType::H1 ? 28 * m_defaultTextSize / 14 :
@@ -222,49 +350,59 @@ namespace tgui
             // -------------------------------
             if (xhtmlStyleableElement)
             {
-                for (auto styleEntry : styleEntries)
-                {
-                    auto styleEntryFlags = styleEntry->getStyleEntryFlags();
-                    if ((styleEntryFlags & StyleEntryFlags::ForeColor) == StyleEntryFlags::ForeColor)
-                        m_formattingState.ForeColor = styleEntry->getColor();
-                    if ((styleEntryFlags & StyleEntryFlags::BackColor) == StyleEntryFlags::BackColor)
-                        m_formattingState.BackColor = styleEntry->getBackgroundColor();
-                    if ((styleEntryFlags & StyleEntryFlags::Opacity) == StyleEntryFlags::Opacity)
-                        m_formattingState.Opacity = styleEntry->getOpacity();
-                    if ((styleEntryFlags & StyleEntryFlags::FontFamily) == StyleEntryFlags::FontFamily)
-                        m_formattingState.setFontFamily(styleEntry->getFontFamily(), fontCollection);
-                    if ((styleEntryFlags & StyleEntryFlags::FontStyle) == StyleEntryFlags::FontStyle)
-                        m_formattingState.setFontWeight(styleEntry->getBold(), fontCollection);
-                    if ((styleEntryFlags & StyleEntryFlags::FontStyle) == StyleEntryFlags::FontStyle)
-                        m_formattingState.setFontSlant(styleEntry->getItalic(), fontCollection);
-                    if ((styleEntryFlags & StyleEntryFlags::FontSize) == StyleEntryFlags::FontSize)
-                        m_formattingState.setTextSize(styleEntry->getFontSize());
-                }
+                applyStyleEntriesToFormattingState(styleEntries, fontCollection, StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
             }
 
             // -------------------------------
-            // Apply leading offsets
+            // Create formatted elements
+            // And apply leading offsets
             // -------------------------------
             if (typeName == XhtmlElementType::Body)
             {
-                // act like a "\r\n"
-                m_evolvingLineRunLength = 0;
+                // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
+
+                // -- Prepare Y
                 m_evolvingLineExtraHeight = 0;
+
+                // -- Prepare X
+
+                // -- Create element
+                currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement);
+                m_content.push_back(currentFormattedElement);
+
+                // -- Act like a "\r"
+                m_evolvingLineRunLength = 0;
+
+                // -- Set flags
             }
             else if (typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3 ||
                      typeName == XhtmlElementType::H4 || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6)
             {
-                if (predecessorWasStructuringBlockElement)
+                // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
+
+                // -- Prepare Y
+                if (predecessorWasExtraSpacingBlockElement)
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight;
                 else
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize + m_defaultTextSize + m_defaultTextSize / 2;
-
-                // act like a "\r\n"
-                m_evolvingLineRunLength = 0;
                 m_evolvingLineExtraHeight = 0;
+
+                // -- Prepare X
+
+                // -- Create element
+                currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement);
+                m_content.push_back(currentFormattedElement);
+
+                // -- Act like a "\r"
+                m_evolvingLineRunLength = 0;
+
+                // -- Set flags
             }
             else if (typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList)
             {
+                // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
+
+                // -- Prepare Y
                 auto parent  = xhtmlElement->getParent();
                 auto sibling = XhtmlElement::getPreviousSibling(xhtmlElement);
                 auto parentTypeName = (parent  != nullptr ? parent->getTypeName()  : XhtmlElementType::Body);
@@ -285,9 +423,12 @@ namespace tgui
                 /* [2] */ else if (parentTypeName != XhtmlElementType::UnorderedList && parentTypeName != XhtmlElementType::OrderedList)
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize + m_defaultTextSize / 4;
                 /* [3] */ else if (predecTypeName == XhtmlElementType::ListItem)
-                    m_evolvingLayoutArea.top += 0;
+                    m_evolvingLayoutArea.top += m_evolvingLineExtraHeight;
                 /* [4] */ else
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize + m_defaultTextSize / 4;
+                m_evolvingLineExtraHeight = 0;
+
+                // -- Prepare X
 
                 auto newListMetric = std::make_shared<FormattedTextDocument::ListData>();
                 newListMetric->Ordered = (typeName == XhtmlElementType::OrderedList);
@@ -295,17 +436,25 @@ namespace tgui
                 newListMetric->ItemType = ListItemType::InheritOrDefault;
                 m_formattingState.ListMetrics.push_back(newListMetric);
 
-                currentIsTextBlockElement = true;
+                // -- Create element
+                currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement);
+                m_content.push_back(currentFormattedElement);
 
-                // act like a "\r\n"
+                // -- Act like a "\r"
                 m_evolvingLineRunLength = 0;
-                m_evolvingLineExtraHeight = 0;
+
+                // -- Set flags
+                currentIsTextBlockElement = true;
             }
             else if (typeName == XhtmlElementType::ListItem)
             {
+                // Can be an anchor or styled and also represents text/image ==> FormattedTextSection
+
+                // -- Prepare Y
+                m_evolvingLineExtraHeight = 0;
+
                 auto xhtmlListItem = std::dynamic_pointer_cast<XhtmlListItem>(xhtmlStyleableElement);
                 FormattedTextDocument::ListData::Ptr listMetrics = m_formattingState.ListMetrics.back();
-
                 listMetrics->ActualItemIndex++;
                 if (listMetrics->ActualItemIndex == 1)
                 {
@@ -313,6 +462,7 @@ namespace tgui
                     inflate(m_evolvingLayoutArea, -m_listPadding, 0, 0, 0);
                 }
 
+                // -- Prepare X
                 String bullet = listMetrics->calculateBullet(m_formattingState.ListMetrics.size());
                 tgui::Font font = (listMetrics->Ordered ? m_formattingState.TextFont : fontCollection.Mono->Regular);
                 auto runLengt = Text::getLineWidth(bullet, font, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
@@ -324,21 +474,58 @@ namespace tgui
                 formattedTextSection->setColor(m_formattingState.ForeColor);
                 formattedTextSection->setStyle(m_formattingState.Style);
 
-                auto formattedElement = std::static_pointer_cast<FormattedElement>(formattedTextSection);
-                m_content.push_back(formattedElement);
+                // -- Create element
+                currentFormattedElement = std::static_pointer_cast<FormattedElement>(formattedTextSection);
+                m_content.push_back(currentFormattedElement);
 
-                currentIsTextBlockElement = true;
-
-                // act like a "\r\n"
+                // -- Act like a "\r"
                 m_evolvingLineRunLength = 0;
-                m_evolvingLineExtraHeight = 0;
+
+                // -- Set flags
+                currentIsTextBlockElement = true;
+            }
+            else if (typeName == XhtmlElementType::Span || typeName == XhtmlElementType::Anchor)
+            {
+                // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
+
+                // -- Prepare Y
+
+                // -- Prepare X
+
+                // -- Create element
+                currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement, true);
+                m_content.push_back(currentFormattedElement);
+
+                if (typeName == XhtmlElementType::Anchor)
+                {
+                    Color linkColor = Color(U"#4500AD");
+                    // Color alnkColor = Color(U"#600090");
+                    // Color vlnkColor = Color(U"#100080");
+                    auto body = getBodyElement();
+                    if (body != nullptr)
+                    {
+                        auto link = body->getAttribute(U"link");
+                        if (link != nullptr && link->getValue().length() > 2)
+                            linkColor = Color(link->getValue());
+                    }
+
+                    m_formattingState.ForeColor = linkColor;
+                }
+
+                // -- Act NOT like a "\r"
+
+                // -- Set flags
             }
             else if (typeName == XhtmlElementType::Division || typeName == XhtmlElementType::Preformatted || typeName == XhtmlElementType::Code)
             {
-                if (predecessorWasStructuringBlockElement || parentIsTextBlockElement)
+                // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
+
+                // -- Prepare Y
+                if (predecessorWasExtraSpacingBlockElement || parentIsTextBlockElement)
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight;
                 else
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_formattingState.TextHeight + m_formattingState.TextHeight / 4;
+                m_evolvingLineExtraHeight = 0;
 
                 if (typeName == XhtmlElementType::Preformatted)
                     m_preformattedText++;
@@ -357,21 +544,56 @@ namespace tgui
                         m_evolvingLayoutArea.top -= m_formattingState.TextHeight + m_formattingState.TextHeight / 4;
                 }
 
-                currentIsTextBlockElement = true;
+                // -- Prepare X
 
-                // act like a "\r\n"
+                // -- Create element
+                currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement);
+                m_content.push_back(currentFormattedElement);
+
+                // -- Act like a "\r"
                 m_evolvingLineRunLength = 0;
-                m_evolvingLineExtraHeight = 0;
+
+                // -- Set flags
+                currentIsTextBlockElement = true;
             }
             else if (typeName == XhtmlElementType::Paragraph)
             {
-                m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize + m_defaultTextSize / 2 + m_defaultTextSize;
+                // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
 
-                currentIsTextBlockElement = true;
-
-                // act like a "\r\n"
-                m_evolvingLineRunLength = 0;
+                // -- Prepare Y
+                if (predecessorWasExtraSpacingBlockElement || parentIsTextBlockElement)
+                    m_evolvingLayoutArea.top += m_evolvingLineExtraHeight;
+                else
+                    m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize + m_defaultTextSize / 2 + m_defaultTextSize;
                 m_evolvingLineExtraHeight = 0;
+
+                // -- Prepare X
+
+                // -- Create element
+                currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement);
+                m_content.push_back(currentFormattedElement);
+
+                // -- Act like a "\r"
+                m_evolvingLineRunLength = 0;
+
+                // -- Set flags
+                currentIsTextBlockElement = true;
+            }
+            else if (typeName == XhtmlElementType::Image)
+            {
+                // Can be an anchor or styled and also represents text/image ==> FormattedTextSection
+
+                // -- Prepare Y
+
+                // -- Prepare X
+
+                // -- Create element
+                currentFormattedElement = createFormattedImageWithPosition(xhtmlElement);
+                m_content.push_back(currentFormattedElement);
+
+                // -- Act NOT like a "\r"
+
+                // -- Set flags
             }
 
             // -------------------------------
@@ -392,31 +614,19 @@ namespace tgui
             // -------------------------------
             // Initialize backgound and border
             // -------------------------------
-            if (typeName == XhtmlElementType::Body || typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList ||
-                typeName == XhtmlElementType::Paragraph || typeName == XhtmlElementType::Preformatted || typeName == XhtmlElementType::Code ||
-                typeName == XhtmlElementType::Division || typeName == XhtmlElementType::Image)
+            if (typeName == XhtmlElementType::Body          ||
+                typeName == XhtmlElementType::H1            || typeName == XhtmlElementType::H2            || typeName == XhtmlElementType::H3 ||
+                typeName == XhtmlElementType::H4            || typeName == XhtmlElementType::H5            || typeName == XhtmlElementType::H6 ||
+                typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList   ||
+                typeName == XhtmlElementType::Span          || typeName == XhtmlElementType::Anchor        ||
+                typeName == XhtmlElementType::Division      || typeName == XhtmlElementType::Preformatted  || typeName == XhtmlElementType::Code ||
+                typeName == XhtmlElementType::Paragraph     || typeName == XhtmlElementType::Image)
             {
-                for (auto styleEntry : styleEntries)
+                FormattedRectangle::Ptr formattedRectSection = std::dynamic_pointer_cast<tgui::FormattedRectangle>(currentFormattedElement);
+                if (formattedRectSection != nullptr)
                 {
-                    auto styleEntryFlags = styleEntry->getStyleEntryFlags();
-                    if ((styleEntryFlags & StyleEntryFlags::BackColor) == StyleEntryFlags::BackColor ||
-                        (styleEntryFlags & StyleEntryFlags::Opacity) == StyleEntryFlags::Opacity ||
-                        ((styleEntryFlags & StyleEntryFlags::BorderWidth) == StyleEntryFlags::BorderWidth &&
-                            !styleEntry->getBorderWidth().isEmpty(m_availableClientSize)) ||
-                        (styleEntryFlags & StyleEntryFlags::BorderColor) == StyleEntryFlags::BorderColor)
-                    {
-                        formattedRectSection = std::make_shared<FormattedRectangle>();
-                        formattedRectSection->setRenderArea(m_evolvingLayoutArea.getPosition());
-                        if ((styleEntryFlags & StyleEntryFlags::BackColor) == StyleEntryFlags::BackColor)
-                            formattedRectSection->setBackgroundColor(styleEntry->getBackgroundColor());
-                        if ((styleEntryFlags & StyleEntryFlags::Opacity) == StyleEntryFlags::Opacity)
-                            formattedRectSection->setOpacity(styleEntry->getOpacity());
-                        if ((styleEntryFlags & StyleEntryFlags::BorderWidth) == StyleEntryFlags::BorderWidth)
-                            formattedRectSection->setBoderWidth(styleEntry->getBorderWidth());
-                        if ((styleEntryFlags & StyleEntryFlags::BorderColor) == StyleEntryFlags::BorderColor)
-                            formattedRectSection->setBorderColor(styleEntry->getBorderColor());
-                        m_content.push_back(formattedRectSection);
-                    }
+                    applyStyleEntriesToFormattedElement(formattedRectSection, styleEntries, fontCollection,
+                        StyleCategoryFlags::BackColor | StyleCategoryFlags::Opacity | StyleCategoryFlags::BorderWidth | StyleCategoryFlags::BorderColor);
                 }
             }
 
@@ -438,10 +648,10 @@ namespace tgui
             // -------------------------------
             // Process children
             // -------------------------------
-            bool loopinternalPedecessorWasStructuringBlockElement = false;
+            bool loopinternalPredecessorWasExtraSpacingBlockElement = false;
             bool lastchildWasRunLengtElement = false;
             for (size_t index = 0; xhtmlElement->isContainer() && index < xhtmlElement->countChildren(); index++)
-                layout(loopinternalPedecessorWasStructuringBlockElement, currentIsTextBlockElement, lastchildWasRunLengtElement,
+                layout(loopinternalPredecessorWasExtraSpacingBlockElement, currentIsTextBlockElement, lastchildWasRunLengtElement,
                     xhtmlElement->getChild(index), fontCollection, keepSelection);
 
 
@@ -463,19 +673,29 @@ namespace tgui
             // -------------------------------
             // Finalize background
             // -------------------------------
-            if (typeName == XhtmlElementType::Body      || typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList ||
-                typeName == XhtmlElementType::Paragraph || typeName == XhtmlElementType::Preformatted  || typeName == XhtmlElementType::Code ||
-                typeName == XhtmlElementType::Division  || typeName == XhtmlElementType::Image)
+            if (typeName == XhtmlElementType::Body          || typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList ||
+                typeName == XhtmlElementType::H1            || typeName == XhtmlElementType::H2            || typeName == XhtmlElementType::H3 ||
+                typeName == XhtmlElementType::H4            || typeName == XhtmlElementType::H5            || typeName == XhtmlElementType::H6 ||
+                typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList   ||
+                typeName == XhtmlElementType::Span          || typeName == XhtmlElementType::Anchor        ||
+                typeName == XhtmlElementType::Division      || typeName == XhtmlElementType::Preformatted  || typeName == XhtmlElementType::Code ||
+                typeName == XhtmlElementType::Paragraph)    // typeName == XhtmlElementType::Image)
             {
-                if (formattedRectSection != nullptr)
+                if (currentFormattedElement != nullptr)
                 {
+                    // Recover the last child (if any) or itself. If there is a child - if child is text section a special treatment is required.
                     auto lastTextSection = std::dynamic_pointer_cast<tgui::FormattedTextSection>(m_content.back());
                     if (lastTextSection)
+                    {
                         // typically the the text sections are always open to add new charachters (in other words: not finalized with line break / carriage return)
                         // which implies, that m_evolvingLayoutArea.top points still to the top of the  text sections, while they might have a heigth
-                        formattedRectSection->setRenderRightBottom(Vector2f(right(m_evolvingLayoutArea), lastTextSection->getRenderRefLine() + m_formattingState.TextHeight / 4));
+                        if (typeName == XhtmlElementType::Span || typeName == XhtmlElementType::Anchor)
+                            currentFormattedElement->setRenderRightBottom(Vector2f(m_evolvingLineRunLength, lastTextSection->getRenderRefLine() + m_formattingState.TextHeight / 4));
+                        else
+                            currentFormattedElement->setRenderRightBottom(Vector2f(right(m_evolvingLayoutArea), lastTextSection->getRenderRefLine() + m_formattingState.TextHeight / 4));
+                    }
                     else
-                        formattedRectSection->setRenderRightBottom(Vector2f(right(m_evolvingLayoutArea), m_evolvingLayoutArea.top));
+                        currentFormattedElement->setRenderRightBottom(Vector2f(right(m_evolvingLayoutArea), m_evolvingLayoutArea.top));
                 }
             }
 
@@ -571,23 +791,26 @@ namespace tgui
             // -------------------------------
             // Set flags
             // -------------------------------
-            predecessorWasStructuringBlockElement = false;
+            predecessorWasExtraSpacingBlockElement = false;
 
             if (typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3 ||
                 typeName == XhtmlElementType::H4 || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6)
             {
-                predecessorWasStructuringBlockElement = true;
+                predecessorWasExtraSpacingBlockElement = true;
                 lastchildWasRunLengtElement = false;
             }
             else if (typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList)
             {
-                predecessorWasStructuringBlockElement = true;
+                predecessorWasExtraSpacingBlockElement = true;
                 lastchildWasRunLengtElement = false;
             }
             else if (typeName == XhtmlElementType::Division || typeName == XhtmlElementType::Preformatted || typeName == XhtmlElementType::Code)
                 lastchildWasRunLengtElement = false;
             else if (typeName == XhtmlElementType::Paragraph)
+            {
+                predecessorWasExtraSpacingBlockElement = true;
                 lastchildWasRunLengtElement = false;
+            }
 
             m_formattingState = cachedState;
         }
@@ -606,12 +829,12 @@ namespace tgui
                 m_evolvingLineRunLength = 0;
                 m_evolvingLineExtraHeight = 0;
 
-                predecessorWasStructuringBlockElement = false;
+                predecessorWasExtraSpacingBlockElement = false;
                 parentIsTextBlockElement = false;
             }
             else if (typeName == XhtmlElementType::Text)
             {
-                String remainingText = ((XhtmlInnerText*)&(*xhtmlElement))->getText().toUtf32();
+                String remainingText = ((XhtmlInnerText*)&(*xhtmlElement))->getText();
                 auto   runLengt      = Text::getLineWidth(remainingText, m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
                 size_t formerCharCnt = remainingText.size() + 1;
 
@@ -702,7 +925,7 @@ namespace tgui
                     formattedTextSection->setStyle(m_formattingState.Style);
                 }
 
-                predecessorWasStructuringBlockElement = false;
+                predecessorWasExtraSpacingBlockElement = false;
                 parentIsTextBlockElement = false;
             }
 
@@ -716,7 +939,7 @@ namespace tgui
 
         if (typeName == XhtmlElementType::Image)
         {
-            auto formattedImage = std::make_shared<FormattedImage>();
+            FormattedImage::Ptr formattedImage = std::dynamic_pointer_cast<tgui::FormattedImage>(currentFormattedElement);
             formattedImage->setContentOrigin(xhtmlElement);
 
             Vector2u            availSize(static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f), static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
@@ -812,11 +1035,18 @@ namespace tgui
                     m_evolvingLineExtraHeight += additionalExtraHeight;
                 }
 
-                // fix y position for previous formatted elements in this line
+                // fix y position for previous formatted elements in the same line
                 for(auto rit = m_content.rbegin(); rit != m_content.rend(); ++rit)
                 {
-                    float oldReferenceLine = rit->get()->getRenderRefLine();
-                    if (oldReferenceLine == renderReferenceLine)
+                    // skip self
+                    if (rit == m_content.rbegin())
+                        continue;
+#if _DEBUG
+                    auto formattedTextSection = std::dynamic_pointer_cast<tgui::FormattedTextSection>(*rit);
+#endif
+                    float oldReferenceLine = (*rit)->getRenderRefLine();
+                    auto  typeName = (*rit)->getContentOrigin()->getTypeName();
+                    if (oldReferenceLine == renderReferenceLine || typeName == XhtmlElementType::Span)
                     {
                         auto rect = rit->get()->getRenderArea();
                         rect.top += additionalExtraHeight;
@@ -829,7 +1059,6 @@ namespace tgui
 
             formattedImage->setRenderLeftTop(m_evolvingLayoutArea.getPosition(), m_evolvingLineRunLength);
             formattedImage->setRenderRightBottom(Vector2f(formattedImage->getRenderLeft() + m_evolvingLineRunLength + logicSize.x, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight));
-            m_content.push_back(formattedImage);
             m_evolvingLineRunLength += logicSize.x + m_formattingState.TextHeight / 8;
         }
     }

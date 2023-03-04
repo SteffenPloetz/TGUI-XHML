@@ -128,7 +128,7 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     enum class SizeType
     {
-        Pixel,         //!< The size is given in pixels
+        Pixel,         //!< The size is given in pixels, this is the default if no measuring unit is set
         Point,         //!< The size is given in points
         EquivalentOfM, //!< The size is given equivalents to the height of the letter m (16px)
         Relative,      //!< The size is given relative to the default size
@@ -307,7 +307,7 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief The enumeration of style entry properties, that are valid for a style entry
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    enum class StyleEntryFlags
+    enum class StyleEntryFlags : unsigned int
     {
         None        = 1 << 0,  //!< This is an empty style entry
         ForeColor   = 1 << 1,  //!< The fore color is captured by this style entry
@@ -349,6 +349,30 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief The initializer structure for a XHTML style entry, designed to benefit from designated initializers
+    ///
+    /// To benefit from designated initializers we need GCC, or Clang or MSVC with -std:c++latest (which is at least C++20)
+    /// Read: https://pdimov.github.io/blog/2020/09/07/named-parameters-in-c20/ for details
+    ///
+    /// A generic solution for C++ is to use inititalizers, that return a reference to the this pointer. Like
+    /// @example auto style = std::make_shared<XhtmlStyleEntry>(XhtmlStyleEntryInitializer().SetForeColor(tgui::Color::Blue));
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    struct XhtmlStyleEntryInitializer
+    {
+        Color      ForeColor  = Color::Transparent;                     //!< The foreground/text color
+        String     FontFamily = U"";                                    //!< The font family
+        OneDimSize FontSize   = OneDimSize(SizeType::Relative, 1.0F);   //!< The font size
+        TextStyle  FontStyle  = (TextStyle)(1 << 4);                    //!< The font style
+        Color      BackColor  = Color::Transparent;                     //!< The background color
+
+        inline XhtmlStyleEntryInitializer& SetForeColor(Color color)         { ForeColor = color; return *this; }
+        inline XhtmlStyleEntryInitializer& SetFontFamily(String fontFamily)  { FontFamily = fontFamily; return *this; }
+        inline XhtmlStyleEntryInitializer& SetFontSize(OneDimSize fontSize)  { FontSize = fontSize; return *this; }
+        inline XhtmlStyleEntryInitializer& SetFontStyle(TextStyle fontStyle) { FontStyle = fontStyle; return *this; }
+        inline XhtmlStyleEntryInitializer& SetBackColor(Color color)         { BackColor = color; return *this; }
+    };
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief The XHTML Style entry
     ///
     /// This class represents a THML **style="..."** entry
@@ -366,7 +390,7 @@ namespace tgui
         /// @brief The default constructor
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         XhtmlStyleEntry()
-            : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(Color(0, 0, 0)), m_backgroundColor(Color(255, 255, 255)), m_borderColor(Color(0, 0, 0)),
+            : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(Color(0, 0, 0)), m_backgroundColor(Color::Transparent), m_borderColor(Color(0, 0, 0)),
               m_opacity(1.0f), m_fontFamily(U"Sans-serif"), m_fontSize({SizeType::Relative, 1.0f}), m_fontStyle(TextStyle::Regular),
               m_margin({SizeType::Relative, 0.0f}), m_border({SizeType::Relative, 0.0f}),
               m_padding({SizeType::Relative, 0.0f}), m_styleEntryFlags(StyleEntryFlags::None)
@@ -378,11 +402,13 @@ namespace tgui
         /// @param color  The new foreground color
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         XhtmlStyleEntry(Color color)
-            : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(color), m_backgroundColor(Color(255, 255, 255)), m_borderColor(Color(0, 0, 0)),
-              m_opacity(1.0f), m_fontFamily(U"Sans-serif"), m_fontSize({SizeType::Relative, 1.0f}), m_fontStyle(TextStyle::Regular),
-              m_margin({SizeType::Relative, 0.0f}), m_border({SizeType::Relative, 0.0f}),
-              m_padding({SizeType::Relative, 0.0f}), m_styleEntryFlags(StyleEntryFlags::ForeColor)
-        {   ;   }
+            : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(color), m_backgroundColor(Color::Transparent), m_borderColor(Color(0, 0, 0)),
+            m_opacity(1.0f), m_fontFamily(U"Sans-serif"), m_fontSize({ SizeType::Relative, 1.0f }), m_fontStyle(TextStyle::Regular),
+            m_margin({ SizeType::Relative, 0.0f }), m_border({ SizeType::Relative, 0.0f }),
+            m_padding({ SizeType::Relative, 0.0f }), m_styleEntryFlags(StyleEntryFlags::ForeColor)
+        {
+            ;
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief The initializing constructor with foreground color and font family
@@ -390,28 +416,38 @@ namespace tgui
         /// @param color   The new foreground color
         /// @param family  The new family
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        XhtmlStyleEntry(Color color, String family)
-            : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(color), m_backgroundColor(Color(255, 255, 255)), m_borderColor(Color(0, 0, 0)),
-              m_opacity(1.0f), m_fontFamily(family), m_fontSize({SizeType::Relative, 1.0f}), m_fontStyle(TextStyle::Regular),
+        XhtmlStyleEntry(const XhtmlStyleEntryInitializer& initializer)
+            : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(Color(0, 0, 0)), m_backgroundColor(Color::Transparent), m_borderColor(Color(0, 0, 0)),
+              m_opacity(1.0f), m_fontFamily(U"Sans-serif"), m_fontSize({SizeType::Relative, 1.0f}), m_fontStyle(TextStyle::Regular),
               m_margin({SizeType::Relative, 0.0f}), m_border({SizeType::Relative, 0.0f}),
-              m_padding({SizeType::Relative, 0.0f}), m_styleEntryFlags(StyleEntryFlags::ForeColor | StyleEntryFlags::FontFamily)
-        {   ;   }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief The initializing constructor with foreground color, font family, font size, font slant and font weight
-        ///
-        /// @param color   The new foreground color
-        /// @param family  The new family
-        /// @param size    The new font size
-        /// @param slant   The new font slant
-        /// @param weight  The new font weight
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        XhtmlStyleEntry(Color color, String family, OneDimSize size, TextStyle style = TextStyle::Regular)
-            : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(color), m_backgroundColor(Color(255, 255, 255)), m_borderColor(Color(0, 0, 0)),
-              m_opacity(1.0f), m_fontFamily(family), m_fontSize(size), m_fontStyle(style),
-              m_margin({SizeType::Relative, 0.0f}), m_border({SizeType::Relative, 0.0f}), m_padding({SizeType::Relative, 0.0f}),
-              m_styleEntryFlags(StyleEntryFlags::ForeColor | StyleEntryFlags::FontFamily | StyleEntryFlags::FontSize | StyleEntryFlags::FontStyle)
-        {   ;   }
+              m_padding({SizeType::Relative, 0.0f}), m_styleEntryFlags(StyleEntryFlags::None)
+        {
+            if (initializer.ForeColor != Color::Transparent)
+            {
+                m_color = initializer.ForeColor;
+                m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::ForeColor;
+            }
+            if (initializer.FontFamily.length() != 0)
+            {
+                m_fontFamily = initializer.FontFamily;
+                m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::FontFamily;
+            }
+            if (initializer.FontSize.sizeType != SizeType::Relative && initializer.FontSize.value != 1.0F)
+            {
+                m_fontSize = initializer.FontSize;
+                m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::FontSize;
+            }
+            if ((int)initializer.FontStyle <= (int)TextStyle::StrikeThrough)
+            {
+                m_fontStyle = initializer.FontStyle;
+                m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::FontStyle;
+            }
+            if (initializer.BackColor != Color::Transparent)
+            {
+                m_backgroundColor = initializer.BackColor;
+                m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::BackColor;
+            }
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief The copy constructor
