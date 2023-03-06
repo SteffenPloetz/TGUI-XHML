@@ -394,8 +394,8 @@ namespace tgui
 
         // The fonts
         FormattedTextDocument::FontCollection    m_fontCollection;
-        std::map<Outline, FormattedElement::Ptr> m_anchorSources;
-        std::map<String, FormattedElement::Ptr>  m_anchorTargets;
+        std::vector<FormattedLink::Ptr>          m_anchorSources;         //!< The list of formatted links
+        std::map<String, FormattedElement::Ptr>  m_anchorTargets;         //!< The list of link targets
     };
 
 }

@@ -162,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="src\MarkupLanguageElement.cpp" />
     <ClCompile Include="src\Renderers\FormattedTextRenderer.cpp" />
     <ClCompile Include="src\StringHelper.cpp" />
     <ClCompile Include="src\UtfHelper.cpp" />

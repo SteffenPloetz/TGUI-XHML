@@ -14,45 +14,6 @@
 
 #include "TGUI/StringHelper.hpp"
 #include "TGUI/Xhtml/XhtmlEntityResolver.hpp"
-namespace ext
-{
-    int isSpace(char32_t character)
-    {
-#if _WIN32
-        return std::iswspace((wchar_t)character);
-#else
-        return std::iswspace(character);
-#endif
-    }
-
-    int isAlpha(char32_t character)
-    {
-#if _WIN32
-        return std::iswalpha((wchar_t)character);
-#else
-        return std::iswalpha(character);
-#endif
-    }
-
-    int isAlnum(char32_t character)
-    {
-#if _WIN32
-        return std::iswalnum((wchar_t)character);
-#else
-        return std::iswalnum(character);
-#endif
-    }
-
-    int isUpper(char32_t character)
-    {
-#if _WIN32
-        return std::iswupper((wchar_t)character);
-#else
-        return std::iswupper(character);
-#endif
-    }
-}
-
 
 namespace tgui
 {
@@ -200,7 +161,7 @@ namespace tgui
             return 0; // throw "TinyXhtmlEntityResolver::resolveEntity() -> No end marker found!"
 
         // skip leading white-space characters
-        while (ext::isSpace(*begin) && length > 0)
+        while (tgui::isWhitespace(*begin) && length > 0)
         {
             begin++; length--;
         }
@@ -245,7 +206,7 @@ namespace tgui
             if (strKey.equalIgnoreCase(U"eth") ||
                 strKey.equalIgnoreCase(U"thorn"))
             {
-                if (ext::isUpper(strKey[0]))
+                if (strKey[0] == U'E' || strKey[0] == U'T')
                     std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::toupper);
                 else
                     std::transform(strKey.begin(), strKey.end(), strKey.begin(), ::tolower);

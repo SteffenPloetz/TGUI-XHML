@@ -191,11 +191,11 @@ namespace tgui
         char32_t workCharacter = 0;
 
         // skip leading white-space characters
-        while (ext::isSpace(buffer[workPosition]))
+        while (tgui::isWhitespace(buffer[workPosition]))
             workPosition++;
 
         // name always begins with an alpha character - otherwise we have empty content or we are done with the attributes
-        if (!ext::isAlpha(buffer[workPosition]))
+        if (!tgui::isAlpha(buffer[workPosition]))
             return nullptr;
 
         endPosition = workPosition;
@@ -205,7 +205,8 @@ namespace tgui
             // digits (0-9), underscores '_', hyphen '-', colons ':', and periods '.'
             // otherwise we have to determine whether we have a valid end of the name
             // or an inner text, that does not establish an attribute
-            if ((!ext::isAlnum(buffer[endPosition])) &&
+            if ((!tgui::isAlpha(buffer[endPosition])) &&
+                (!tgui::isDigit(buffer[endPosition])) &&
                 (buffer[endPosition] != U'-') &&
                 (buffer[endPosition] != U':') &&
                 (buffer[endPosition] != U'_') &&
@@ -225,7 +226,7 @@ namespace tgui
                 // can act as as a separator between an attribute and
                 // its value or  an inner-text delimiter
                 if (buffer[endPosition] == 0 ||
-                    ext::isSpace(buffer[endPosition]) ||
+                    tgui::isWhitespace(buffer[endPosition]) ||
                     buffer[endPosition] == U'=' ||
                     buffer[endPosition] == U'>' ||
                     buffer[endPosition] == U'/')
@@ -264,7 +265,7 @@ namespace tgui
             do
             {
                 endPosition++;
-            } while (ext::isSpace(buffer[endPosition]));
+            } while (tgui::isWhitespace(buffer[endPosition]));
 
             workPosition = endPosition;
             workCharacter = buffer[endPosition];
@@ -294,7 +295,7 @@ namespace tgui
                 // white-space character, or until we reach at the
                 // end of the string buffer.
                 while (buffer[endPosition] != 0 &&
-                    !ext::isSpace(buffer[endPosition]) &&
+                    !tgui::isWhitespace(buffer[endPosition]) &&
                     buffer[endPosition] != U'/' &&
                     buffer[endPosition] != U'>');
             }

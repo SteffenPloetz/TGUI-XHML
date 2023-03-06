@@ -397,9 +397,14 @@ namespace tgui
         {
             for (auto formattedElement : m_document->getContent())
             {
+                FormattedLink::Ptr formattedLink = nullptr;
+                if (formattedElement->getContentOrigin()->getTypeName() == MarkupLanguageElement::Anchor)
+                    formattedLink = std::dynamic_pointer_cast<FormattedLink>(formattedElement);
+                if (formattedLink != nullptr)
+                    m_anchorSources.push_back(formattedLink);
+
                 auto originName = formattedElement->getOriginName();
                 auto originId   = formattedElement->getOriginId();
-
                 if (!originName.empty())
                     m_anchorTargets[originName] = formattedElement;
                 if (!originId.empty())

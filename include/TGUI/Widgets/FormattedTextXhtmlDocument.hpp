@@ -255,6 +255,16 @@ namespace tgui
         FormattedRectangle::Ptr createFormattedRectangleWithPosition(XhtmlElement::Ptr xhtmlElement, bool applyLineRunLength = false);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Creates and basically initializes a FormattedLink
+        ///
+        /// @param xhtmlElement                             The XHTML element, represented by this formatted text section
+        /// @param applyLineRunLength                       Determine wheter to start at current line run length (true) or very left
+        ///
+        /// @return The newly created FormattedLink
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        FormattedLink::Ptr createFormattedLinkWithPosition(XhtmlElement::Ptr xhtmlElement, bool applyLineRunLength = false);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates and basically initializes a FormattedImage
         ///
         /// @param xhtmlElement                             The XHTML element, represented by this formatted text section

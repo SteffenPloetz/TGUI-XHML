@@ -40,7 +40,10 @@ namespace tgui
     class TGUI_API MarkupLanguageElement
     {
     public:
-        using Ptr = std::shared_ptr<MarkupLanguageElement>; //!< Shared markup language element (abstract base) pointer
+        static constexpr const char  Anchor[] = "a";                   //!< The tag name of an ANCHOR element
+
+    public:
+        using Ptr = std::shared_ptr<MarkupLanguageElement>;            //!< Shared markup language element (abstract base) pointer
         using ConstPtr = std::shared_ptr<const MarkupLanguageElement>; //!< Shared constant markup language element (abstract base) pointer
 
     public:

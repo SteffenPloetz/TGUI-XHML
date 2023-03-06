@@ -190,6 +190,22 @@ namespace tgui
         return formattedRectangle;
     }
 
+    FormattedLink::Ptr FormattedTextXhtmlDocument::createFormattedLinkWithPosition(XhtmlElement::Ptr xhtmlElement, bool applyLineRunLength)
+    {
+        auto formattedRectangle = std::make_shared<FormattedLink>();
+        formattedRectangle->setContentOrigin(xhtmlElement);
+
+        auto leftTop = Vector2f(m_evolvingLayoutArea.left,
+                                m_evolvingLineExtraHeight + m_evolvingLayoutArea.top);
+        formattedRectangle->setRenderLeftTop(leftTop, (applyLineRunLength ? m_evolvingLineRunLength : 0));
+        auto rightBottom = Vector2f(formattedRectangle->getRenderLeft(),
+                                    m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight);
+        formattedRectangle->setRenderRightBottom(rightBottom);
+        formattedRectangle->setBackgroundColor(Color(255, 255, 255, 0));
+
+        return formattedRectangle;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     FormattedImage::Ptr FormattedTextXhtmlDocument::createFormattedImageWithPosition(XhtmlElement::Ptr xhtmlElement)
@@ -374,6 +390,7 @@ namespace tgui
                 m_evolvingLineRunLength = 0;
 
                 // -- Set flags
+                currentIsTextBlockElement = true;
             }
             else if (typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3 ||
                      typeName == XhtmlElementType::H4 || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6)
@@ -493,23 +510,29 @@ namespace tgui
                 // -- Prepare X
 
                 // -- Create element
-                currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement, true);
+                FormattedLink::Ptr formattedLink = createFormattedLinkWithPosition(xhtmlElement, true);
+                currentFormattedElement = formattedLink;
                 m_content.push_back(currentFormattedElement);
 
                 if (typeName == XhtmlElementType::Anchor)
                 {
-                    Color linkColor = Color(U"#4500AD");
-                    // Color alnkColor = Color(U"#600090");
-                    // Color vlnkColor = Color(U"#100080");
+                    auto href = xhtmlElement->getAttribute(U"href");
+                    if (href != nullptr && href->getValue().length() > 2)
+                        formattedLink->setHref(href->getValue());
+
                     auto body = getBodyElement();
                     if (body != nullptr)
                     {
                         auto link = body->getAttribute(U"link");
                         if (link != nullptr && link->getValue().length() > 2)
-                            linkColor = Color(link->getValue());
+                            formattedLink->setLinkColor(Color(link->getValue()));
+                        auto alink = body->getAttribute(U"alink");
+                        if (alink != nullptr && alink->getValue().length() > 2)
+                            formattedLink->setActiveColor(Color(alink->getValue()));
+                        auto vlink = body->getAttribute(U"vlink");
+                        if (vlink != nullptr && vlink->getValue().length() > 2)
+                            formattedLink->setVisitedColor(Color(vlink->getValue()));
                     }
-
-                    m_formattingState.ForeColor = linkColor;
                 }
 
                 // -- Act NOT like a "\r"
@@ -648,7 +671,7 @@ namespace tgui
             // -------------------------------
             // Process children
             // -------------------------------
-            bool loopinternalPredecessorWasExtraSpacingBlockElement = false;
+            bool loopinternalPredecessorWasExtraSpacingBlockElement = (typeName == XhtmlElementType::Body);
             bool lastchildWasRunLengtElement = false;
             for (size_t index = 0; xhtmlElement->isContainer() && index < xhtmlElement->countChildren(); index++)
                 layout(loopinternalPredecessorWasExtraSpacingBlockElement, currentIsTextBlockElement, lastchildWasRunLengtElement,

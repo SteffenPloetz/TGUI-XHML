@@ -54,6 +54,7 @@
 		<Unit filename="../include/TGUI/Xhtml/XhtmlElements.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/XhtmlEntityResolver.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/XhtmlParser.hpp" />
+		<Unit filename="../src/MarkupLanguageElement.cpp" />
 		<Unit filename="../src/Renderers/FormattedTextRenderer.cpp" />
 		<Unit filename="../src/StringHelper.cpp" />
 		<Unit filename="../src/UtfHelper.cpp" />

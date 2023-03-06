@@ -57,7 +57,7 @@ namespace tgui
             return false;
         }
 
-        while (ext::isSpace(m_buffer[workPosition]))
+        while (tgui::isWhitespace(m_buffer[workPosition]))
             workPosition++;
 
         if(m_buffer[workPosition] != '>')
@@ -95,7 +95,7 @@ namespace tgui
         // set a defined element tree root to prevent problems with parentElements.back()
         parentElements.push_back(nullptr);
 
-        while (ext::isSpace(workCharacter))
+        while (tgui::isWhitespace(workCharacter))
             workCharacter = acquireChar();
         rejectChar();
 

@@ -42,46 +42,46 @@ namespace tgui
     struct TGUI_API XhtmlElementType
     {
     public:
-        static constexpr const char  DocType[] = "!doctype";   //!< The tag name of an !DOCTYPE element
-        static constexpr const char  Document[] = "document";  //!< The tag name of a DOCUMENT element
-        static constexpr const char  Style[] = "style";        //!< The tag name of a STYLE element
-        static constexpr const char  Break[] = "br";           //!< The tag name of a BREAK element
-        static constexpr const char  Text[] = "text";          //!< The virtual tag name of an INNER-TEXT element
-        static constexpr const char  Html[] = "html";          //!< The tag name of a HTML element
-        static constexpr const char  Head[] = "head";          //!< The tag name of a HEAD element
-        static constexpr const char  Meta[] = "meta";          //!< The tag name of a META element
-        static constexpr const char  Link[] = "link";          //!< The tag name of a LINK element
-        static constexpr const char  Title[] = "title";        //!< The tag name of a TITLE element
-        static constexpr const char  Body[] = "body";          //!< The tag name of a BODY element
-        static constexpr const char  Input[] = "input";        //!< The tag name of an INPUT element
-        static constexpr const char  Label[] = "label";        //!< The tag name of a LABEL element
+        static constexpr const char  DocType[] = "!doctype";                   //!< The tag name of an !DOCTYPE element
+        static constexpr const char  Document[] = "document";                  //!< The tag name of a DOCUMENT element
+        static constexpr const char  Style[] = "style";                        //!< The tag name of a STYLE element
+        static constexpr const char  Break[] = "br";                           //!< The tag name of a BREAK element
+        static constexpr const char  Text[] = "text";                          //!< The virtual tag name of an INNER-TEXT element
+        static constexpr const char  Html[] = "html";                          //!< The tag name of a HTML element
+        static constexpr const char  Head[] = "head";                          //!< The tag name of a HEAD element
+        static constexpr const char  Meta[] = "meta";                          //!< The tag name of a META element
+        static constexpr const char  Link[] = "link";                          //!< The tag name of a LINK element
+        static constexpr const char  Title[] = "title";                        //!< The tag name of a TITLE element
+        static constexpr const char  Body[] = "body";                          //!< The tag name of a BODY element
+        static constexpr const char  Input[] = "input";                        //!< The tag name of an INPUT element
+        static constexpr const char  Label[] = "label";                        //!< The tag name of a LABEL element
 
-        static constexpr const char  H1[] = "h1";              //!< The tag name of a HEADLINE-1 element
-        static constexpr const char  H2[] = "h2";              //!< The tag name of a HEADLINE-2 element
-        static constexpr const char  H3[] = "h3";              //!< The tag name of a HEADLINE-3 element
-        static constexpr const char  H4[] = "h4";              //!< The tag name of a HEADLINE-4 element
-        static constexpr const char  H5[] = "h5";              //!< The tag name of a HEADLINE-5 element
-        static constexpr const char  H6[] = "h6";              //!< The tag name of a HEADLINE-6 element
-        static constexpr const char  Emphasized[] = "em";      //!< The tag name of an EMPHASIZED element
-        static constexpr const char  Italic[] = "i";           //!< The tag name of an ITALIC element
-        static constexpr const char  Strong[] = "s";           //!< The tag name of a STRONG element
-        static constexpr const char  Bold[] = "b";             //!< The tag name of a BOLD element
-        static constexpr const char  Underline[] = "u";        //!< The tag name of an UNDERLINE element
-        static constexpr const char  Superscript[] = "sup";    //!< The tag name of a SUPERSCRIPT element
-        static constexpr const char  Subscript[] = "sub";      //!< The tag name of a SUBSCRIPT element
+        static constexpr const char  H1[] = "h1";                              //!< The tag name of a HEADLINE-1 element
+        static constexpr const char  H2[] = "h2";                              //!< The tag name of a HEADLINE-2 element
+        static constexpr const char  H3[] = "h3";                              //!< The tag name of a HEADLINE-3 element
+        static constexpr const char  H4[] = "h4";                              //!< The tag name of a HEADLINE-4 element
+        static constexpr const char  H5[] = "h5";                              //!< The tag name of a HEADLINE-5 element
+        static constexpr const char  H6[] = "h6";                              //!< The tag name of a HEADLINE-6 element
+        static constexpr const char  Emphasized[] = "em";                      //!< The tag name of an EMPHASIZED element
+        static constexpr const char  Italic[] = "i";                           //!< The tag name of an ITALIC element
+        static constexpr const char  Strong[] = "s";                           //!< The tag name of a STRONG element
+        static constexpr const char  Bold[] = "b";                             //!< The tag name of a BOLD element
+        static constexpr const char  Underline[] = "u";                        //!< The tag name of an UNDERLINE element
+        static constexpr const char  Superscript[] = "sup";                    //!< The tag name of a SUPERSCRIPT element
+        static constexpr const char  Subscript[] = "sub";                      //!< The tag name of a SUBSCRIPT element
 
-        static constexpr const char  UnorderedList[] = "ul";   //!< The tag name of an UNORDERED-LIST element
-        static constexpr const char  OrderedList[] = "ol";     //!< The tag name of an ORDERED-LIST element
-        static constexpr const char  ListItem[] = "li";        //!< The tag name of a LIST-ITEM element
-        static constexpr const char  Span[] = "span";          //!< The tag name of a SPAN element
-        static constexpr const char  Division[] = "div";       //!< The tag name of a DIVISION element
-        static constexpr const char  Preformatted[] = "pre";   //!< The tag name of a PREFORMATTED element
-        static constexpr const char  Code[] = "code";          //!< The tag name of a CODE element
-        static constexpr const char  Paragraph[] = "p";        //!< The tag name of a PARAGRAPH element
+        static constexpr const char  UnorderedList[] = "ul";                   //!< The tag name of an UNORDERED-LIST element
+        static constexpr const char  OrderedList[] = "ol";                     //!< The tag name of an ORDERED-LIST element
+        static constexpr const char  ListItem[] = "li";                        //!< The tag name of a LIST-ITEM element
+        static constexpr const char  Span[] = "span";                          //!< The tag name of a SPAN element
+        static constexpr const char  Division[] = "div";                       //!< The tag name of a DIVISION element
+        static constexpr const char  Preformatted[] = "pre";                   //!< The tag name of a PREFORMATTED element
+        static constexpr const char  Code[] = "code";                          //!< The tag name of a CODE element
+        static constexpr const char  Paragraph[] = "p";                        //!< The tag name of a PARAGRAPH element
 
-        static constexpr const char  Anchor[] = "a";           //!< The tag name of an ANCHOR element
-        static constexpr const char  Image[] = "img";          //!< The tag name of an IMAGE element
-        static constexpr const char  Script[] = "script";      //!< The tag name of a SCRIPT element
+        static constexpr const char* Anchor = MarkupLanguageElement::Anchor;   //!< The tag name of an ANCHOR element
+        static constexpr const char  Image[] = "img";                          //!< The tag name of an IMAGE element
+        static constexpr const char  Script[] = "script";                      //!< The tag name of a SCRIPT element
 
     private:
         static XhtmlElementType m_dataTypes[]; //!< The supported XHTML element types
