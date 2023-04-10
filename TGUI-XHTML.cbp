@@ -44,10 +44,10 @@
 			<Add library="sfml-window" />
 			<Add library="sfml-system" />
 		</Linker>
-		<Unit filename="include/TGUI/Xhtml/DOM/XhtmlAttributes.hpp" />
-		<Unit filename="include/TGUI/Xhtml/DOM/XhtmlElements.hpp" />
-		<Unit filename="include/TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp" />
-		<Unit filename="include/TGUI/Xhtml/DOM/XhtmlParser.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlAttributes.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlElements.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlParser.hpp" />
 		<Unit filename="include/TGUI/Xhtml/MarkupLanguageElement.hpp" />
 		<Unit filename="include/TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp" />
 		<Unit filename="include/TGUI/Xhtml/StringHelper.hpp" />
@@ -56,10 +56,10 @@
 		<Unit filename="include/TGUI/Xhtml/Widgets/FormattedTextDocument.hpp" />
 		<Unit filename="include/TGUI/Xhtml/Widgets/FormattedTextView.hpp" />
 		<Unit filename="include/TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp" />
-		<Unit filename="src/Xhtml/DOM/XhtmlAttributes.cpp" />
-		<Unit filename="src/Xhtml/DOM/XhtmlElements.cpp" />
-		<Unit filename="src/Xhtml/DOM/XhtmlEntityResolver.cpp" />
-		<Unit filename="src/Xhtml/DOM/XhtmlParser.cpp" />
+		<Unit filename="src/Xhtml/Dom/XhtmlAttributes.cpp" />
+		<Unit filename="src/Xhtml/Dom/XhtmlElements.cpp" />
+		<Unit filename="src/Xhtml/Dom/XhtmlEntityResolver.cpp" />
+		<Unit filename="src/Xhtml/Dom/XhtmlParser.cpp" />
 		<Unit filename="src/Xhtml/MarkupLanguageElement.cpp" />
 		<Unit filename="src/Xhtml/Renderers/FormattedTextRenderer.cpp" />
 		<Unit filename="src/Xhtml/StringHelper.cpp" />

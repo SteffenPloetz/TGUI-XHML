@@ -14,10 +14,10 @@
 #endif
 
 #include "TGUI/Xhtml/StringHelper.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlAttributes.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlElements.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlParser.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlParser.hpp"
 
 namespace tgui  { namespace xhtml
 {

@@ -14,9 +14,9 @@
 #endif
 
 #include "TGUI/Xhtml/StringHelper.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlAttributes.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlElements.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedElements.hpp"
 
 #include "TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp"

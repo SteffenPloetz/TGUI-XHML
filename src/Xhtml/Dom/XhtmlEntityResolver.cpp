@@ -13,7 +13,7 @@
 #endif
 
 #include "TGUI/Xhtml/StringHelper.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
 
 namespace tgui  { namespace xhtml
 {

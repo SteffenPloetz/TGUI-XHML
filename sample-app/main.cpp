@@ -15,14 +15,14 @@
 #endif
 
 #include "TGUI/Xhtml/StringHelper.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlAttributes.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlElements.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedElements.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp"
 #include "TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedTextView.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlParser.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlParser.hpp"
 #include "TGUI/Xhtml/UtfHelper.hpp"
 
 #if TGUI_COMPILED_WITH_CPP_VER >= 17

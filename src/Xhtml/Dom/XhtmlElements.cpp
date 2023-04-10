@@ -14,9 +14,9 @@
 #endif
 
 #include "TGUI/Xhtml/StringHelper.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlAttributes.hpp"
-#include "TGUI/Xhtml/DOM/XhtmlElements.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
 
 // intense tracing
 // #define LOG_ELEMENT 1
