@@ -15,7 +15,7 @@
 #include <string>
 #include <vector>
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -59,5 +59,6 @@ namespace tgui
         static bool checkValid(const std::vector<char>& data, bool utf8 = true);
     };
 
-}
+} }
+
 #endif // TGUI_UTF_HELPER_HPP

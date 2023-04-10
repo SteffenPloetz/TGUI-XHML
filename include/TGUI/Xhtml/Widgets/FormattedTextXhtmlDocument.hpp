@@ -28,7 +28,7 @@
 
 #include "FormattedTextDocument.hpp"
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -229,7 +229,7 @@ namespace tgui
         /// @param styleEntries                             The XHTML style entries to apply
         /// @param styleCategories                          The style categories to apply
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        void applyStyleEntriesToFormattingState(const std::vector<tgui::XhtmlStyleEntry::Ptr> styleEntries,
+        void applyStyleEntriesToFormattingState(const std::vector<XhtmlStyleEntry::Ptr> styleEntries,
             const FormattedTextDocument::FontCollection& fontCollection,
             StyleCategoryFlags categories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
 
@@ -240,7 +240,7 @@ namespace tgui
         /// @param styleEntries                             The XHTML style entries to apply
         /// @param styleCategories                          The style categories to apply
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        void applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement, const std::vector<tgui::XhtmlStyleEntry::Ptr> styleEntries,
+        void applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement, const std::vector<XhtmlStyleEntry::Ptr> styleEntries,
             const FormattedTextDocument::FontCollection& fontCollection,
             StyleCategoryFlags categories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
 
@@ -318,7 +318,7 @@ namespace tgui
         /// @param remainingText     The text to calculate the best outo-line-break position for
         /// @param runLengt          The remaining run lengt on the current FormattedTextSection
         ///
-        /// @return                  The best outo-line-break position on success, or SIZE_MAX otherwise (which is equal to 
+        /// @return                  The best outo-line-break position on success, or SIZE_MAX otherwise (which is equal to
         ///                          std::string::npos and (size_t)-1)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         size_t calculateAutoLineBreak(const String remainingText, float runLengt) const;
@@ -360,6 +360,6 @@ namespace tgui
         float                                     m_listPadding;              //!< The indent per list level
         float                                     m_backPadding;              //!< Back indent of the list item bullet, relative to the list item indent
     };
-}
+} }
 
 #endif // TGUI_FORMATTED_TEXT_XHTML_DOCUMENT_HPP

@@ -26,7 +26,7 @@
 #ifndef TGUI_FORMATTED_TEXT_VIEW_HPP
 #define TGUI_FORMATTED_TEXT_VIEW_HPP
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -398,6 +398,6 @@ namespace tgui
         std::map<String, FormattedElement::Ptr>  m_anchorTargets;         //!< The list of link targets
     };
 
-}
+} }
 
 #endif // TGUI_FORMATTED_TEXT_VIEW_HPP

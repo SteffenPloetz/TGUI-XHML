@@ -12,10 +12,10 @@
 #endif
 #endif
 
-#include "TGUI/StringHelper.hpp"
-#include "TGUI/Xhtml/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/StringHelper.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,7 +133,7 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    unsigned int XhtmlEntityResolver::resolveEntity(std::vector<std::tuple<tgui::MessageType,String>>& messages, char32_t* encode, char32_t& substitute)
+    unsigned int XhtmlEntityResolver::resolveEntity(std::vector<std::tuple<tgui::xhtml::MessageType,String>>& messages, char32_t* encode, char32_t& substitute)
     {
         if (m_charEntityRefs.empty())
         {
@@ -268,4 +268,4 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-}
+} }

@@ -15,11 +15,11 @@
 #endif
 #endif
 
-#include "TGUI/StringHelper.hpp"
-#include "TGUI/Xhtml/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/XhtmlAttributes.hpp"
+#include "TGUI/Xhtml/StringHelper.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlAttributes.hpp"
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief The list of known web color names mapped to their color value
@@ -318,7 +318,7 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void XhtmlAttribute::putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const tgui::String& rawValue)
+    void XhtmlAttribute::putValue(std::vector<std::tuple<MessageType, String>>& messages, const tgui::String& rawValue)
     {
         if (rawValue.empty())
         {
@@ -426,10 +426,10 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void XhtmlStyleEntry::putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const tgui::String& rawValue)
+    void XhtmlStyleEntry::putValue(std::vector<std::tuple<tgui::xhtml::MessageType, String>>& messages, const tgui::String& rawValue)
     {
         XhtmlAttribute::putValue(messages, rawValue);
-        auto styleEntryValues = ext::String::split(m_value, U';', true);
+        auto styleEntryValues = StringEx::split(m_value, U';', true);
         for (auto styleEntryValue : styleEntryValues)
         {
             styleEntryValue.remove(U';');
@@ -444,7 +444,7 @@ namespace tgui
                 continue;
             }
 
-            auto styleEntryParts = ext::String::split(styleEntryValue, U':', true);
+            auto styleEntryParts = StringEx::split(styleEntryValue, U':', true);
             if (styleEntryParts.size() != 2)
             {
                 tgui::String message(U"XhtmlAttribute::putValue() -> Unable to split style value '" + styleEntryValue + U"' into key and value(s)!");
@@ -550,7 +550,7 @@ namespace tgui
                 styleEntryParts[1].replace(U"medium", U"3px");
                 styleEntryParts[1].replace(U"thick", U"5px");
                 FourDimSize borderWidth = getBorderWidth();
-                borderWidth.parse(ext::String::split(styleEntryParts[1], U' '));
+                borderWidth.parse(StringEx::split(styleEntryParts[1], U' '));
                 setBorderWidth(borderWidth);
                 continue;
             }
@@ -559,7 +559,7 @@ namespace tgui
             {
                 FourDimSize margin = getMargin();
                 if (styleEntryParts[0].equalIgnoreCase(U"margin"))
-                    margin.parse(ext::String::split(styleEntryParts[1], U' ', true));
+                    margin.parse(StringEx::split(styleEntryParts[1], U' ', true));
                 else
                 {
                     if (styleEntryParts[0].equalIgnoreCase(U"margin-top"))
@@ -581,7 +581,7 @@ namespace tgui
             {
                 FourDimSize padding = getPadding();
                 if (styleEntryParts[0].equalIgnoreCase(U"padding"))
-                    padding.parse(ext::String::split(styleEntryParts[1], U' ', true));
+                    padding.parse(StringEx::split(styleEntryParts[1], U' ', true));
                 else
                 {
                     if (styleEntryParts[0].equalIgnoreCase(U"padding-top") == 0)
@@ -618,4 +618,4 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-}
+} }

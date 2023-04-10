@@ -26,7 +26,7 @@
 #ifndef TGUI_MARKUP_LANGUAGE_ELEMENT_HPP
 #define TGUI_MARKUP_LANGUAGE_ELEMENT_HPP
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +76,6 @@ namespace tgui
         static const tgui::String& getEmptyString();
     };
 
-}
+} }
 
 #endif // TGUI_MARKUP_LANGUAGE_ELEMENT_HPP

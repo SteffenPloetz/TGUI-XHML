@@ -41,7 +41,7 @@
 #include <tuple>
 #include <vector>
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -72,7 +72,7 @@ namespace tgui
         ///
         /// @return The number of processed character in encode on success, or 0 otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static unsigned int resolveEntity(std::vector<std::tuple<tgui::MessageType, String>>& messages, char32_t* encode, char32_t& substitute);
+        static unsigned int resolveEntity(std::vector<std::tuple<tgui::xhtml::MessageType, String>>& messages, char32_t* encode, char32_t& substitute);
 
     private:
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -89,6 +89,6 @@ namespace tgui
         static std::map<tgui::String, char32_t> m_charEntityRefs; /**< The map of encoded entity names to decoded entities */
     };
 
-}
+} }
 
 #endif    // TINY_XHTML_ENTRITY_RESOLVER

@@ -48,7 +48,7 @@
 #include <map>
 #include <algorithm>
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief The XHTML parser
@@ -171,7 +171,7 @@ namespace tgui
         ///
         /// @return The complete collection of parser (error/warning) messages. Can be empty
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline std::vector<std::tuple<tgui::MessageType, tgui::String>> getMessages() const
+        inline std::vector<std::tuple<MessageType, tgui::String>> getMessages() const
         {   return m_messages;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -195,6 +195,6 @@ namespace tgui
         std::vector<XhtmlElement::Ptr> m_rootElements; //!< The collection of root elements, parsed from the UTF character stream
     };
 
-}
+} }
 
 #endif    // TINY_XHTML_PARSER

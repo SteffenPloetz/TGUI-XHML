@@ -26,9 +26,9 @@
 #ifndef TGUI_FORMATTED_ELEMENTS_HPP
 #define TGUI_FORMATTED_ELEMENTS_HPP
 
-#include "TGUI/MarkupLanguageElement.hpp"
+#include "TGUI/Xhtml/MarkupLanguageElement.hpp"
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -810,6 +810,6 @@ namespace tgui
         String            m_string;                //!< The text string
         TextStyle         m_style;                 //!< The text style
     };
-}
+} }
 
 #endif // TGUI_FORMATTED_ELEMENTS_HPP

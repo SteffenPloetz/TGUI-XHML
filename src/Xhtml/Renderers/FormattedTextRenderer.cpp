@@ -11,11 +11,11 @@
 #endif
 #endif
 
-#include "TGUI/Renderers/FormattedTextRenderer.hpp"
+#include "TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 
     TGUI_RENDERER_PROPERTY_OUTLINE(FormattedTextRenderer, Borders)
@@ -33,4 +33,4 @@ namespace tgui
 
     TGUI_RENDERER_PROPERTY_RENDERER(FormattedTextRenderer, Scrollbar, "Scrollbar")
     TGUI_RENDERER_PROPERTY_NUMBER(FormattedTextRenderer, ScrollbarWidth, 0)
-}
+} }

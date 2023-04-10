@@ -26,7 +26,7 @@
 #ifndef TGUI_FORMATTED_TEXT_DOCUMENT_HPP
 #define TGUI_FORMATTED_TEXT_DOCUMENT_HPP
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief Helper to determine the best matching font pack from the most common font family names
@@ -537,6 +537,6 @@ namespace tgui
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         virtual inline Vector2f getOccupiedLayoutSize() const = 0;
     };
-}
+} }
 
 #endif // TGUI_FORMATTED_TEXT_DOCUMENT_HPP

@@ -13,17 +13,17 @@
 #endif
 #endif
 
-#include "TGUI/StringHelper.hpp"
-#include "TGUI/Xhtml/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/XhtmlAttributes.hpp"
-#include "TGUI/Xhtml/XhtmlElements.hpp"
+#include "TGUI/Xhtml/StringHelper.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlAttributes.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlElements.hpp"
 
 // intense tracing
 // #define LOG_ELEMENT 1
 
 #define UNUSED(x) (void)(x)
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 #if TGUI_COMPILED_WITH_CPP_VER < 17 && !defined(_MSC_VER)
     constexpr const char  XhtmlElementType::DocType[];
@@ -138,7 +138,7 @@ namespace tgui
 
     XhtmlElementType XhtmlElementType::getType(const char* typeName)
     {
-        auto size = sizeof(tgui::XhtmlElementType::m_dataTypes) / sizeof(m_dataTypes[0]);
+        auto size = sizeof(XhtmlElementType::m_dataTypes) / sizeof(m_dataTypes[0]);
         for (size_t index = 0; index < size; index++)
             if (tgui::viewEqualIgnoreCase(m_dataTypes[index].TypeName, typeName))
                 return m_dataTypes[index];
@@ -372,8 +372,8 @@ namespace tgui
 
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
-        auto styleEntry = std::make_shared<tgui::XhtmlStyleEntry>();
-        styleEntry->setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8));
+        auto styleEntry = std::make_shared<XhtmlStyleEntry>();
+        styleEntry->setMargin(FourDimSize(SizeType::Pixel, 8));
 
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
@@ -385,8 +385,8 @@ namespace tgui
 
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
     {
-        auto styleEntry = std::make_shared<tgui::XhtmlStyleEntry>();
-        styleEntry->setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8));
+        auto styleEntry = std::make_shared<XhtmlStyleEntry>();
+        styleEntry->setMargin(FourDimSize(SizeType::Pixel, 8));
 
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
@@ -399,7 +399,7 @@ namespace tgui
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child)
     {
         if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) != StyleEntryFlags::Margin)
-            styleEntry->setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8));
+            styleEntry->setMargin(FourDimSize(SizeType::Pixel, 8));
 
         std::shared_ptr<XhtmlStyleableContainerElement> element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
@@ -412,7 +412,7 @@ namespace tgui
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children)
     {
         if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) != StyleEntryFlags::Margin)
-            styleEntry->setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8));
+            styleEntry->setMargin(FourDimSize(SizeType::Pixel, 8));
 
         std::shared_ptr<XhtmlStyleableContainerElement> element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
@@ -1739,7 +1739,7 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    size_t XhtmlElement::createAttributesFromParseStr(std::vector<std::tuple<tgui::MessageType, String>>& messages,
+    size_t XhtmlElement::createAttributesFromParseStr(std::vector<std::tuple<MessageType, String>>& messages,
         std::vector<XhtmlAttribute::Ptr>& attributes, const tgui::String& buffer, const size_t beginPosition)
     {
         if (buffer.empty())
@@ -1801,7 +1801,7 @@ namespace tgui
 
     void XhtmlStyle::createEntriesFromParseData(std::vector<std::tuple<MessageType, String>>& messages, const tgui::String& buffer)
     {
-        auto styleEntries = ext::String::split(buffer, U'}', true);
+        auto styleEntries = StringEx::split(buffer, U'}', true);
         for (auto styleEntry : styleEntries)
         {
             styleEntry = styleEntry.trim();
@@ -1809,7 +1809,7 @@ namespace tgui
             if (styleEntry.size() == 0)
                 continue;
 
-            auto styleEntryParts = ext::String::split(styleEntry, U'{', true);
+            auto styleEntryParts = StringEx::split(styleEntry, U'{', true);
             if (styleEntryParts.size() != 2)
                 continue;
 
@@ -1847,4 +1847,4 @@ namespace tgui
         return nullptr;
     }
 
-}
+} }

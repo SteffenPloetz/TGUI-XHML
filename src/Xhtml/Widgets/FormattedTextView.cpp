@@ -11,17 +11,17 @@
 #endif
 #endif
 
-#include "TGUI/StringHelper.hpp"
-#include "TGUI/Xhtml/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/XhtmlAttributes.hpp"
-#include "TGUI/Xhtml/XhtmlElements.hpp"
-#include "TGUI/Widgets/FormattedElements.hpp"
-#include "TGUI/Widgets/FormattedTextXhtmlDocument.hpp"
+#include "TGUI/Xhtml/StringHelper.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlAttributes.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlElements.hpp"
+#include "TGUI/Xhtml/Widgets/FormattedElements.hpp"
+#include "TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp"
 
-#include "TGUI/Renderers/FormattedTextRenderer.hpp"
-#include "TGUI/Widgets/FormattedTextView.hpp"
+#include "TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp"
+#include "TGUI/Xhtml/Widgets/FormattedTextView.hpp"
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
     // ToDo: Discuss in forum.
 #if TGUI_COMPILED_WITH_CPP_VER < 17 && !defined( _MSC_VER)
@@ -648,4 +648,4 @@ namespace tgui
                 std::max(0.f, innerSize.y - m_paddingCached.getTop() - m_paddingCached.getBottom() - (m_horizontalScrollbar->isShown() ? m_horizontalScrollbar->getSize().y : 0.0f))};
     }
 
-}
+} }

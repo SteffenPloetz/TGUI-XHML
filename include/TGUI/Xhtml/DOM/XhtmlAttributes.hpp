@@ -30,8 +30,9 @@
 #include <string>
 #include <vector>
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief Generic XHTML attribute
     ///
@@ -112,7 +113,7 @@ namespace tgui
         /// @param messages  The collection of error messages, created during the parser run
         /// @param rawValue  The raw string of the value to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        virtual void putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const tgui::String& rawValue);
+        virtual void putValue(std::vector<std::tuple<MessageType, tgui::String>>& messages, const tgui::String& rawValue);
 
     protected:
         tgui::String m_name;   //!< This attribute's name
@@ -359,17 +360,17 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     struct XhtmlStyleEntryInitializer
     {
-        Color      ForeColor  = Color::Transparent;                     //!< The foreground/text color
-        String     FontFamily = U"";                                    //!< The font family
-        OneDimSize FontSize   = OneDimSize(SizeType::Relative, 1.0F);   //!< The font size
-        TextStyle  FontStyle  = (TextStyle)(1 << 4);                    //!< The font style
-        Color      BackColor  = Color::Transparent;                     //!< The background color
+        Color        ForeColor  = Color::Transparent;                     //!< The foreground/text color
+        tgui::String FontFamily = U"";                                    //!< The font family
+        OneDimSize   FontSize   = OneDimSize(SizeType::Relative, 1.0F);   //!< The font size
+        TextStyle    FontStyle  = (TextStyle)(1 << 4);                    //!< The font style
+        Color        BackColor  = Color::Transparent;                     //!< The background color
 
-        inline XhtmlStyleEntryInitializer& SetForeColor(Color color)         { ForeColor = color; return *this; }
-        inline XhtmlStyleEntryInitializer& SetFontFamily(String fontFamily)  { FontFamily = fontFamily; return *this; }
-        inline XhtmlStyleEntryInitializer& SetFontSize(OneDimSize fontSize)  { FontSize = fontSize; return *this; }
-        inline XhtmlStyleEntryInitializer& SetFontStyle(TextStyle fontStyle) { FontStyle = fontStyle; return *this; }
-        inline XhtmlStyleEntryInitializer& SetBackColor(Color color)         { BackColor = color; return *this; }
+        inline XhtmlStyleEntryInitializer& SetForeColor(Color color)              { ForeColor = color; return *this; }
+        inline XhtmlStyleEntryInitializer& SetFontFamily(tgui::String fontFamily) { FontFamily = fontFamily; return *this; }
+        inline XhtmlStyleEntryInitializer& SetFontSize(OneDimSize fontSize)       { FontSize = fontSize; return *this; }
+        inline XhtmlStyleEntryInitializer& SetFontStyle(TextStyle fontStyle)      { FontStyle = fontStyle; return *this; }
+        inline XhtmlStyleEntryInitializer& SetBackColor(Color color)              { BackColor = color; return *this; }
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -592,7 +593,7 @@ namespace tgui
         ///
         /// @return       A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline XhtmlStyleEntry& setFontFamily(const String& fontFamily)
+        inline XhtmlStyleEntry& setFontFamily(const tgui::String& fontFamily)
         {   m_fontFamily = fontFamily; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::FontFamily; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -600,7 +601,7 @@ namespace tgui
         ///
         /// @return The color
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline String getFontFamily() const
+        inline tgui::String getFontFamily() const
         {   return m_fontFamily;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -737,7 +738,7 @@ namespace tgui
         /// @param messages  The collection of error messages, created during the parser run
         /// @param rawValue  The raw string of the value to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        void putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const tgui::String& rawValue) override;
+        void putValue(std::vector<std::tuple<tgui::xhtml::MessageType, String>>& messages, const tgui::String& rawValue) override;
 
     public:
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -755,7 +756,7 @@ namespace tgui
         Color            m_backgroundColor;   //!< The background color
         Color            m_borderColor;       //!< The border color
         float            m_opacity;           //!< The color opacity
-        String           m_fontFamily;        //!< The font family name
+        tgui::String     m_fontFamily;        //!< The font family name
         OneDimSize       m_fontSize;          //!< The font size (in pixels)
         TextStyle        m_fontStyle;         //!< The font style (slant, weight, underline, strike-through)
         FourDimSize      m_margin;            //!< The margin width (around the element and around it's border, if any)
@@ -764,6 +765,6 @@ namespace tgui
         StyleEntryFlags  m_styleEntryFlags;   //!< The flags of style entry properties, that are actively set for this style entry
     };
 
-}
+} }
 
 #endif // TGUI_XHTML_ATTRIBUTES_HPP

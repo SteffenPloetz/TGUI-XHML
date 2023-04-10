@@ -31,9 +31,9 @@
 
 #include <TGUI/String.hpp>
 
-#include "TGUI/MarkupLanguageElement.hpp"
+#include "TGUI/Xhtml/MarkupLanguageElement.hpp"
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1677,7 +1677,7 @@ namespace tgui
         ///
         /// @return The number of character processes in the buffer
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static size_t createAttributesFromParseStr(std::vector<std::tuple<tgui::MessageType, String>>& messages,
+        static size_t createAttributesFromParseStr(std::vector<std::tuple<MessageType, tgui::String>>& messages,
             std::vector<XhtmlAttribute::Ptr>& attributes, const tgui::String& buffer, const size_t beginPosition);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1695,7 +1695,7 @@ namespace tgui
         ///
         /// @return The XHTML element on success, or nullptr otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static const XhtmlElement::Ptr createElementFromParseStr(std::vector<std::tuple<tgui::MessageType, tgui::String>>& messages,
+        static const XhtmlElement::Ptr createElementFromParseStr(std::vector<std::tuple<tgui::xhtml::MessageType, tgui::String>>& messages,
             XhtmlElement::Ptr parent, const tgui::String& buffer, const size_t beginPosition,
             bool& isOpeningTag, bool& isClosingTag, bool& isInsideScript, size_t& processedLength, bool parseInnerText = true);
 
@@ -1868,17 +1868,17 @@ namespace tgui
         /// @param text  The new text to set
         /// @param decode  The flag, determining whether to encode the text, default is true
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setText(String text, bool decode = true) { m_text = (decode ? XhtmlElement::decode(text) : text); }
+        inline void setText(tgui::String text, bool decode = true) { m_text = (decode ? XhtmlElement::decode(text) : text); }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the text of the element
         ///
         /// @return The text of the element. The text will typically be decoded. To get encoded text use XhtmlHelper.encode()
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline String getText() { return m_text; }
+        inline tgui::String getText() { return m_text; }
 
     private:
-        String m_text;
+        tgui::String m_text;
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2138,6 +2138,6 @@ namespace tgui
         ListItemType m_bullettype;
     };
 
-}
+} }
 
 #endif // TGUI_XHTML_ELEMENTS_HPP

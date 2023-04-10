@@ -12,11 +12,11 @@
 #endif
 #endif
 
-#include "TGUI/MarkupLanguageElement.hpp"
+#include "TGUI/Xhtml/MarkupLanguageElement.hpp"
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
 #if TGUI_COMPILED_WITH_CPP_VER < 17 && !defined(_MSC_VER)
     constexpr const char  MarkupLanguageElement::Anchor[];
 #endif
-}
+} }

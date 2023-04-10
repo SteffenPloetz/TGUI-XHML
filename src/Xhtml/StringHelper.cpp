@@ -16,11 +16,11 @@
 #endif
 #endif
 
-#include "TGUI/StringHelper.hpp"
+#include "TGUI/Xhtml/StringHelper.hpp"
 
-namespace ext
+namespace tgui  { namespace xhtml
 {
-    std::vector<tgui::String> String::split(const tgui::String& s, char32_t separator, bool suppressEmpty)
+    std::vector<tgui::String> StringEx::split(const tgui::String& s, char32_t separator, bool suppressEmpty)
     {
         std::vector<tgui::String> output;
         std::size_t prev_pos = 0, pos = 0;
@@ -41,4 +41,4 @@ namespace ext
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-}
+} }

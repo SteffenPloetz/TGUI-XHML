@@ -13,13 +13,13 @@
 #endif
 #endif
 
-#include "TGUI/StringHelper.hpp"
-#include "TGUI/Xhtml/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/XhtmlAttributes.hpp"
-#include "TGUI/Xhtml/XhtmlElements.hpp"
-#include "TGUI/Xhtml/XhtmlParser.hpp"
+#include "TGUI/Xhtml/StringHelper.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlAttributes.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlElements.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlParser.hpp"
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -456,4 +456,4 @@ namespace tgui
         return warnings;
     }
 
-}
+} }

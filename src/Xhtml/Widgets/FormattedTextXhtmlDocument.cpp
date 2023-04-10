@@ -13,16 +13,15 @@
 #endif
 #endif
 
-#include "TGUI/StringHelper.hpp"
-#include "TGUI/Xhtml/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/XhtmlAttributes.hpp"
-#include "TGUI/StringHelper.hpp"
-#include "TGUI/Xhtml/XhtmlElements.hpp"
-#include "TGUI/Widgets/FormattedElements.hpp"
+#include "TGUI/Xhtml/StringHelper.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlAttributes.hpp"
+#include "TGUI/Xhtml/DOM/XhtmlElements.hpp"
+#include "TGUI/Xhtml/Widgets/FormattedElements.hpp"
 
-#include "TGUI/Widgets/FormattedTextXhtmlDocument.hpp"
+#include "TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp"
 
-namespace tgui
+namespace tgui  { namespace xhtml
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -83,7 +82,7 @@ namespace tgui
         auto styleElement = getStyleElement();
         if (styleElement)
         {
-            auto classNames = ext::String::split(xhtmlElement->getClassNames(), U' ', true);
+            auto classNames = StringEx::split(xhtmlElement->getClassNames(), U' ', true);
             for (auto className : classNames)
             {
                 auto globalStyleEntry = styleElement->getEntry(xhtmlElement->getTypeName(), className);
@@ -104,7 +103,7 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void FormattedTextXhtmlDocument::applyStyleEntriesToFormattingState(std::vector<tgui::XhtmlStyleEntry::Ptr> styleEntries,
+    void FormattedTextXhtmlDocument::applyStyleEntriesToFormattingState(std::vector<XhtmlStyleEntry::Ptr> styleEntries,
         const FormattedTextDocument::FontCollection& fontCollection, StyleCategoryFlags categories)
     {
         for (auto styleEntry : styleEntries)
@@ -136,7 +135,7 @@ namespace tgui
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void FormattedTextXhtmlDocument::applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement,
-        const std::vector<tgui::XhtmlStyleEntry::Ptr> styleEntries,
+        const std::vector<XhtmlStyleEntry::Ptr> styleEntries,
         const FormattedTextDocument::FontCollection& fontCollection, StyleCategoryFlags categories)
     {
 
@@ -154,7 +153,7 @@ namespace tgui
                     formattedElement->setOpacity(styleEntry->getOpacity());
             }
 
-            FormattedRectangle::Ptr formattedRect = std::dynamic_pointer_cast<tgui::FormattedRectangle>(formattedElement);
+            FormattedRectangle::Ptr formattedRect = std::dynamic_pointer_cast<FormattedRectangle>(formattedElement);
             if (formattedRect == nullptr)
                 continue;
 
@@ -672,7 +671,7 @@ namespace tgui
                 typeName == XhtmlElementType::Division      || typeName == XhtmlElementType::Preformatted  || typeName == XhtmlElementType::Code ||
                 typeName == XhtmlElementType::Paragraph     || typeName == XhtmlElementType::Image)
             {
-                FormattedRectangle::Ptr formattedRectSection = std::dynamic_pointer_cast<tgui::FormattedRectangle>(currentFormattedElement);
+                FormattedRectangle::Ptr formattedRectSection = std::dynamic_pointer_cast<FormattedRectangle>(currentFormattedElement);
                 if (formattedRectSection)
                 {
                     applyStyleEntriesToFormattedElement(formattedRectSection, styleEntries, fontCollection,
@@ -685,7 +684,7 @@ namespace tgui
             // -------------------------------
             if (xhtmlStyleableElement)
             {
-                FormattedRectangle::Ptr formattedRectSection = std::dynamic_pointer_cast<tgui::FormattedRectangle>(currentFormattedElement);
+                FormattedRectangle::Ptr formattedRectSection = std::dynamic_pointer_cast<FormattedRectangle>(currentFormattedElement);
                 for (auto styleEntry : styleEntries)
                 {
                     if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) == StyleEntryFlags::Margin)
@@ -770,7 +769,7 @@ namespace tgui
                 if (currentFormattedElement != nullptr)
                 {
                     // Recover the last child (if any) or itself. If there is a child - if child is text section a special treatment is required.
-                    auto lastTextSection = std::dynamic_pointer_cast<tgui::FormattedTextSection>(m_content.back());
+                    auto lastTextSection = std::dynamic_pointer_cast<FormattedTextSection>(m_content.back());
                     if (lastTextSection)
                     {
                         // typically the the text sections are always open to add new charachters (in other words: not finalized with line break / carriage return)
@@ -975,7 +974,7 @@ namespace tgui
                     }
                 }
 
-                auto lastTextSection = (m_content.size() > 0 ? std::dynamic_pointer_cast<tgui::FormattedTextSection>(m_content.back()) : nullptr);
+                auto lastTextSection = (m_content.size() > 0 ? std::dynamic_pointer_cast<FormattedTextSection>(m_content.back()) : nullptr);
                 if (lastTextSection != nullptr && lastTextSection->getString().length() == 0)
                     m_content.pop_back();
 
@@ -1004,7 +1003,7 @@ namespace tgui
 
         if (typeName == XhtmlElementType::Image)
         {
-            FormattedImage::Ptr formattedImage = std::dynamic_pointer_cast<tgui::FormattedImage>(currentFormattedElement);
+            FormattedImage::Ptr formattedImage = std::dynamic_pointer_cast<FormattedImage>(currentFormattedElement);
             formattedImage->setContentOrigin(xhtmlElement);
 
             Vector2u            availSize(static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f), static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
@@ -1107,7 +1106,7 @@ namespace tgui
                     if (rit == m_content.rbegin())
                         continue;
 #if _DEBUG
-                    auto formattedTextSection = std::dynamic_pointer_cast<tgui::FormattedTextSection>(*rit);
+                    auto formattedTextSection = std::dynamic_pointer_cast<FormattedTextSection>(*rit);
 #endif
                     float oldReferenceLine = (*rit)->getLayoutRefLine();
                     auto  typeName = (*rit)->getContentOrigin()->getTypeName();
@@ -1127,4 +1126,4 @@ namespace tgui
             m_evolvingLineRunLength += logicSize.x + m_formattingState.TextHeight / 8;
         }
     }
-}
+} }
