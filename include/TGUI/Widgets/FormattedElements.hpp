@@ -48,7 +48,7 @@ namespace tgui
         /// @brief The default constructor
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         FormattedElement()
-            : m_contentOrigin(nullptr), m_renderArea(FloatRect(0.0f, 0.0f, 0.0f, 0.0f)), m_renderRefLine(0.0f),
+            : m_contentOrigin(nullptr), m_layoutArea(FloatRect(0.0f, 0.0f, 0.0f, 0.0f)), m_layoutRefLine(0.0f),
               m_backgroundColor(Color(255, 255, 255)), m_opacity(1.0f)
         { ; }
 
@@ -93,163 +93,163 @@ namespace tgui
         {   if (m_contentOrigin != nullptr) return m_contentOrigin->getName(); else return MarkupLanguageElement::getEmptyString();   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the render area (to an empty area at indicated position) of this formatted element
+        /// @brief Sets the layout area (within the widget, it wil be rendered) of this formatted element (to an empty area by default)
         ///
-        /// @param position  The new (empty) render area position
-        /// @param size      The new (empty) render area size (default is {0, 0})
+        /// @param position  The new (empty) layout area position
+        /// @param size      The new (empty) layout area size (default is {0, 0})
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setRenderArea(Vector2f position, Vector2f size = {0.0f, 0.0f})
+        inline void setLayoutArea(Vector2f position, Vector2f size = {0.0f, 0.0f})
         {
-            m_renderArea.left = position.x;
-            m_renderArea.width = size.x;
-            m_renderArea.top = position.y;
-            m_renderArea.height = size.y;
-            m_renderRefLine = m_renderArea.top + m_renderArea.height;
+            m_layoutArea.left = position.x;
+            m_layoutArea.width = size.x;
+            m_layoutArea.top = position.y;
+            m_layoutArea.height = size.y;
+            m_layoutRefLine = m_layoutArea.top + m_layoutArea.height;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the render area of this formatted element
+        /// @brief Gets the layout area of this formatted element (within the widget, it wil be rendered)
         ///
-        /// @return The render area of this formatted element
+        /// @return The layout area of this formatted element
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline FloatRect getRenderArea() const
-        {   return m_renderArea;   }
+        inline FloatRect getLayoutArea() const
+        {   return m_layoutArea;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the render area reference line (y position)
+        /// @brief Gets the layout area (within the widget, it wil be rendered) reference line (y position)
         ///
-        /// @return The render area reference line (y position)
+        /// @return The layout area reference line (y position)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline float getRenderRefLine() const
-        {   return m_renderRefLine;   }
+        inline float getLayoutRefLine() const
+        {   return m_layoutRefLine;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the new render area top left position (without affecting the size)
+        /// @brief Sets the new layout area (within the widget, it wil be rendered) top left position (without affecting the size)
         ///
-        /// @param position        The new render area top left position
+        /// @param position        The new layout area top left position
         /// @param indentOffset    The horizontal indent offset. Default is 0.0f
         /// @param subsciptOffset  The vertical subscipt offset. Default is 0.0f
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setRenderLeftTop(Vector2f position, float indentOffset = 0.0f, float subsciptOffset = 0.0f)
+        inline void setLayoutLeftTop(Vector2f position, float indentOffset = 0.0f, float subsciptOffset = 0.0f)
         {
-            m_renderRefLine = position.y - m_renderArea.top;
-            m_renderArea.left = position.x + indentOffset;
-            m_renderArea.top = position.y + subsciptOffset;
+            m_layoutRefLine = position.y - m_layoutArea.top;
+            m_layoutArea.left = position.x + indentOffset;
+            m_layoutArea.top = position.y + subsciptOffset;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the new render area left position (without affecting the size)
+        /// @brief Sets the new layout area (within the widget, it wil be rendered) left position (without affecting the size)
         ///
-        /// @param left  The new render area left position
+        /// @param left  The new layout area left position
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setRenderLeft(float left)
-        {   m_renderArea.left = left;   }
+        inline void setLayoutLeft(float left)
+        {   m_layoutArea.left = left;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the new render area top position (without affecting the size)
+        /// @brief Sets the new layout area (within the widget, it wil be rendered) top position (without affecting the size)
         ///
-        /// @param position        The new render area top position
+        /// @param position        The new layout area top position
         /// @param indentOffset    The horizontal indent offset. Default is 0.0f
         /// @param subsciptOffset  The vertical subscipt offset. Default is 0.0f
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setRenderTop(float top)
+        inline void setLayoutTop(float top)
         {
-            m_renderRefLine = top - m_renderArea.top;
-            m_renderArea.top = top;
+            m_layoutRefLine = top - m_layoutArea.top;
+            m_layoutArea.top = top;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the render area top left position of this formatted element
+        /// @brief Gets the layout area top (within the widget, it wil be rendered) left position of this formatted element
         ///
-        /// @return The render area top left position
+        /// @return The layout area top left position
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline Vector2f getRenderLeftTop()
-        {   return {m_renderArea.left, m_renderArea.top};   }
+        inline Vector2f getLayoutLeftTop() const
+        {   return {m_layoutArea.left, m_layoutArea.top};   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the render area left position of this formatted element
+        /// @brief Gets the layout area (within the widget, it wil be rendered) left position of this formatted element
         ///
-        /// @return The render area left position
+        /// @return The layout area left position
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline float getRenderLeft() const
-        {   return m_renderArea.left;  }
+        inline float getLayoutLeft() const
+        {   return m_layoutArea.left;  }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the render area top position of this formatted element
+        /// @brief Gets the layout area (within the widget, it wil be rendered) top position of this formatted element
         ///
-        /// @return The render area top position
+        /// @return The layout area top position
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        float getRenderTop() const
-        {   return m_renderArea.top;   }
+        float getLayoutTop() const
+        {   return m_layoutArea.top;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the render area size (without affecting the top left coordinates) of this formatted element
+        /// @brief Sets the layout area (within the widget, it wil be rendered) size (without affecting the top left coordinates) of this formatted element
         ///
-        /// @param size  The new render area size to set (the size is relative to the top left coordinates)
+        /// @param size  The new layout area size to set (the size is relative to the top left coordinates)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setRenderSize(Vector2f size)
+        inline void setLayouSize(Vector2f size)
         {
-            m_renderRefLine += size.y - m_renderArea.height;
-            m_renderArea.width = size.x;
-            m_renderArea.height = size.y;
+            m_layoutRefLine += size.y - m_layoutArea.height;
+            m_layoutArea.width = size.x;
+            m_layoutArea.height = size.y;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the render area size of this formatted element
+        /// @brief Gets the layout area (within the widget, it wil be rendered) size of this formatted element
         ///
-        /// @return The render area size
+        /// @return The layout area size
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline Vector2f getRenderSize()
-        {   return {m_renderArea.width, m_renderArea.height};   }
+        inline Vector2f getLayoutSize() const
+        {   return {m_layoutArea.width, m_layoutArea.height};   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the render area bottom right coordinates (with affecting the size) of this formatted element
+        /// @brief Sets the layout area (within the widget, it wil be rendered) bottom right coordinates (with affecting the size) of this formatted element
         ///
-        /// @param bottomRight        The new render area bottom right coordinates (absolute coordinates)
+        /// @param bottomRight        The new layout area bottom right coordinates (absolute coordinates)
         /// @param indentOffset       The horizontal indent offset. Default is 0.0f
         /// @param superscriptOffset  The vertical superscipt offset. Default is 0.0f
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setRenderRightBottom(Vector2f bottomRight, float indentOffset = 0.0f, float superscriptOffset = 0.0f)
+        inline void setLayoutRightBottom(Vector2f bottomRight, float indentOffset = 0.0f, float superscriptOffset = 0.0f)
         {
-            m_renderRefLine = bottomRight.y;
-            m_renderArea.width = bottomRight.x + indentOffset - m_renderArea.left;
-            m_renderArea.height = bottomRight.y + superscriptOffset - m_renderArea.top;
+            m_layoutRefLine = bottomRight.y;
+            m_layoutArea.width = bottomRight.x + indentOffset - m_layoutArea.left;
+            m_layoutArea.height = bottomRight.y + superscriptOffset - m_layoutArea.top;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the render area right coordinate (with affecting the size) of this formatted element
+        /// @brief Sets the layout area (within the widget, it wil be rendered) right coordinate (with affecting the size) of this formatted element
         ///
-        /// @param right  The new render area right coordinate (absolute coordinates)
+        /// @param right  The new layout area right coordinate (absolute coordinates)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setRenderRight(float right)
-        {   m_renderArea.width = right - m_renderArea.left;   }
+        inline void setLayoutRight(float right)
+        {   m_layoutArea.width = right - m_layoutArea.left;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the render area right position of this formatted element
+        /// @brief Gets the layout area (within the widget, it wil be rendered) right position of this formatted element
         ///
-        /// @return The render area right position
+        /// @return The layout area right position
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline float getRenderRight() const
-        {   return m_renderArea.left + m_renderArea.width;   }
+        inline float getLayoutRight() const
+        {   return m_layoutArea.left + m_layoutArea.width;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the render area bottom coordinate (with affecting the size) of this formatted element
+        /// @brief Sets the layout area (within the widget, it wil be rendered) bottom coordinate (with affecting the size) of this formatted element
         ///
-        /// @param bottom  The new render area bottom coordinate (absolute coordinates)
+        /// @param bottom  The new layout area bottom coordinate (absolute coordinates)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setRenderBottom(float bottom)
+        inline void setLayoutBottom(float bottom)
         {
-            m_renderRefLine = bottom - (m_renderArea.top + m_renderArea.height);
-            m_renderArea.height = bottom - m_renderArea.top;
+            m_layoutRefLine = bottom - (m_layoutArea.top + m_layoutArea.height);
+            m_layoutArea.height = bottom - m_layoutArea.top;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the render area bottom position of this formatted element
+        /// @brief Gets the layout area (within the widget, it wil be rendered) bottom position of this formatted element
         ///
-        /// @return The render area bottom position
+        /// @return The layout area bottom position
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        float getRenderBottom() const
-        {   return m_renderArea.top + m_renderArea.height;   }
+        float getLayoutBottom() const
+        {   return m_layoutArea.top + m_layoutArea.height;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the new background color of this rect section
@@ -286,8 +286,8 @@ namespace tgui
 
     protected:
         MarkupLanguageElement::Ptr m_contentOrigin;   //!< The origin data element, that is (partly) represented by this formatted element
-        FloatRect                  m_renderArea;      //!< The render area
-        float                      m_renderRefLine;   //!< The render area reference line (y position)
+        FloatRect                  m_layoutArea;      //!< The layout area (within the widget, it wil be rendered)
+        float                      m_layoutRefLine;   //!< The layout area (within the widget, it wil be rendered) reference line (y position)
         Color                      m_backgroundColor; //!< The background color
         float                      m_opacity;         //!< The background opacity
     };
@@ -312,33 +312,54 @@ namespace tgui
         /// @brief The default constructor
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         FormattedRectangle()
-            : FormattedElement(), m_borderWidth(SizeType::Pixel, 0.0f), m_borderColor(Color(0, 0, 0))
+            : FormattedElement(), m_borderMargin(SizeType::Pixel, 0.0f), m_borderWidth(SizeType::Pixel, 0.0f), m_borderColor(Color(0, 0, 0))
         { ; }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the render area border width
+        /// @brief Sets the area border margin (should always be in px)
         ///
-        /// @param size  The new render area border width
+        /// @param size  The new area border margin (should always be in px)
+        ///
+        /// @return      A reference to this formatted rectangle
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setBoderWidth(const FourDimSize& borderWidth)
-        { m_borderWidth = borderWidth; }
+        inline FormattedRectangle& setBorderMargin(FourDimSize margin)
+        {   m_borderMargin = margin; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the render area border width
+        /// @brief Gets the area border margin (should always be in px)
         ///
-        /// @return The render area border width
+        /// @return The area border margin (should always be in px)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline FourDimSize getBoderMargin() const
+        {    return m_borderMargin;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Sets the area border width (should always be in px)
+        ///
+        /// @param size  The new area border width (should always be in px)
+        ///
+        /// @return      A reference to this formatted rectangle
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline FormattedRectangle& setBoderWidth(const FourDimSize& borderWidth)
+        {   m_borderWidth = borderWidth; return *this;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the area border width (should always be in px)
+        ///
+        /// @return The area border width (should always be in px)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline FourDimSize getBoderWidth() const
-        { return m_borderWidth; }
+        {   return m_borderWidth;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the new border color of this rect section
         ///
         /// @param borderColor  The new border color of this rect section
         ///
+        /// @return             A reference to this formatted rectangle
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setBorderColor(Color borderColor)
-        { m_borderColor = borderColor; }
+        inline FormattedRectangle& setBorderColor(Color borderColor)
+        {   m_borderColor = borderColor; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the border color of this rect section
@@ -346,10 +367,11 @@ namespace tgui
         /// @return The border color of this rect section
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline Color getBorderColor() const
-        { return m_borderColor; }
+        {   return m_borderColor;   }
 
     protected:
-        FourDimSize       m_borderWidth;         //!< The border width
+        FourDimSize       m_borderMargin;        //!< The border margin (should always be in px)
+        FourDimSize       m_borderWidth;         //!< The border width (should always be in px)
         Color             m_borderColor;         //!< The border color
     };
 
@@ -373,8 +395,8 @@ namespace tgui
         /// @brief The default constructor
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         FormattedLink()
-            : FormattedRectangle(), m_href(U""), m_linkColor(Color(U"#4500AD")), m_activeColor(Color(U"#600090")),
-              m_visitedColor(Color(U"#100080")), m_underlined(true), m_visited(false)
+            : FormattedRectangle(), m_href(U""), m_linkColor(Color(U"#4500AD")), m_activeColor(Color(U"#4500AD")),
+              m_visitedColor(Color(U"#100080")), m_underlined(true), m_visited(false), m_active(false)
         {   ;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -390,7 +412,7 @@ namespace tgui
         ///
         /// @return The link target
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline String getHref()
+        inline String getHref() const
         {   return m_href;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -406,7 +428,7 @@ namespace tgui
         ///
         /// @return The color an unvisited link
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline Color getLinkColor()
+        inline Color getLinkColor() const
         {   return m_linkColor;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -422,7 +444,7 @@ namespace tgui
         ///
         /// @return  The color an active link
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline Color getActiveColor()
+        inline Color getActiveColor() const
         {   return m_activeColor;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -438,23 +460,23 @@ namespace tgui
         ///
         /// @return  The color an visited link
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline Color getVisitedColor()
+        inline Color getVisitedColor() const
         {   return m_visitedColor;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the flag that determines whether to underline
+        /// @brief Sets the flag that determines whether to underline on hover/mouseover
         ///
-        /// @param underlined  The flag that determines whether to underline
+        /// @param underlined  The flag that determines whether to underline on hover/mouseover
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setUnderlined(bool underlined)
         {   m_underlined = underlined;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the flag that determines whether to underline
+        /// @brief Gets the flag that determines whether to underline on hover/mouseover
         ///
-        /// @return The flag that determines whether to underline
+        /// @return The flag that determines whether to underline on hover/mouseover
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline bool getUnderlined()
+        inline bool getUnderlined() const
         {   return m_underlined;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -470,8 +492,24 @@ namespace tgui
         ///
         /// @return The flag that determines whether this link has been visited
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline bool getVisited()
+        inline bool getVisited() const
         {   return m_visited;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Sets the flag that determines whether this link is currently active
+        ///
+        /// @param active  The flag that determines whether this link is currently active
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline void setActive(bool active)
+        {   m_active = active;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the flag that determines whether this link is currently active
+        ///
+        /// @return The flag that determines whether this linkis currently active
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline bool getActive() const
+        {   return m_active;   }
 
     protected:
         String            m_href;                  //!< The link target
@@ -480,6 +518,7 @@ namespace tgui
         Color             m_visitedColor;          //!< The color an visited link
         bool              m_underlined;            //!< The flag that determines whether to underline
         bool              m_visited;               //!< The flag that determines whether this link has been visited
+        bool              m_active;                //!< The flag that determines whether this link is currently active
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -686,7 +725,7 @@ namespace tgui
         /// @param height  The new character size of this text section
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setRenderHeight(float height)
-        { m_renderArea.height = height; }
+        { m_layoutArea.height = height; }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the character size of this text section
@@ -694,7 +733,7 @@ namespace tgui
         /// @return The character size of this text section. Default is 16
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         unsigned int getCharacterSizeAsInt() const
-        { return static_cast<unsigned int>(m_renderArea.height + 0.49f); }
+        { return static_cast<unsigned int>(m_layoutArea.height + 0.49f); }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the new run length of this text section
@@ -702,7 +741,7 @@ namespace tgui
         /// @param runLength  The new run length of this text section
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setRunLength(float runLength)
-        { m_renderArea.width = runLength; }
+        { m_layoutArea.width = runLength; }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the run length of this text section
@@ -710,7 +749,7 @@ namespace tgui
         /// @return The run length of this text section. Default is 16
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline float getRunLength() const
-        { return m_renderArea.width; }
+        { return m_layoutArea.width; }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the new font of this text section

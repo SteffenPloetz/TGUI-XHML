@@ -1436,7 +1436,13 @@ namespace tgui
         /// @param attribute  The attribute to add to the element's collection of attributes
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void addAttribute(XhtmlAttribute::Ptr attribute)
-        {   return m_attributes->push_back(attribute);   }
+        {
+            auto styleEntry = investigateStyleEntry();
+            if (attribute->getName().equalIgnoreCase(XhtmlStyleEntry::TypeName) && styleEntry)
+                styleEntry->mergeWith(std::dynamic_pointer_cast<XhtmlStyleEntry>(attribute));
+            else
+                return m_attributes->push_back(attribute);
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Adds one attribute to the element's collection of attributes
@@ -1444,7 +1450,16 @@ namespace tgui
         /// @param attributes  The collection of attributes to add to the element's collection of attributes
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void addAttributes(const std::vector<XhtmlAttribute::Ptr>& attributes)
-        {   for (size_t index = 0; index < attributes.size(); index++) m_attributes->push_back(attributes[index]);   }
+        {
+            auto styleEntry = investigateStyleEntry();
+            for (size_t index = 0; index < attributes.size(); index++)
+            {
+                if (attributes[index]->getName().equalIgnoreCase(XhtmlStyleEntry::TypeName) && styleEntry)
+                    styleEntry->mergeWith(std::dynamic_pointer_cast<XhtmlStyleEntry>(attributes[index]));
+                else
+                    m_attributes->push_back(attributes[index]);
+            }
+        }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the indicated attribute
@@ -1705,6 +1720,14 @@ namespace tgui
             XhtmlElement::Ptr& parent, const size_t& beginPosition, const size_t& endPosition, std::vector<XhtmlAttribute::Ptr>& attributesBuffer);
 
     protected:
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Investigates the style entry
+        ///
+        /// @return The style entry. Can be nullptr
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        XhtmlStyleEntry::Ptr investigateStyleEntry() const;
+
+    protected:
         XhtmlElementType                                  m_elementType; //!< The associated XHTML element type
         XhtmlElement::Ptr                                 m_parent;      //!< This element's parent element
         std::shared_ptr<std::vector<XhtmlAttribute::Ptr>> m_attributes;  //!< This element's attribute list
@@ -1741,7 +1764,7 @@ namespace tgui
         /// ATTENTION: To register a parent and to register this new object to a parent are the responsibility of the caller!
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         XhtmlStyle()
-            : XhtmlElement(XhtmlElementType::Style), m_styles()
+            : XhtmlElement(XhtmlElementType::Style), m_entries()
         { ; }
 
     public:
@@ -1749,7 +1772,7 @@ namespace tgui
         /// @brief The virtual default destructor
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         virtual ~XhtmlStyle()
-        {   m_styles.clear();   }
+        {   m_entries.clear();   }
 
 
     public:
@@ -1760,7 +1783,7 @@ namespace tgui
         /// @param styleEntry     The style entry to register
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setEntry(const tgui::String& styleName, XhtmlStyleEntry::Ptr styleEntry)
-        {   if(styleName.size() != 0 && styleEntry != nullptr) m_styles[styleName] = styleEntry; }
+        {   if(styleName.size() != 0 && styleEntry != nullptr) m_entries[styleName] = styleEntry; }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets an style entry
@@ -1770,7 +1793,7 @@ namespace tgui
         /// @return The requested style entry on success, or nullptr otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline XhtmlStyleEntry::Ptr getEntry(const tgui::String& styleName)
-        {   return (styleName.size() != 0 && m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);   }
+        {   return (styleName.size() != 0 && m_entries.find(styleName) != m_entries.end() ? m_entries[styleName] : nullptr);   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the style entry
@@ -1791,7 +1814,7 @@ namespace tgui
         void createEntriesFromParseData(std::vector<std::tuple<MessageType, String>>& messages, const tgui::String& buffer);
 
     private:
-        std::map<tgui::String, XhtmlStyleEntry::Ptr> m_styles;                   //!< The collection of registered styles
+        std::map<tgui::String, XhtmlStyleEntry::Ptr> m_entries;                   //!< The collection of registered styles
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1873,7 +1896,7 @@ namespace tgui
         ///
         /// @return The style entry. Can be nullptr
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        virtual XhtmlStyleEntry::Ptr getStyleEntry() = 0;
+        virtual XhtmlStyleEntry::Ptr getStyleEntry() const = 0;
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1970,7 +1993,8 @@ namespace tgui
         ///
         /// @return The style entry. Can be nullptr
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        XhtmlStyleEntry::Ptr getStyleEntry();
+        virtual XhtmlStyleEntry::Ptr getStyleEntry() const
+        {   return investigateStyleEntry();   }
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2029,7 +2053,8 @@ namespace tgui
         ///
         /// @return The style entry. Can be nullptr
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        XhtmlStyleEntry::Ptr getStyleEntry();
+        inline XhtmlStyleEntry::Ptr getStyleEntry() const
+        {   return investigateStyleEntry();   }
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

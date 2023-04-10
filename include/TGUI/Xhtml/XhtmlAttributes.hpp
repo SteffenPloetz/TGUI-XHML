@@ -238,12 +238,12 @@ namespace tgui
         ///
         /// @param parentSize  The parent size for the calculation of a relative defined size
         ///
-        /// @return The four dimension size equivalent in pixel calculated out of the current size
+        /// @return            The four dimension size equivalent in pixel calculated out of the current size
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline FourDimSize toPixel(Vector2f parentSize) const
         {
             if (sizeType == SizeType::Pixel)
-                return FourDimSize(SizeType::Pixel, top, right, bottom , left);
+                return FourDimSize(SizeType::Pixel, top, right, bottom, left);
             else if (sizeType == SizeType::Point)
                 return FourDimSize(SizeType::Pixel, top * 1.3333333333f, right * 1.3333333333f, bottom * 1.3333333333f, left * 1.3333333333f);
             else if (sizeType == SizeType::EquivalentOfM)
@@ -490,6 +490,8 @@ namespace tgui
         /// @brief Overload of copy assignment operator
         ///
         /// @param styleEntry  The style entry to apply
+        ///
+        /// @return            A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         XhtmlStyleEntry& operator=(const XhtmlStyleEntry& styleEntry);
 
@@ -497,16 +499,29 @@ namespace tgui
         /// @brief Move assignment operator
         ///
         /// @param styleEntry  The style entry to apply
+        ///
+        /// @return            A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         XhtmlStyleEntry& operator=(XhtmlStyleEntry&& styleEntry) noexcept;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Merge/override the style values of this stryle entry with the style values of the indicated style enty
+        ///
+        /// @param styleEntry  The style entry to merge/override with this style entry
+        ///
+        /// @return            A reference to this style entry
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        XhtmlStyleEntry& mergeWith(const XhtmlStyleEntry::Ptr styleEntry);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the new color
         ///
-        /// @param color  The new color
+        /// @param color The new color
+        ///
+        /// @return      A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setColor(const Color& color)
-        {   m_color = color; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::ForeColor;   }
+        inline XhtmlStyleEntry& setColor(const Color& color)
+        {   m_color = color; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::ForeColor; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the color
@@ -520,9 +535,11 @@ namespace tgui
         /// @brief Sets the new background color
         ///
         /// @param backgroundColor  The new background color
+        ///
+        /// @return                 A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setBackgroundColor(const Color& backgroundColor)
-        {   m_backgroundColor = backgroundColor; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::BackColor;   }
+        inline XhtmlStyleEntry& setBackgroundColor(const Color& backgroundColor)
+        {   m_backgroundColor = backgroundColor; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::BackColor; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the background color
@@ -536,9 +553,11 @@ namespace tgui
         /// @brief Sets the new border color
         ///
         /// @param borderColor  The new border color
+        ///
+        /// @return             A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setBorderColor(const Color& borderColor)
-        {   m_borderColor = borderColor; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::BorderColor;   }
+        inline XhtmlStyleEntry& setBorderColor(const Color& borderColor)
+        {   m_borderColor = borderColor; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::BorderColor; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the border color
@@ -552,9 +571,11 @@ namespace tgui
         /// @brief Sets the new opacity
         ///
         /// @param opacity  The new opacity
+        ///
+        /// @return         A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setOpacity(float opacity)
-        {   m_opacity = opacity; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::Opacity;   }
+        inline XhtmlStyleEntry& setOpacity(float opacity)
+        {   m_opacity = opacity; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::Opacity; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the opacity
@@ -568,9 +589,11 @@ namespace tgui
         /// @brief Sets the new color
         ///
         /// @param color  The new color
+        ///
+        /// @return       A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setFontFamily(const String& fontFamily)
-        {   m_fontFamily = fontFamily; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::FontFamily;   }
+        inline XhtmlStyleEntry& setFontFamily(const String& fontFamily)
+        {   m_fontFamily = fontFamily; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::FontFamily; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the color
@@ -584,9 +607,11 @@ namespace tgui
         /// @brief Sets the new font size
         ///
         /// @param fontSize  The new font size
+        ///
+        /// @return          A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setFontSize(OneDimSize fontSize)
-        {   m_fontSize = fontSize; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::FontSize;   }
+        inline XhtmlStyleEntry& setFontSize(OneDimSize fontSize)
+        {   m_fontSize = fontSize; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::FontSize; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the font size
@@ -640,9 +665,11 @@ namespace tgui
         /// @brief Sets the new margin
         ///
         /// @param margin  The new margin
+        ///
+        /// @return        A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setMargin(FourDimSize margin)
-        {   m_margin = margin; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::Margin;   }
+        inline XhtmlStyleEntry& setMargin(FourDimSize margin)
+        {   m_margin = margin; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::Margin; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the margin
@@ -656,9 +683,11 @@ namespace tgui
         /// @brief Sets the new border width
         ///
         /// @param borderWidth  The new border width
+        ///
+        /// @return             A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setBorderWidth(FourDimSize borderWidth)
-        {   m_border = borderWidth; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::BorderWidth;   }
+        inline XhtmlStyleEntry& setBorderWidth(FourDimSize borderWidth)
+        {   m_border = borderWidth; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::BorderWidth; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the border width
@@ -672,9 +701,11 @@ namespace tgui
         /// @brief Sets the new padding
         ///
         /// @param padding  The new padding
+        ///
+        /// @return         A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setPadding(FourDimSize padding)
-        {   m_padding = padding; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::Padding;   }
+        inline XhtmlStyleEntry& setPadding(FourDimSize padding)
+        {   m_padding = padding; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::Padding; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the padding

@@ -30,7 +30,7 @@ namespace tgui
         : FormattedTextDocument(), m_textures(), m_content(), m_rootElement(), m_defaultTextSize(14.0f),
           m_defaultForeColor(Color(0, 0, 0)), m_defaultOpacity(1), m_defaultFont(nullptr), m_availableClientSize(0.0f, 0.0f),
           m_occupiedLayoutSize(0.0f, 0.0f), m_evolvingLayoutArea(0.0f, 0.0f, 0.0f, 0.0f),
-          m_evolvingLineExtraHeight(0.0f), m_evolvingLineRunLength(0.0f), m_preformattedText(0), m_formattingState(Color(0, 0, 0)),
+          m_evolvingLineExtraHeight(0.0f), m_evolvingLineRunLength(0.0f), m_preformattedTextFlagCnt(0), m_formattingState(Color(0, 0, 0)),
           m_listPadding(30), m_backPadding(4)
     {
         m_rootElement = XhtmlElement::createHtml(nullptr);
@@ -81,21 +81,21 @@ namespace tgui
     {
         std::vector<XhtmlStyleEntry::Ptr> styleEntries;
         auto styleElement = getStyleElement();
-        if (styleElement != nullptr)
+        if (styleElement)
         {
             auto classNames = ext::String::split(xhtmlElement->getClassNames(), U' ', true);
             for (auto className : classNames)
             {
                 auto globalStyleEntry = styleElement->getEntry(xhtmlElement->getTypeName(), className);
-                if (globalStyleEntry != nullptr)
+                if (globalStyleEntry)
                     styleEntries.push_back(globalStyleEntry);
             }
         }
         auto xhtmlStyleableElement = std::dynamic_pointer_cast<XhtmlStyleableInterface>(xhtmlElement);
-        if (xhtmlStyleableElement != nullptr)
+        if (xhtmlStyleableElement)
         {
             auto localStyleEntry = xhtmlStyleableElement->getStyleEntry();
-            if (localStyleEntry != nullptr)
+            if (localStyleEntry)
                 styleEntries.push_back(localStyleEntry);
         }
 
@@ -181,10 +181,10 @@ namespace tgui
 
         auto leftTop = Vector2f(m_evolvingLayoutArea.left,
                                 m_evolvingLineExtraHeight + m_evolvingLayoutArea.top);
-        formattedRectangle->setRenderLeftTop(leftTop, (applyLineRunLength ? m_evolvingLineRunLength : 0));
-        auto rightBottom = Vector2f(formattedRectangle->getRenderLeft(),
+        formattedRectangle->setLayoutLeftTop(leftTop, (applyLineRunLength ? m_evolvingLineRunLength : 0));
+        auto rightBottom = Vector2f(formattedRectangle->getLayoutLeft(),
                                     m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight);
-        formattedRectangle->setRenderRightBottom(rightBottom);
+        formattedRectangle->setLayoutRightBottom(rightBottom);
         formattedRectangle->setBackgroundColor(Color(255, 255, 255, 0));
 
         return formattedRectangle;
@@ -197,10 +197,10 @@ namespace tgui
 
         auto leftTop = Vector2f(m_evolvingLayoutArea.left,
                                 m_evolvingLineExtraHeight + m_evolvingLayoutArea.top);
-        formattedRectangle->setRenderLeftTop(leftTop, (applyLineRunLength ? m_evolvingLineRunLength : 0));
-        auto rightBottom = Vector2f(formattedRectangle->getRenderLeft(),
+        formattedRectangle->setLayoutLeftTop(leftTop, (applyLineRunLength ? m_evolvingLineRunLength : 0));
+        auto rightBottom = Vector2f(formattedRectangle->getLayoutLeft(),
                                     m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight);
-        formattedRectangle->setRenderRightBottom(rightBottom);
+        formattedRectangle->setLayoutRightBottom(rightBottom);
         formattedRectangle->setBackgroundColor(Color(255, 255, 255, 0));
 
         return formattedRectangle;
@@ -215,10 +215,10 @@ namespace tgui
 
         auto leftTop = Vector2f(m_evolvingLayoutArea.left,
                                 m_evolvingLineExtraHeight + m_evolvingLayoutArea.top);
-        formattedImage->setRenderLeftTop(leftTop);
-        auto rightBottom = Vector2f(formattedImage->getRenderLeft(),
+        formattedImage->setLayoutLeftTop(leftTop);
+        auto rightBottom = Vector2f(formattedImage->getLayoutLeft(),
                                     m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight);
-        formattedImage->setRenderRightBottom(rightBottom);
+        formattedImage->setLayoutRightBottom(rightBottom);
         formattedImage->setBackgroundColor(Color(255, 255, 255, 0));
 
         return formattedImage;
@@ -236,14 +236,48 @@ namespace tgui
 
         auto leftTop = Vector2f(m_evolvingLayoutArea.left,
                                 m_evolvingLineExtraHeight + m_evolvingLayoutArea.top);
-        formattedTextSection->setRenderLeftTop(leftTop, indentOffset, std::max(0.0f, superscriptOrSubsciptTextHeightReduction));
+        formattedTextSection->setLayoutLeftTop(leftTop, indentOffset, std::max(0.0f, superscriptOrSubsciptTextHeightReduction));
         // for superscript / subscript - the text height is already adjusted
         float unscriptedTextHeight = m_formattingState.TextHeight + std::abs(superscriptOrSubsciptTextHeightReduction);
-        auto rightBottom = Vector2f(formattedTextSection->getRenderLeft(),
+        auto rightBottom = Vector2f(formattedTextSection->getLayoutLeft(),
                                     m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + unscriptedTextHeight);
-        formattedTextSection->setRenderRightBottom(rightBottom, 0.0f, std::min(0.0f, superscriptOrSubsciptTextHeightReduction));
+        formattedTextSection->setLayoutRightBottom(rightBottom, 0.0f, std::min(0.0f, superscriptOrSubsciptTextHeightReduction));
 
         return formattedTextSection;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    size_t FormattedTextXhtmlDocument::calculateAutoLineBreak(const String remainingText, float runLength) const
+    {
+        // Determine SECURE auto-line-break position: For a mono-space font, the runLength is distributed equally to the characters.
+        // For a proportional font, the runLength typically is smaller and the SECURE auto-line-break position is a good starting point.
+        size_t delimiterPosition = (int)(remainingText.size() * ((1.0f * (m_evolvingLayoutArea.width - m_evolvingLineRunLength)) / (1.0f * runLength)));
+        // The line width calculation is not 100% correct. - So some security space is subtracted.
+        delimiterPosition -= (delimiterPosition > 333 ? 8 : (delimiterPosition > 99 ? 6 : (delimiterPosition > 33 ? 4 : (delimiterPosition > 9 ? 2 : (delimiterPosition > 3 ? 1 : 0)))));
+        size_t linebreakPosition = remainingText.find_last_of(LinebreakDelimitercharacters, delimiterPosition); // Search only includes characters at or before delimiterPosition.
+
+        auto tryAgain = true;
+        while (tryAgain)
+        {
+            size_t expandedLinebreakPosition = remainingText.find_first_of(LinebreakDelimitercharacters, delimiterPosition + 1);
+            if (expandedLinebreakPosition < remainingText.size())
+            {
+                expandedLinebreakPosition += expandedLinebreakPosition < remainingText.size() - 1 && remainingText[expandedLinebreakPosition] == L'-' ? 1 : 0;
+                runLength = Text::getLineWidth(remainingText.substr(0, expandedLinebreakPosition), m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
+                if (m_evolvingLayoutArea.width - m_evolvingLineRunLength > runLength)
+                {
+                    delimiterPosition = expandedLinebreakPosition;
+                    linebreakPosition = expandedLinebreakPosition;
+                }
+                else
+                    tryAgain = false;
+            }
+            else
+                tryAgain = false;
+        }
+
+        return linebreakPosition;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -256,9 +290,9 @@ namespace tgui
         if(!m_defaultFont)
             std::cerr << "Invalid default font!\n";
 
-        bool predecessorWasExtraSpacingBlockElement = false;
-        bool parentIsBlockElement = false;
-        bool lastchildWasRunLengtElement = false;
+        bool predecessorElementProvidesExtraSpace = false;
+        bool parentElementSuppressesInitialExtraSpace = false;
+        bool lastchildAcceptsRunLengtExpansion = false;
 
         m_availableClientSize = {0.0f, 0.0f};
         m_occupiedLayoutSize = {0.0f, 0.0f};
@@ -275,21 +309,20 @@ namespace tgui
         m_formattingState.TextFont = fontCollection.Sans->Regular;
 
         for (size_t index = 0; index < m_rootElement->countChildren(); index++)
-            layout(predecessorWasExtraSpacingBlockElement, parentIsBlockElement, lastchildWasRunLengtElement,
+            layout(predecessorElementProvidesExtraSpace, parentElementSuppressesInitialExtraSpace, lastchildAcceptsRunLengtExpansion,
                    m_rootElement->getChild(index), fontCollection,keepSelection);
         if (m_content.size() > 0)
         {
             FormattedElement::Ptr formattedElement = m_content[m_content.size() - 1];
-            m_occupiedLayoutSize.y += formattedElement->getRenderSize().y + m_defaultTextSize / 2;
+            m_occupiedLayoutSize.y += formattedElement->getLayoutSize().y + m_defaultTextSize / 2;
         }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void FormattedTextXhtmlDocument::layout(bool& predecessorWasExtraSpacingBlockElement, bool parentIsTextBlockElement,
-                                            bool& lastchildWasRunLengtElement, std::shared_ptr<XhtmlElement> xhtmlElement,
-                                            const FormattedTextDocument::FontCollection& fontCollection,
-                                            bool keepSelection)
+    void FormattedTextXhtmlDocument::layout(bool& predecessorElementProvidesExtraSpace, bool parentElementSuppressesInitialExtraSpace,
+                                            bool& lastchildAcceptsRunLengtExpansion, XhtmlElement::Ptr xhtmlElement,
+                                            const FormattedTextDocument::FontCollection& fontCollection, bool keepSelection)
     {
         auto typeName = xhtmlElement->getTypeName();
         if (typeName == XhtmlElementType::Head)
@@ -317,7 +350,7 @@ namespace tgui
             auto styleEntries = getApplicableStyleElements(xhtmlElement);
             auto xhtmlStyleableElement = std::dynamic_pointer_cast<XhtmlStyleableInterface>(xhtmlElement);
 
-            bool currentIsTextBlockElement = false;
+            bool currentIsInitialExtraSpaceSuppressingElement = false;
 
             // -------------------------------
             // Apply predefined font style
@@ -385,12 +418,21 @@ namespace tgui
                 // -- Create element
                 currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement);
                 m_content.push_back(currentFormattedElement);
+                if (xhtmlStyleableElement)
+                {
+                    auto localStyleEntry = xhtmlStyleableElement->getStyleEntry();
+                    if (!localStyleEntry)
+                    {
+                        localStyleEntry = std::make_shared< XhtmlStyleEntry>();
+                        xhtmlElement->addAttribute(localStyleEntry);
+                    }
+                }
 
                 // -- Act like a "\r"
                 m_evolvingLineRunLength = 0;
 
                 // -- Set flags
-                currentIsTextBlockElement = true;
+                currentIsInitialExtraSpaceSuppressingElement = true; // First child element can be placed without preceeding extra space.
             }
             else if (typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3 ||
                      typeName == XhtmlElementType::H4 || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6)
@@ -398,7 +440,7 @@ namespace tgui
                 // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
 
                 // -- Prepare Y
-                if (predecessorWasExtraSpacingBlockElement)
+                if (predecessorElementProvidesExtraSpace || parentElementSuppressesInitialExtraSpace) // XXX
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight;
                 else
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize + m_defaultTextSize + m_defaultTextSize / 2;
@@ -461,7 +503,7 @@ namespace tgui
                 m_evolvingLineRunLength = 0;
 
                 // -- Set flags
-                currentIsTextBlockElement = true;
+                currentIsInitialExtraSpaceSuppressingElement = true; // First child element can be placed without preceeding extra space.
             }
             else if (typeName == XhtmlElementType::ListItem)
             {
@@ -499,7 +541,7 @@ namespace tgui
                 m_evolvingLineRunLength = 0;
 
                 // -- Set flags
-                currentIsTextBlockElement = true;
+                currentIsInitialExtraSpaceSuppressingElement = true; // First child element can be placed without preceeding extra space.
             }
             else if (typeName == XhtmlElementType::Span || typeName == XhtmlElementType::Anchor)
             {
@@ -544,14 +586,14 @@ namespace tgui
                 // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
 
                 // -- Prepare Y
-                if (predecessorWasExtraSpacingBlockElement || parentIsTextBlockElement)
+                if (predecessorElementProvidesExtraSpace || parentElementSuppressesInitialExtraSpace)
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight;
                 else
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_formattingState.TextHeight + m_formattingState.TextHeight / 4;
                 m_evolvingLineExtraHeight = 0;
 
                 if (typeName == XhtmlElementType::Preformatted)
-                    m_preformattedText++;
+                    m_preformattedTextFlagCnt++;
                 else if (typeName == XhtmlElementType::Code)
                 {
                     m_formattingState.TextFont    = fontCollection.Mono->Regular;
@@ -577,15 +619,15 @@ namespace tgui
                 m_evolvingLineRunLength = 0;
 
                 // -- Set flags
-                currentIsTextBlockElement = true;
+                currentIsInitialExtraSpaceSuppressingElement = true; // First child element can be placed without preceeding extra space.
             }
             else if (typeName == XhtmlElementType::Paragraph)
             {
                 // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
 
                 // -- Prepare Y
-                if (predecessorWasExtraSpacingBlockElement || parentIsTextBlockElement)
-                    m_evolvingLayoutArea.top += m_evolvingLineExtraHeight;
+                if (predecessorElementProvidesExtraSpace || parentElementSuppressesInitialExtraSpace)
+                    m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize;
                 else
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize + m_defaultTextSize / 2 + m_defaultTextSize;
                 m_evolvingLineExtraHeight = 0;
@@ -600,7 +642,7 @@ namespace tgui
                 m_evolvingLineRunLength = 0;
 
                 // -- Set flags
-                currentIsTextBlockElement = true;
+                currentIsInitialExtraSpaceSuppressingElement = true; // First child element can be placed without preceeding extra space.
             }
             else if (typeName == XhtmlElementType::Image)
             {
@@ -620,21 +662,6 @@ namespace tgui
             }
 
             // -------------------------------
-            // Apply leading margin
-            // -------------------------------
-            if (xhtmlStyleableElement)
-            {
-                for (auto styleEntry : styleEntries)
-                {
-                    if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) == StyleEntryFlags::Margin)
-                    {
-                        auto margin = styleEntry->getMargin().toPixel(m_availableClientSize);
-                        inflate(m_evolvingLayoutArea, -margin.left, -margin.top, -margin.right, 0);
-                    }
-                }
-            }
-
-            // -------------------------------
             // Initialize backgound and border
             // -------------------------------
             if (typeName == XhtmlElementType::Body          ||
@@ -646,10 +673,28 @@ namespace tgui
                 typeName == XhtmlElementType::Paragraph     || typeName == XhtmlElementType::Image)
             {
                 FormattedRectangle::Ptr formattedRectSection = std::dynamic_pointer_cast<tgui::FormattedRectangle>(currentFormattedElement);
-                if (formattedRectSection != nullptr)
+                if (formattedRectSection)
                 {
                     applyStyleEntriesToFormattedElement(formattedRectSection, styleEntries, fontCollection,
                         StyleCategoryFlags::BackColor | StyleCategoryFlags::Opacity | StyleCategoryFlags::BorderWidth | StyleCategoryFlags::BorderColor);
+                }
+            }
+
+            // -------------------------------
+            // Apply leading margin
+            // -------------------------------
+            if (xhtmlStyleableElement)
+            {
+                FormattedRectangle::Ptr formattedRectSection = std::dynamic_pointer_cast<tgui::FormattedRectangle>(currentFormattedElement);
+                for (auto styleEntry : styleEntries)
+                {
+                    if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) == StyleEntryFlags::Margin)
+                    {
+                        auto margin = styleEntry->getMargin().toPixel(m_availableClientSize);
+                        inflate(m_evolvingLayoutArea, -margin.left, -margin.top, -margin.right, 0);
+                        if (formattedRectSection)
+                            formattedRectSection->setBorderMargin(margin);
+                    }
                 }
             }
 
@@ -671,12 +716,13 @@ namespace tgui
             // -------------------------------
             // Process children
             // -------------------------------
-            bool loopinternalPredecessorWasExtraSpacingBlockElement = (typeName == XhtmlElementType::Body);
-            bool lastchildWasRunLengtElement = false;
+            bool loopinternalPredecessorElementProvidesExtraSpace = false; // XXX (typeName == XhtmlElementType::Body);
+            bool lastchildAcceptsRunLengtExpansion = false;
             for (size_t index = 0; xhtmlElement->isContainer() && index < xhtmlElement->countChildren(); index++)
-                layout(loopinternalPredecessorWasExtraSpacingBlockElement, currentIsTextBlockElement, lastchildWasRunLengtElement,
+                layout(loopinternalPredecessorElementProvidesExtraSpace, index == 0 && currentIsInitialExtraSpaceSuppressingElement, lastchildAcceptsRunLengtExpansion,
                     xhtmlElement->getChild(index), fontCollection, keepSelection);
 
+            float bottomExtraSpace = 0.0f;
 
             // -----------------------------
             // Apply tailing padding
@@ -689,6 +735,23 @@ namespace tgui
                     {
                         auto padding = styleEntry->getPadding().toPixel(m_availableClientSize);
                         inflate(m_evolvingLayoutArea, padding.left, -padding.bottom, padding.right, 0);
+                        bottomExtraSpace += padding.bottom;
+                    }
+                }
+            }
+
+            // -------------------------------
+            // Apply tailing margin
+            // -------------------------------
+            if (xhtmlStyleableElement)
+            {
+                for (auto styleEntry : styleEntries)
+                {
+                    if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) == StyleEntryFlags::Margin)
+                    {
+                        auto margin = styleEntry->getMargin().toPixel(m_availableClientSize);
+                        inflate(m_evolvingLayoutArea, margin.left, -margin.bottom, margin.right, 0);
+                        bottomExtraSpace += margin.bottom;
                     }
                 }
             }
@@ -713,27 +776,12 @@ namespace tgui
                         // typically the the text sections are always open to add new charachters (in other words: not finalized with line break / carriage return)
                         // which implies, that m_evolvingLayoutArea.top points still to the top of the  text sections, while they might have a heigth
                         if (typeName == XhtmlElementType::Span || typeName == XhtmlElementType::Anchor)
-                            currentFormattedElement->setRenderRightBottom(Vector2f(m_evolvingLineRunLength, lastTextSection->getRenderRefLine() + m_formattingState.TextHeight / 4));
+                            currentFormattedElement->setLayoutRightBottom(Vector2f(m_evolvingLineRunLength, lastTextSection->getLayoutRefLine() + m_formattingState.TextHeight / 4 + bottomExtraSpace));
                         else
-                            currentFormattedElement->setRenderRightBottom(Vector2f(right(m_evolvingLayoutArea), lastTextSection->getRenderRefLine() + m_formattingState.TextHeight / 4));
+                            currentFormattedElement->setLayoutRightBottom(Vector2f(right(m_evolvingLayoutArea), lastTextSection->getLayoutRefLine() + m_formattingState.TextHeight / 4 + bottomExtraSpace));
                     }
                     else
-                        currentFormattedElement->setRenderRightBottom(Vector2f(right(m_evolvingLayoutArea), m_evolvingLayoutArea.top));
-                }
-            }
-
-            // -------------------------------
-            // Apply tailing margin
-            // -------------------------------
-            if (xhtmlStyleableElement)
-            {
-                for (auto styleEntry : styleEntries)
-                {
-                    if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) == StyleEntryFlags::Margin)
-                    {
-                        auto margin = styleEntry->getMargin().toPixel(m_availableClientSize);
-                        inflate(m_evolvingLayoutArea, margin.left, -margin.bottom, margin.right, 0);
-                    }
+                        currentFormattedElement->setLayoutRightBottom(Vector2f(right(m_evolvingLayoutArea), m_evolvingLayoutArea.top));
                 }
             }
 
@@ -788,14 +836,14 @@ namespace tgui
             }
             else if (typeName == XhtmlElementType::Division || typeName == XhtmlElementType::Preformatted || typeName == XhtmlElementType::Code)
             {
-                if (lastchildWasRunLengtElement)
+                if (lastchildAcceptsRunLengtExpansion)
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight;
                 else
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize;
 
                 if (typeName == XhtmlElementType::Preformatted)
-                    m_preformattedText--;
-                if (typeName == XhtmlElementType::Preformatted && m_preformattedText == 0)
+                    m_preformattedTextFlagCnt--;
+                if (typeName == XhtmlElementType::Preformatted && m_preformattedTextFlagCnt == 0)
                     m_evolvingLayoutArea.top += m_formattingState.TextHeight;
 
                 // act like a "\r\n"
@@ -814,25 +862,25 @@ namespace tgui
             // -------------------------------
             // Set flags
             // -------------------------------
-            predecessorWasExtraSpacingBlockElement = false;
+            predecessorElementProvidesExtraSpace = false;
 
             if (typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3 ||
                 typeName == XhtmlElementType::H4 || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6)
             {
-                predecessorWasExtraSpacingBlockElement = true;
-                lastchildWasRunLengtElement = false;
+                predecessorElementProvidesExtraSpace = true;
+                lastchildAcceptsRunLengtExpansion = false;
             }
             else if (typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList)
             {
-                predecessorWasExtraSpacingBlockElement = true;
-                lastchildWasRunLengtElement = false;
+                predecessorElementProvidesExtraSpace = true;
+                lastchildAcceptsRunLengtExpansion = false;
             }
             else if (typeName == XhtmlElementType::Division || typeName == XhtmlElementType::Preformatted || typeName == XhtmlElementType::Code)
-                lastchildWasRunLengtElement = false;
+                lastchildAcceptsRunLengtExpansion = false;
             else if (typeName == XhtmlElementType::Paragraph)
             {
-                predecessorWasExtraSpacingBlockElement = true;
-                lastchildWasRunLengtElement = false;
+                predecessorElementProvidesExtraSpace = true;
+                lastchildAcceptsRunLengtExpansion = false;
             }
 
             m_formattingState = cachedState;
@@ -852,8 +900,8 @@ namespace tgui
                 m_evolvingLineRunLength = 0;
                 m_evolvingLineExtraHeight = 0;
 
-                predecessorWasExtraSpacingBlockElement = false;
-                parentIsTextBlockElement = false;
+                predecessorElementProvidesExtraSpace = false;
+                parentElementSuppressesInitialExtraSpace = false;
             }
             else if (typeName == XhtmlElementType::Text)
             {
@@ -862,30 +910,25 @@ namespace tgui
                 size_t formerCharCnt = remainingText.size() + 1;
 
                 // distribute, if text exceeds available width
-                while ((m_preformattedText > 0 && remainingText.contains('\r')) ||         // preformatted text has a line bereak
+                while ((m_preformattedTextFlagCnt > 0 && remainingText.contains('\r')) ||  // preformatted text has dedicated line bereak instructions
                        (formerCharCnt > remainingText.size() &&                            // there must be a chance to distribute the text to multiple lines
                         m_evolvingLayoutArea.width - m_evolvingLineRunLength < runLengt && // there must be a need to distribute the text to multiple lines
                         remainingText.size() > 0))                                         // there must be remaining text to distribute to multiple lines
                 {
                     formerCharCnt = remainingText.size();
 
-                    // Determine auto-line-break: For a mono-space font, the runLength is distributed equally to the characters.
-                    size_t delimiterPosition = (int)(remainingText.size() * ((1.0f * (m_evolvingLayoutArea.width - m_evolvingLineRunLength)) / (1.0f * runLengt)));
-                    // The line width calculation is not 100% correct. - So some security space is subtracted.
-                    delimiterPosition -= (delimiterPosition > 333 ? 8 : (delimiterPosition > 99 ? 6 : (delimiterPosition > 33 ? 4 : (delimiterPosition > 9 ? 2 : (delimiterPosition > 3 ? 1 : 0)))));
-                    String delimitercharacters(L"\r\n\t\v -");
-                    size_t linebreakPosition = remainingText.find_last_of(delimitercharacters, delimiterPosition);
+                    size_t linebreakPosition = calculateAutoLineBreak(remainingText, runLengt);
 
-                    // The preformatted text might force an earlier line-break.
-                    if (m_preformattedText > 0)
+                    // The preformatted text might force an earlier line-break, that is situated witin the remaining text before auto-line-break 'linebreakPosition'.
+                    if (m_preformattedTextFlagCnt > 0)
                     {
                         auto   substring      = remainingText.substr(0, linebreakPosition);
                         size_t forcedPosition = substring.find('\r');
                         if (forcedPosition != static_cast<size_t>(-1))
                             linebreakPosition = forcedPosition;
                     }
-                    // There might be no way to add the remaining text (without any possibility to auto-line-break) to the end of the current run length.
-                    if (linebreakPosition < 1 || linebreakPosition > delimiterPosition)
+                    // There might be no way to add (any small part of) the remaining text to the end of the current run length (no meaningfulo auto-line-break).
+                    if (linebreakPosition == SIZE_MAX)
                     {
                         // for superscript / subscript - the text height is already adjusted
                         float unscriptedTextHeight = m_formattingState.TextHeight + m_formattingState.Subscript + m_formattingState.Superscript;
@@ -896,27 +939,26 @@ namespace tgui
                         m_evolvingLineExtraHeight = 0;
 
                         // Since the internal coordinates of formattedTextSection are not in initial state and would falsify the result, reset the internal coordinates!
-                        formattedTextSection->setRenderArea({0.0f, 0.0f});
-                        formattedTextSection->setRenderLeftTop(Vector2f(m_evolvingLayoutArea.left, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top), m_evolvingLineRunLength, m_formattingState.Subscript);
-                        formattedTextSection->setRenderRightBottom(Vector2f(formattedTextSection->getRenderLeft(), m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + unscriptedTextHeight), 0.0f, -m_formattingState.Superscript);
+                        formattedTextSection->setLayoutArea({0.0f, 0.0f});
+                        formattedTextSection->setLayoutLeftTop(Vector2f(m_evolvingLayoutArea.left, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top), m_evolvingLineRunLength, m_formattingState.Subscript);
+                        formattedTextSection->setLayoutRightBottom(Vector2f(formattedTextSection->getLayoutLeft(), m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + unscriptedTextHeight), 0.0f, -m_formattingState.Superscript);
                         break;
                     }
-                    delimiterPosition = linebreakPosition;
 
-                    formattedTextSection->setString(remainingText.substr(0, delimiterPosition + (remainingText[delimiterPosition] == L'-' ? 1 : 0)));
+                    formattedTextSection->setString(remainingText.substr(0, linebreakPosition));
                     runLengt = Text::getLineWidth(formattedTextSection->getString(), m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
                     formattedTextSection->setRunLength(runLengt + 0.45f);
                     m_evolvingLineRunLength += runLengt;
                     formattedTextSection->setColor(m_formattingState.ForeColor);
                     formattedTextSection->setStyle(m_formattingState.Style);
 
-                    remainingText = remainingText.substr(delimiterPosition + 1);
+                    remainingText = remainingText.substr(linebreakPosition + 1);
                     runLengt = Text::getLineWidth(remainingText, m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
 
                     if (remainingText.size() > 0)
                     {
-                        m_occupiedLayoutSize.x = std::max(m_occupiedLayoutSize.x, formattedTextSection->getRenderLeft());
-                        m_occupiedLayoutSize.y = formattedTextSection->getRenderTop();
+                        m_occupiedLayoutSize.x = std::max(m_occupiedLayoutSize.x, formattedTextSection->getLayoutLeft());
+                        m_occupiedLayoutSize.y = formattedTextSection->getLayoutTop();
                         auto formattedElement = std::static_pointer_cast<FormattedElement>(formattedTextSection);
                         m_content.push_back(formattedElement);
 
@@ -948,16 +990,16 @@ namespace tgui
                     formattedTextSection->setStyle(m_formattingState.Style);
                 }
 
-                predecessorWasExtraSpacingBlockElement = false;
-                parentIsTextBlockElement = false;
+                predecessorElementProvidesExtraSpace = false;
+                parentElementSuppressesInitialExtraSpace = false;
             }
 
-            m_occupiedLayoutSize.x = std::max(m_occupiedLayoutSize.x, formattedTextSection->getRenderLeft());
-            m_occupiedLayoutSize.y = formattedTextSection->getRenderTop();
+            m_occupiedLayoutSize.x = std::max(m_occupiedLayoutSize.x, formattedTextSection->getLayoutLeft());
+            m_occupiedLayoutSize.y = formattedTextSection->getLayoutTop();
             auto formattedElement = std::static_pointer_cast<FormattedElement>(formattedTextSection);
             m_content.push_back(formattedElement);
 
-            lastchildWasRunLengtElement = true;
+            lastchildAcceptsRunLengtExpansion = true;
         }
 
         if (typeName == XhtmlElementType::Image)
@@ -1067,21 +1109,21 @@ namespace tgui
 #if _DEBUG
                     auto formattedTextSection = std::dynamic_pointer_cast<tgui::FormattedTextSection>(*rit);
 #endif
-                    float oldReferenceLine = (*rit)->getRenderRefLine();
+                    float oldReferenceLine = (*rit)->getLayoutRefLine();
                     auto  typeName = (*rit)->getContentOrigin()->getTypeName();
                     if (oldReferenceLine == renderReferenceLine || typeName == XhtmlElementType::Span)
                     {
-                        auto rect = rit->get()->getRenderArea();
+                        auto rect = rit->get()->getLayoutArea();
                         rect.top += additionalExtraHeight;
-                        rit->get()->setRenderArea(rect.getPosition(), rect.getSize());
+                        rit->get()->setLayoutArea(rect.getPosition(), rect.getSize());
                     }
                     else
                         break;
                 }
             }
 
-            formattedImage->setRenderLeftTop(m_evolvingLayoutArea.getPosition(), m_evolvingLineRunLength);
-            formattedImage->setRenderRightBottom(Vector2f(formattedImage->getRenderLeft() + m_evolvingLineRunLength + logicSize.x, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight));
+            formattedImage->setLayoutLeftTop(m_evolvingLayoutArea.getPosition(), m_evolvingLineRunLength);
+            formattedImage->setLayoutRightBottom(Vector2f(formattedImage->getLayoutLeft() + m_evolvingLineRunLength + logicSize.x, m_evolvingLineExtraHeight + m_evolvingLayoutArea.top + m_formattingState.TextHeight));
             m_evolvingLineRunLength += logicSize.x + m_formattingState.TextHeight / 8;
         }
     }

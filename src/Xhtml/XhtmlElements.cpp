@@ -140,7 +140,7 @@ namespace tgui
     {
         auto size = sizeof(tgui::XhtmlElementType::m_dataTypes) / sizeof(m_dataTypes[0]);
         for (size_t index = 0; index < size; index++)
-            if (ext::string::strcasecmp(m_dataTypes[index].TypeName, typeName) == 0)
+            if (tgui::viewEqualIgnoreCase(m_dataTypes[index].TypeName, typeName))
                 return m_dataTypes[index];
         return m_dataTypes[size - 1];
     }
@@ -195,84 +195,84 @@ namespace tgui
         const size_t beginPosition, const size_t endPosition, const bool isParsedAsAutoClosed)
     {
         XhtmlElement::Ptr element = nullptr;
-        if (ext::string::strcasecmp(typeName, XhtmlElementType::DocType) == 0 ||
-            ext::string::strcasecmp(typeName, XhtmlElementType::Document) == 0)
+        if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::DocType) ||
+            tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Document))
         {
             element = std::make_shared<XhtmlElement>(typeName);
             addChildAndSetPatent(parent, element);
         }
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Style) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Style))
             element = XhtmlElement::createStyle(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Break) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Break))
             element = XhtmlElement::createBreak(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Text) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Text))
             element = XhtmlElement::createInnerText(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Html) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Html))
             element = XhtmlElement::createHtml(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Head) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Head))
             element = XhtmlElement::createHead(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Meta) == 0 ||
-                 ext::string::strcasecmp(typeName, XhtmlElementType::Link) == 0 ||
-                 ext::string::strcasecmp(typeName, XhtmlElementType::Title) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Meta) ||
+                 tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Link) ||
+                 tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Title))
         {
             element = std::make_shared<XhtmlElement>(typeName);
             addChildAndSetPatent(parent, element);
         }
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Body) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Body))
             element = XhtmlElement::createBody(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Input) == 0 ||
-            ext::string::strcasecmp(typeName, XhtmlElementType::Label) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Input) ||
+                 tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Label))
         {
             element = std::make_shared<XhtmlElement>(typeName);
             addChildAndSetPatent(parent, element);
         }
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::H1) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::H1))
             element = XhtmlElement::createH1(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::H2) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::H2))
             element = XhtmlElement::createH2(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::H3) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::H3))
             element = XhtmlElement::createH3(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::H4) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::H4))
             element = XhtmlElement::createH4(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::H5) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::H5))
             element = XhtmlElement::createH5(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::H6) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::H6))
             element = XhtmlElement::createH6(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Emphasized) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Emphasized))
             element = XhtmlElement::createEmphasized(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Italic) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Italic))
             element = XhtmlElement::createItalic(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Strong) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Strong))
             element = XhtmlElement::createStrong(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Bold) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Bold))
             element = XhtmlElement::createBold(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Underline) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Underline))
             element = XhtmlElement::createUnderline(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Superscript) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Superscript))
             element = XhtmlElement::createSuperscript(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Subscript) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Subscript))
             element = XhtmlElement::createSubscript(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::UnorderedList) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::UnorderedList))
             element = XhtmlElement::createUnorderedList(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::OrderedList) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::OrderedList))
             element = XhtmlElement::createOrderedList(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::ListItem) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::ListItem))
             element = XhtmlElement::createListItem(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Span) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Span))
             element = XhtmlElement::createSpan(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Division) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Division))
             element = XhtmlElement::createDivision(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Preformatted) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Preformatted))
             element = XhtmlElement::createPreformatted(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Code) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Code))
             element = XhtmlElement::createCode(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Paragraph) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Paragraph))
             element = XhtmlElement::createParagraph(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Anchor) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Anchor))
             element = XhtmlElement::createAnchor(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Image) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Image))
             element = XhtmlElement::createImage(parent);
-        else if (ext::string::strcasecmp(typeName, XhtmlElementType::Script) == 0)
+        else if (tgui::viewEqualIgnoreCase(typeName, XhtmlElementType::Script))
         {
             element = std::make_shared<XhtmlStyleableNoncontainerElement>(XhtmlElementType::Script);
             addChildAndSetPatent(parent, element);
@@ -372,7 +372,10 @@ namespace tgui
 
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body);
+        auto styleEntry = std::make_shared<tgui::XhtmlStyleEntry>();
+        styleEntry->setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8));
+
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
         addChildAndSetPatent(element, child);
         return element;
@@ -382,7 +385,10 @@ namespace tgui
 
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
     {
-        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body);
+        auto styleEntry = std::make_shared<tgui::XhtmlStyleEntry>();
+        styleEntry->setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8));
+
+        auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
         return element;
@@ -392,6 +398,9 @@ namespace tgui
 
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child)
     {
+        if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) != StyleEntryFlags::Margin)
+            styleEntry->setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8));
+
         std::shared_ptr<XhtmlStyleableContainerElement> element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
         addChildAndSetPatent(element, child);
@@ -402,6 +411,9 @@ namespace tgui
 
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children)
     {
+        if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) != StyleEntryFlags::Margin)
+            styleEntry->setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8));
+
         std::shared_ptr<XhtmlStyleableContainerElement> element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
         addChildrenAndSetPatent(element, children);
@@ -1192,17 +1204,17 @@ namespace tgui
         if (strlen(m_elementType.TypeName) == 0)
             return false;
 
-        if (ext::string::strcasecmp(m_elementType.TypeName, XhtmlElementType::DocType) == 0)
+        if (tgui::viewEqualIgnoreCase(m_elementType.TypeName, XhtmlElementType::DocType))
             return true;
-        if (ext::string::strcasecmp(m_elementType.TypeName, XhtmlElementType::Meta) == 0)
+        if (tgui::viewEqualIgnoreCase(m_elementType.TypeName, XhtmlElementType::Meta))
             return true;
-        if (ext::string::strcasecmp(m_elementType.TypeName, XhtmlElementType::Link) == 0)
+        if (tgui::viewEqualIgnoreCase(m_elementType.TypeName, XhtmlElementType::Link))
             return true;
-        if (ext::string::strcasecmp(m_elementType.TypeName, XhtmlElementType::Break) == 0)
+        if (tgui::viewEqualIgnoreCase(m_elementType.TypeName, XhtmlElementType::Break))
             return true;
-        if (ext::string::strcasecmp(m_elementType.TypeName, XhtmlElementType::Text) == 0)
+        if (tgui::viewEqualIgnoreCase(m_elementType.TypeName, XhtmlElementType::Text))
             return true;
-        if (ext::string::strcasecmp(m_elementType.TypeName, XhtmlElementType::Input) == 0)
+        if (tgui::viewEqualIgnoreCase(m_elementType.TypeName, XhtmlElementType::Input))
             return true;
 
         return false;
@@ -1329,7 +1341,7 @@ namespace tgui
 
         auto result = std::make_shared<std::vector<XhtmlElement::Ptr>>();
         for (XhtmlElement::Ptr e : *m_children)
-            if (ext::string::strcasecmp(e->getTypeName(), typeName) == 0)
+            if (tgui::viewEqualIgnoreCase(e->getTypeName(), typeName))
                 result->push_back(e);
 
         return result;
@@ -1343,7 +1355,7 @@ namespace tgui
             return nullptr;
 
         for (XhtmlElement::Ptr e : *m_children)
-            if (typeName == nullptr || strlen(typeName) == 0 || ext::string::strcasecmp(e->getTypeName(), typeName) == 0)
+            if (typeName == nullptr || strlen(typeName) == 0 || tgui::viewEqualIgnoreCase(e->getTypeName(), typeName))
                 return e;
         return nullptr;
     }
@@ -1394,7 +1406,7 @@ namespace tgui
         tgui::String children = (m_children != nullptr ? U", children: " + tgui::String(m_children->size()) : U"");
 
         tgui::String content = U"";
-        if (ext::string::strcasecmp(getTypeName(), XhtmlElementType::Text) == 0)
+        if (tgui::viewEqualIgnoreCase(getTypeName(), XhtmlElementType::Text))
         {
             if (((XhtmlInnerText*)this)->getText().length() > 12)
                 content += U", content: \"" + ((XhtmlInnerText*)this)->getText().substr(0, 10) + U"...\"";
@@ -1715,7 +1727,7 @@ namespace tgui
         element->addAttributes(attributesBuffer);
         attributesBuffer.clear();
 
-        if (ext::string::strcasecmp(element->getTypeName(), "empty") == 0)
+        if (tgui::viewEqualIgnoreCase(element->getTypeName(), "empty"))
         {
             tgui::String message(U"XhtmlElement::createFromParseData() -> Couldn't recognize element type for tag type '");
             message.append(typeName).append(U"', continue with 'empty' - but this is unsafe!");
@@ -1775,6 +1787,18 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    XhtmlStyleEntry::Ptr XhtmlElement::investigateStyleEntry() const
+    {
+        for (auto it = m_attributes->begin(); it != m_attributes->end(); it++)
+        {
+            if ((*it)->getName().equalIgnoreCase(XhtmlStyleEntry::TypeName))
+                return std::dynamic_pointer_cast<XhtmlStyleEntry>((*it));
+        }
+        return nullptr;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     void XhtmlStyle::createEntriesFromParseData(std::vector<std::tuple<MessageType, String>>& messages, const tgui::String& buffer)
     {
         auto styleEntries = ext::String::split(buffer, U'}', true);
@@ -1797,7 +1821,7 @@ namespace tgui
 
             auto se = std::make_shared<XhtmlStyleEntry>();
             se->putValue(messages, styleEntryParts[1]);
-            m_styles[styleEntryParts[0]] = se;
+            m_entries[styleEntryParts[0]] = se;
         }
         return;
     }
@@ -1807,43 +1831,19 @@ namespace tgui
         if (typeName != nullptr && strlen(typeName) > 0 && className.size() > 0)
         {
             tgui::String styleName(typeName); styleName += U"."; styleName += className;
-            return ( m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);
+            return ( m_entries.find(styleName) != m_entries.end() ? m_entries[styleName] : nullptr);
         }
         else if (typeName != nullptr && (strlen(typeName) > 0))
         {
             tgui::String styleName(typeName);
-            return (m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);
+            return (m_entries.find(styleName) != m_entries.end() ? m_entries[styleName] : nullptr);
         }
         else if (className.size() > 0)
         {
             tgui::String styleName = className;
-            return (m_styles.find(styleName) != m_styles.end() ? m_styles[styleName] : nullptr);
+            return (m_entries.find(styleName) != m_entries.end() ? m_entries[styleName] : nullptr);
         }
 
-        return nullptr;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    XhtmlStyleEntry::Ptr XhtmlStyleableNoncontainerElement::getStyleEntry()
-    {
-        for (auto it = m_attributes->begin(); it != m_attributes->end(); it++)
-        {
-            if ((*it)->getName().equalIgnoreCase(XhtmlStyleEntry::TypeName))
-                return std::dynamic_pointer_cast<XhtmlStyleEntry>((*it));
-        }
-        return nullptr;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    XhtmlStyleEntry::Ptr XhtmlStyleableContainerElement::getStyleEntry()
-    {
-        for (auto it = m_attributes->begin(); it != m_attributes->end(); it++)
-        {
-            if ((*it)->getName().equalIgnoreCase(XhtmlStyleEntry::TypeName))
-                return std::dynamic_pointer_cast<XhtmlStyleEntry>((*it));
-        }
         return nullptr;
     }
 

@@ -406,6 +406,26 @@ namespace tgui
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    XhtmlStyleEntry& XhtmlStyleEntry::mergeWith(const XhtmlStyleEntry::Ptr styleEntry)
+    {
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::ForeColor)   == StyleEntryFlags::ForeColor)   m_color           = styleEntry->m_color;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::BackColor)   == StyleEntryFlags::BackColor)   m_backgroundColor = styleEntry->m_backgroundColor;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::BorderColor) == StyleEntryFlags::BorderColor) m_borderColor     = styleEntry->m_borderColor;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::Opacity)     == StyleEntryFlags::Opacity)     m_opacity         = styleEntry->m_opacity;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::FontFamily)  == StyleEntryFlags::FontFamily)  m_fontFamily      = styleEntry->m_fontFamily;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::FontSize)    == StyleEntryFlags::FontSize)    m_fontSize        = styleEntry->m_fontSize;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::FontStyle)   == StyleEntryFlags::FontStyle)   m_fontStyle       = styleEntry->m_fontStyle;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::Margin)      == StyleEntryFlags::Margin)      m_margin          = styleEntry->m_margin;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::BorderWidth) == StyleEntryFlags::BorderWidth) m_border          = styleEntry->m_border;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::Padding)     == StyleEntryFlags::Padding)     m_padding         = styleEntry->m_padding;
+        m_styleEntryFlags = m_styleEntryFlags | styleEntry->m_styleEntryFlags;
+
+        return *this;
+    }
+
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     void XhtmlStyleEntry::putValue(std::vector<std::tuple<tgui::MessageType, String>>& messages, const tgui::String& rawValue)
     {
         XhtmlAttribute::putValue(messages, rawValue);

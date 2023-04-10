@@ -105,6 +105,7 @@ namespace tgui
         using ConstPtr = std::shared_ptr<const FormattedTextDocument>; //!< Shared constant widget pointer
 
         static constexpr const char StaticWidgetType[] = "FormattedTextDocument";
+        static constexpr const wchar_t LinebreakDelimitercharacters[] = L"\r\n\t\v -";
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public:

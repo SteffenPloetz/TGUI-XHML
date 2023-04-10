@@ -140,13 +140,13 @@ namespace tgui
                             // special script mode handling
                             if (isOpeningTag && !isInsideScript)
                             {
-                                if (ext::string::strcasecmp(newElement->getTypeName(), "script") == 0)
+                                if (tgui::viewEqualIgnoreCase(newElement->getTypeName(), "script"))
                                     if (!newElement->getParsedAsAutoClosed())
                                         isInsideScript = true;
                             }
                             if (isClosingTag && isInsideScript)
                             {
-                                if (ext::string::strcasecmp(newElement->getTypeName(), "script") == 0)
+                                if (tgui::viewEqualIgnoreCase(newElement->getTypeName(), "script"))
                                     isInsideScript = false;
                             }
                         }
@@ -247,9 +247,9 @@ namespace tgui
                         }
 
                         // special preformatted mode handling
-                        if (isOpeningTag && ext::string::strcasecmp(newElement->getTypeName(), "pre") == 0)
+                        if (isOpeningTag && tgui::viewEqualIgnoreCase(newElement->getTypeName(), "pre"))
                             preformattedDepth++;
-                        if (isClosingTag && ext::string::strcasecmp(newElement->getTypeName(), "pre") == 0)
+                        if (isClosingTag && tgui::viewEqualIgnoreCase(newElement->getTypeName(), "pre"))
                             preformattedDepth--;
                         if (preformattedDepth < 0)
                             preformattedDepth = 0;
@@ -303,7 +303,7 @@ namespace tgui
 
         size_t htmlRootElements = 0;
         for (XhtmlElement::Ptr e : m_rootElements)
-            if (ext::string::strcasecmp(e->getTypeName(), "html") == 0)
+            if (tgui::viewEqualIgnoreCase(e->getTypeName(), "html"))
                 htmlRootElements++;
 
         if (htmlRootElements > 1)
@@ -344,7 +344,7 @@ namespace tgui
     {
         if (characters.find(U"<br>", 0) != SIZE_MAX)
         {
-            auto charactersParts = ext::String::split(characters, U"<br>");
+            auto charactersParts = characters.split(U"<br>");
             for (size_t index = 0; index < charactersParts.size(); index++)
             {
                 auto charactersPart = charactersParts[index];
@@ -372,7 +372,7 @@ namespace tgui
         {
             auto startTagName = startTagElement->getTypeName();
             auto stopTagName = endTagElement->getTypeName();
-            if (ext::string::strcasecmp(startTagName, stopTagName) != 0)
+            if (!tgui::viewEqualIgnoreCase(startTagName, stopTagName))
             {
                 tgui::String message(U"XhtmlParser::parseDocument_checkStartEndTagParity() -> Can't close tag of type '");
                 message.append(startTagElement->getTypeNameU32()).append(U"' with tag of type '");
@@ -428,7 +428,7 @@ namespace tgui
     XhtmlElement::Ptr XhtmlParser::getFirstRootElement(const char* typeName) const
     {
         for (XhtmlElement::Ptr e : m_rootElements)
-            if (typeName == nullptr || strlen(typeName) == 0 || ext::string::strcasecmp(e->getTypeName(), typeName) == 0)
+            if (typeName == nullptr || strlen(typeName) == 0 || tgui::viewEqualIgnoreCase(e->getTypeName(), typeName))
                 return e;
 
         return nullptr;

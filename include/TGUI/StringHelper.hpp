@@ -51,32 +51,6 @@ namespace ext
         /// @return The collection of split strings
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static std::vector<tgui::String> split(const tgui::String& s, char32_t separator, bool suppressEmpty = false);
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Split the indicated text on indicated separator
-        ///
-        /// @param text       The string split
-        /// @param separator  The separator to use as split delimiter
-        /// @param suppressEmpty  The flag indicating whether to suppress empty split parts
-        ///
-        /// @return The collection of split strings
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static std::vector<tgui::String> split(const tgui::String& s, const tgui::String& separator, bool suppressEmpty = false);
-    };
-
-    class TGUI_API string
-    {
-    public:
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Compare two legacy strings (re-implemented, besause this method is not available outside UNIX)
-        ///
-        /// @param s1  The string to be compared
-        /// @param s2  The string to compare with
-        ///
-        /// @return The negative value if s1 is lighter or shorter than s2, the positive value if s1 is greater or longer s2,
-        /// or 0 is s1 is equal to s2
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static int strcasecmp(const char* s1, const char* s2);
     };
 
 }

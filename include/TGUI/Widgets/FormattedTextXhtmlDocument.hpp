@@ -140,7 +140,7 @@ namespace tgui
         /// @param bottom The inflate value to apply at bottom
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void inflate(FloatRect& rect, float left, float top, float right, float bottom)
-        { rect.top -= top; rect.left -= left; rect.height += top + bottom; rect.width += left + right; }
+        { rect.left -= left; rect.top -= top; rect.width += left + right; rect.height += top + bottom; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -247,7 +247,7 @@ namespace tgui
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates and basically initializes a FormattedRectangle
         ///
-        /// @param xhtmlElement                             The XHTML element, represented by this formatted text section
+        /// @param xhtmlElement                             The XHTML element,  represented by the formatted rectangle section to create
         /// @param applyLineRunLength                       Determine wheter to start at current line run length (true) or very left
         ///
         /// @return The newly created FormattedRectangle
@@ -257,7 +257,7 @@ namespace tgui
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates and basically initializes a FormattedLink
         ///
-        /// @param xhtmlElement                             The XHTML element, represented by this formatted text section
+        /// @param xhtmlElement                             The XHTML element,  represented by the formatted link section to create
         /// @param applyLineRunLength                       Determine wheter to start at current line run length (true) or very left
         ///
         /// @return The newly created FormattedLink
@@ -267,7 +267,7 @@ namespace tgui
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates and basically initializes a FormattedImage
         ///
-        /// @param xhtmlElement                             The XHTML element, represented by this formatted text section
+        /// @param xhtmlElement                             The XHTML element,  represented by the formatted lmage section to create
         ///
         /// @return The newly created FormattedImage
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,7 +276,7 @@ namespace tgui
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates and basically initializes a FormattedTextSection
         ///
-        /// @param xhtmlElement                             The XHTML element, represented by this formatted text section
+        /// @param xhtmlElement                             The XHTML element, represented by the formatted text section to create
         /// @param font                                     The font to apply
         /// @param indentOffset                             The horizontal offset (indent) to apply to the current layout position
         /// @param superscriptOrSubsciptTextHeightReduction The text height reduction applied for superscript / subscript
@@ -312,10 +312,30 @@ namespace tgui
     protected:
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Rearrange the visible content, defined by the indicated XHTML Element
+        // Calculate the best outo-line-break position, that enables the biggest possible part of the 'remainingText' to be
+        // placed on the current FormattedTextSection assuming this FormattedTextSection has remaining 'runLengt'.
+        ///
+        /// @param remainingText     The text to calculate the best outo-line-break position for
+        /// @param runLengt          The remaining run lengt on the current FormattedTextSection
+        ///
+        /// @return                  The best outo-line-break position on success, or SIZE_MAX otherwise (which is equal to 
+        ///                          std::string::npos and (size_t)-1)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        void layout(bool& predecessorWasBlockNode, bool parentIsTextBlockElement, bool& PedecessorWasTextBlockElement,
-                    XhtmlElement::Ptr xhtmlElement, const FormattedTextDocument::FontCollection& fontCollection, bool keepSelection);
+        size_t calculateAutoLineBreak(const String remainingText, float runLengt) const;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Rearrange the visible content, defined by the indicated XHTML Element
+        ///
+        /// @param predecessorElementProvidesExtraSpace     Flag that helps to avoid directly successive application of extra space
+        /// @param parentElementSuppressesInitialExtraSpace Flag that helps to avoid application of extra space for specific blocks
+        /// @param lastchildAcceptsRunLengtExpansion        Flag that marks the last child element would accept run length expasion
+        /// @param xhtmlElement                             The XHTML element, to be layed out next
+        /// @param fontCollection                           The font collection to use
+        /// @param keepSelection                            Flag that helps to keep the selection
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        void layout(bool& predecessorElementProvidesExtraSpace, bool parentElementSuppressesInitialExtraSpace,
+                    bool& lastchildAcceptsRunLengtExpansion, XhtmlElement::Ptr xhtmlElement,
+                    const FormattedTextDocument::FontCollection& fontCollection, bool keepSelection);
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -334,7 +354,7 @@ namespace tgui
         FloatRect                                 m_evolvingLayoutArea;       //!< The area, that is available for the next layout element
         float                                     m_evolvingLineExtraHeight;  //!< The extra height of lines, that contain enlarged elements
         float                                     m_evolvingLineRunLength;    //!< The (text, image, ...) run length aggregated on the current line
-        int                                       m_preformattedText;         //!< The flag, determining whether text is preformatted (keep '\n')
+        int                                       m_preformattedTextFlagCnt;  //!< The preformatted text (keep '\n') flag counter.
 
         FormattingState                           m_formattingState;          //!< The current state of all formatting attributes
         float                                     m_listPadding;              //!< The indent per list level

@@ -216,7 +216,7 @@ namespace tgui
         {
             m_horizontalScrollbar->leftMousePressed(pos);
         }
-        else // The click occurred on the text view
+        else // The click occurred on the formatted text view
         {
         }
     }
@@ -260,19 +260,19 @@ namespace tgui
         m_possibleDoubleClick = false;
 
         // Check if the mouse event should go to the vertical scroll-bar
-        if (m_verticalScrollbar->isShown() &&
-            ((m_verticalScrollbar->isMouseDown() && m_verticalScrollbar->isMouseDownOnThumb()) || m_verticalScrollbar->isMouseOnWidget(pos)))
+        if (m_verticalScrollbar->isShown() && (m_verticalScrollbar->isMouseOnWidget(pos) ||
+            (m_verticalScrollbar->isMouseDown() && m_verticalScrollbar->isMouseDownOnThumb()) ))
         {
             m_verticalScrollbar->mouseMoved(pos);
             recalculateVisiblePart();
         }
         // Check if the mouse event should go to the horizontal scroll-bar
-        else if (m_horizontalScrollbar->isShown() &&
-                 ((m_horizontalScrollbar->isMouseDown() && m_horizontalScrollbar->isMouseDownOnThumb()) || m_horizontalScrollbar->isMouseOnWidget(pos)))
+        else if (m_horizontalScrollbar->isShown() && (m_horizontalScrollbar->isMouseOnWidget(pos) ||
+                 (m_horizontalScrollbar->isMouseDown() && m_horizontalScrollbar->isMouseDownOnThumb()) ))
         {
             m_horizontalScrollbar->mouseMoved(pos);
         }
-        // If the mouse is held down then you are selecting text
+        // If the mouse is held down then you are dragging or selecting text - no child widget should change the state
         else if (m_mouseDown)
         {
         }
@@ -281,6 +281,24 @@ namespace tgui
         {
             m_verticalScrollbar->mouseNoLongerOnWidget();
             m_horizontalScrollbar->mouseNoLongerOnWidget();
+        }
+
+        Vector2f adoptedPos = pos + Vector2f(m_paddingCached.getLeft(), m_paddingCached.getTop()) +
+            Vector2f(static_cast<float>(m_horizontalScrollbar->getValue()), static_cast<float>(m_verticalScrollbar->getValue()));
+        for (FormattedLink::Ptr anchorSource : m_anchorSources)
+        {
+            if (anchorSource->getLayoutArea().contains(adoptedPos))
+            {
+                if (anchorSource->getActive())
+                    continue;
+                anchorSource->setActive(true);
+            }
+            else
+            {
+                if (!anchorSource->getActive())
+                    continue;
+                anchorSource->setActive(false);
+            }
         }
 
         ClickableWidget::rightMouseReleased(pos);
@@ -311,8 +329,32 @@ namespace tgui
 
         if (m_horizontalScrollbar->isShown())
             m_horizontalScrollbar->leftMouseButtonNoLongerDown();
-    }
 
+        for (FormattedLink::Ptr anchorSource : m_anchorSources)
+        {
+            if (anchorSource->getActive())
+            {
+                String href = anchorSource->getHref();
+                if (href.starts_with(U'#'))
+                {
+                    href = href.substr(1);
+                    auto pormattedElement = m_anchorTargets[href];
+                    if (pormattedElement != nullptr)
+                    {
+                        auto innerSize = getInnerSize();
+                        auto layoutSize = m_document->getOccupiedLayoutSize();
+                        auto elementLayoutPosition = pormattedElement->getLayoutLeftTop();
+
+                        if (innerSize.y >= layoutSize.y)
+                            break;
+                        auto scrollPosY = static_cast<int>(elementLayoutPosition.y / (layoutSize.y - innerSize.y) * m_verticalScrollbar->getMaximum() + 0.49F);
+
+                        m_verticalScrollbar->setValue(scrollPosY);
+                    }
+                }
+            }
+        }
+    }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -433,126 +475,155 @@ namespace tgui
         target.drawFilledRect(states, innerSize, Color::applyOpacity(m_backgroundColorCached, m_opacityCached));
 
         // Draw the contents of the text view
+        states.transform.translate({m_paddingCached.getLeft(), m_paddingCached.getTop()});
+
+        float clipWidth = innerSize.x - m_paddingCached.getLeft() - m_paddingCached.getRight();
+        if (m_verticalScrollbar->isShown())
+            clipWidth -= m_verticalScrollbar->getSize().x;
+
+        float clipHeight = innerSize.y - m_paddingCached.getTop() - m_paddingCached.getBottom();
+        if (m_horizontalScrollbar->isShown())
+            clipHeight -= m_horizontalScrollbar->getSize().y;
+
+        target.addClippingLayer(states, {{}, {clipWidth, clipHeight}});
+
+        // Move the text according to the scrollars
+        states.transform.translate({-static_cast<float>(m_horizontalScrollbar->getValue()), -static_cast<float>(m_verticalScrollbar->getValue())});
+
+        FormattedLink::Ptr lastSourceAnchor = nullptr;
+        for (auto formattedElement : m_document->getContent())
         {
-            states.transform.translate({m_paddingCached.getLeft(), m_paddingCached.getTop()});
-
-            float clipWidth = innerSize.x - m_paddingCached.getLeft() - m_paddingCached.getRight();
-            if (m_verticalScrollbar->isShown())
-                clipWidth -= m_verticalScrollbar->getSize().x;
-
-            float clipHeight = innerSize.y - m_paddingCached.getTop() - m_paddingCached.getBottom();
-            if (m_horizontalScrollbar->isShown())
-                clipHeight -= m_horizontalScrollbar->getSize().y;
-
-            target.addClippingLayer(states, {{}, {clipWidth, clipHeight}});
-
-            // Move the text according to the scrollars
-            states.transform.translate({-static_cast<float>(m_horizontalScrollbar->getValue()), -static_cast<float>(m_verticalScrollbar->getValue())});
-
-            for (auto formattedElement : m_document->getContent())
+            auto formattedTextSection = std::dynamic_pointer_cast<FormattedTextSection>(formattedElement);
+            auto formattedImage = std::dynamic_pointer_cast<FormattedImage>(formattedElement);
+            auto formattedRectangle = std::dynamic_pointer_cast<FormattedRectangle>(formattedElement);
+            if (formattedTextSection)
             {
-                // FormattedTextSection* pFormattedTextSection = dynamic_cast<FormattedTextSection*> &(formattedElement->get());
-                auto pFormattedTextSection = std::dynamic_pointer_cast<FormattedTextSection>(formattedElement);
-                auto pFormattedImage = std::dynamic_pointer_cast<FormattedImage>(formattedElement);
-                auto pFormattedRectangle = std::dynamic_pointer_cast<FormattedRectangle>(formattedElement);
-                if (pFormattedTextSection)
+                bool match = false;
+                if (lastSourceAnchor)
                 {
-                    Text text;
-                    text.setString(pFormattedTextSection->getString());
-                    text.setFont(pFormattedTextSection->getFont());
-                    text.setCharacterSize(pFormattedTextSection->getCharacterSizeAsInt());
-                    text.setPosition({pFormattedTextSection->getRenderLeft(),  pFormattedTextSection->getRenderTop()});
-                    text.setOpacity(pFormattedTextSection->getOpacity());
-                    text.setColor(pFormattedTextSection->getColor());
-                    text.setStyle(pFormattedTextSection->getStyle());
+                    auto textRenderArea = formattedTextSection->getLayoutArea();
 
-                    target.drawText(states, text);
+                    if (lastSourceAnchor->getLayoutArea().contains(textRenderArea.getPosition() + (textRenderArea.getSize() * 0.5F)))
+                        match = true;
                 }
-                else if (pFormattedImage)
-                {
-                    auto topleft = pFormattedImage->getRenderLeftTop();
-                    if (pFormattedImage->getTexture().getData() != nullptr)
-                    {
-                        Sprite sprite(pFormattedImage->getTexture());
-                        sprite.setPosition(topleft);
-                        sprite.setSize(Vector2f(pFormattedImage->getLogicaSize()));
-                        target.drawSprite(states, sprite);
-                    }
-                }
-                else if (pFormattedRectangle)
-                {
-                    if (pFormattedRectangle->getOpacity() > 0.0f)
-                    {
-                        ///////////////
-                        // 0-------1 //
-                        // |       | //
-                        // |       | //
-                        // 3-------2 //
-                        ///////////////
 
-                        auto color = Vertex::Color(pFormattedRectangle->getBackgroundColor().getRed(),
-                                                   pFormattedRectangle->getBackgroundColor().getGreen(),
-                                                   pFormattedRectangle->getBackgroundColor().getBlue(),
-                                                   std::max(std::min((int)(pFormattedRectangle->getOpacity() * pFormattedRectangle->getBackgroundColor().getAlpha()), 255), 0));
-                        const std::array<Vertex, 9> vertices = {{
-                            {{pFormattedRectangle->getRenderLeft(),  pFormattedRectangle->getRenderTop()   }, color},
-                            {{pFormattedRectangle->getRenderLeft(),  pFormattedRectangle->getRenderBottom()}, color},
-                            {{pFormattedRectangle->getRenderRight(), pFormattedRectangle->getRenderTop()   }, color},
-                            {{pFormattedRectangle->getRenderRight(), pFormattedRectangle->getRenderBottom()}, color}
-                        }};
-                        const std::array<unsigned int, 2*3> indices = {{
-                            0, 1, 2,
-                            1, 3, 2
-                        }};
-                        target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
-                        //target.drawTriangle(states, vertices[0], vertices[1], vertices[2]);
-                        //target.drawTriangle(states, vertices[1], vertices[3], vertices[2]);
-                    }
-                    if (!pFormattedRectangle->getBoderWidth().isEmpty(innerSize))
-                    {
-                        //////////////////////
-                        // 0---1----------6 //
-                        // |              | //
-                        // |   8------7   | //
-                        // |   |      |   | //
-                        // |   |      |   | //
-                        // |   3------5   | //
-                        // |              | //
-                        // 2--------------4 //
-                        //////////////////////
-                        Borders borders(1.0f, 1.0f, 1.0f, 1.0f);
-                        auto color = Vertex::Color(pFormattedRectangle->getBorderColor().getRed(),
-                                                   pFormattedRectangle->getBorderColor().getGreen(),
-                                                   pFormattedRectangle->getBorderColor().getBlue(),
-                                                   std::max(std::min((int)(pFormattedRectangle->getOpacity() * pFormattedRectangle->getBorderColor().getAlpha()), 255), 0));
-                        const std::array<Vertex, 9> vertices = {{
-                            {{pFormattedRectangle->getRenderLeft(),                       pFormattedRectangle->getRenderTop()                         }, color},
-                            {{pFormattedRectangle->getRenderLeft()  + borders.getLeft(),  pFormattedRectangle->getRenderTop()                         }, color},
-                            {{pFormattedRectangle->getRenderLeft(),                       pFormattedRectangle->getRenderBottom()                      }, color},
-                            {{pFormattedRectangle->getRenderLeft()  + borders.getLeft(),  pFormattedRectangle->getRenderBottom() - borders.getBottom()}, color},
-                            {{pFormattedRectangle->getRenderRight(),                      pFormattedRectangle->getRenderBottom()                      }, color},
-                            {{pFormattedRectangle->getRenderRight() - borders.getRight(), pFormattedRectangle->getRenderBottom() - borders.getBottom()}, color},
-                            {{pFormattedRectangle->getRenderRight(),                      pFormattedRectangle->getRenderTop()                         }, color},
-                            {{pFormattedRectangle->getRenderRight() - borders.getRight(), pFormattedRectangle->getRenderTop()    + borders.getTop()   }, color},
-                            {{pFormattedRectangle->getRenderLeft()  + borders.getLeft(),  pFormattedRectangle->getRenderTop()    + borders.getTop()   }, color}
-                        }};
-                        const std::array<unsigned int, 8*3> indices = {{
-                            0, 2, 1,
-                            1, 2, 3,
-                            2, 4, 3,
-                            3, 4, 5,
-                            4, 6, 5,
-                            5, 6, 7,
-                            6, 1, 7,
-                            7, 1, 8
-                        }};
-                        target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
-                    }
+                Text text;
+                text.setString(formattedTextSection->getString());
+                text.setFont(formattedTextSection->getFont());
+                text.setCharacterSize(formattedTextSection->getCharacterSizeAsInt());
+                text.setPosition({formattedTextSection->getLayoutLeft(),  formattedTextSection->getLayoutTop()});
+                text.setOpacity(formattedTextSection->getOpacity());
+                if (match)
+                {
+                    text.setColor(lastSourceAnchor->getActive() ? lastSourceAnchor->getActiveColor() : lastSourceAnchor->getLinkColor());
+                    text.setStyle(lastSourceAnchor->getActive() && lastSourceAnchor->getUnderlined() ? formattedTextSection->getStyle() | TextStyle::Underlined : formattedTextSection->getStyle());
+                }
+                else
+                {
+                    text.setColor(formattedTextSection->getColor());
+                    text.setStyle(formattedTextSection->getStyle());
+                }
+
+                target.drawText(states, text);
+            }
+            else if (formattedImage)
+            {
+                auto topleft = formattedImage->getLayoutLeftTop();
+                if (formattedImage->getTexture().getData() != nullptr)
+                {
+                    Sprite sprite(formattedImage->getTexture());
+                    sprite.setPosition(topleft);
+                    sprite.setSize(Vector2f(formattedImage->getLogicaSize()));
+                    target.drawSprite(states, sprite);
                 }
             }
+            else if (formattedRectangle)
+            {
+                if (lastSourceAnchor != nullptr)
+                {
+                    if (lastSourceAnchor->getLayoutBottom() < formattedRectangle->getLayoutTop() ||
+                        lastSourceAnchor->getLayoutTop() > formattedRectangle->getLayoutBottom())
+                        lastSourceAnchor = nullptr;
+                }
+                if (formattedRectangle->getContentOrigin() != nullptr && formattedRectangle->getContentOrigin()->getTypeName() == MarkupLanguageElement::Anchor)
+                    lastSourceAnchor = std::dynamic_pointer_cast<FormattedLink>(formattedElement);
 
-            target.removeClippingLayer();
-       }
+                if (formattedRectangle->getOpacity() > 0.0f)
+                {
+                    ///////////////
+                    // 0-------1 //
+                    // |       | //
+                    // |       | //
+                    // 3-------2 //
+                    ///////////////
+
+                    auto color = Vertex::Color(formattedRectangle->getBackgroundColor().getRed(),
+                                               formattedRectangle->getBackgroundColor().getGreen(),
+                                               formattedRectangle->getBackgroundColor().getBlue(),
+                                               std::max(std::min((int)(formattedRectangle->getOpacity() * formattedRectangle->getBackgroundColor().getAlpha()), 255), 0));
+                    const std::array<Vertex, 4> vertices = {{
+                        {{formattedRectangle->getLayoutLeft(),  formattedRectangle->getLayoutTop()   }, color},
+                        {{formattedRectangle->getLayoutLeft(),  formattedRectangle->getLayoutBottom()}, color},
+                        {{formattedRectangle->getLayoutRight(), formattedRectangle->getLayoutTop()   }, color},
+                        {{formattedRectangle->getLayoutRight(), formattedRectangle->getLayoutBottom()}, color}
+                    }};
+                    const std::array<unsigned int, 2*3> indices = {{
+                        0, 1, 2,
+                        1, 3, 2
+                    }};
+                    target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                    //target.drawTriangle(states, vertices[0], vertices[1], vertices[2]);
+                    //target.drawTriangle(states, vertices[1], vertices[3], vertices[2]);
+                }
+                if (!formattedRectangle->getBoderWidth().isEmpty(innerSize))
+                {
+                    //////////////////////
+                    // 0---1----------6 //
+                    // |              | //
+                    // |   8------7   | //
+                    // |   |      |   | //
+                    // |   |      |   | //
+                    // |   3------5   | //
+                    // |              | //
+                    // 2--------------4 //
+                    //////////////////////
+                    Outline borderWidth(std::max(1.0f, formattedRectangle->getBoderWidth().left),  std::max(1.0f, formattedRectangle->getBoderWidth().top),
+                                        std::max(1.0f, formattedRectangle->getBoderWidth().right), std::max(1.0f, formattedRectangle->getBoderWidth().bottom));
+                    auto color = Vertex::Color(formattedRectangle->getBorderColor().getRed(),
+                                               formattedRectangle->getBorderColor().getGreen(),
+                                               formattedRectangle->getBorderColor().getBlue(),
+                                               std::max(std::min((int)(formattedRectangle->getOpacity() * formattedRectangle->getBorderColor().getAlpha()), 255), 0));
+                    Outline borderArea{ formattedRectangle->getLayoutLeft()   + formattedRectangle->getBoderMargin().left,
+                                        formattedRectangle->getLayoutTop()    + formattedRectangle->getBoderMargin().top,
+                                        formattedRectangle->getLayoutRight()  - formattedRectangle->getBoderMargin().right,
+                                        formattedRectangle->getLayoutBottom() - formattedRectangle->getBoderMargin().bottom };
+                    const std::array<Vertex, 9> vertices = {{
+                        {{borderArea.getLeft(),                           borderArea.getTop()                             }, color},
+                        {{borderArea.getLeft()  + borderWidth.getLeft(),  borderArea.getTop()                             }, color},
+                        {{borderArea.getLeft(),                           borderArea.getBottom()                          }, color},
+                        {{borderArea.getLeft()  + borderWidth.getLeft(),  borderArea.getBottom() - borderWidth.getBottom()}, color},
+                        {{borderArea.getRight(),                          borderArea.getBottom()                          }, color},
+                        {{borderArea.getRight() - borderWidth.getRight(), borderArea.getBottom() - borderWidth.getBottom()}, color},
+                        {{borderArea.getRight(),                          borderArea.getTop()                             }, color},
+                        {{borderArea.getRight() - borderWidth.getRight(), borderArea.getTop()    + borderWidth.getTop()   }, color},
+                        {{borderArea.getLeft()  + borderWidth.getLeft(),  borderArea.getTop()    + borderWidth.getTop()   }, color}
+                    }};
+                    const std::array<unsigned int, 8*3> indices = {{
+                        0, 2, 1,
+                        1, 2, 3,
+                        2, 4, 3,
+                        3, 4, 5,
+                        4, 6, 5,
+                        5, 6, 7,
+                        6, 1, 7,
+                        7, 1, 8
+                    }};
+                    target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                }
+            }
+        }
+
+        target.removeClippingLayer();
 
         // Draw the scrollbars if needed
         if (m_verticalScrollbar->isShown())

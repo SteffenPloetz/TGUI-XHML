@@ -257,19 +257,19 @@ public:
                                                               tgui::XhtmlElement::createInnerText(nullptr, U" (h1)")});
         h1_HTML->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"HTML-MU"));
         auto h1_BG01 = std::make_shared<tgui::XhtmlStyleEntry>();
-        h1_BG01->setBackgroundColor(tgui::Color(U"#DFD0D0"));
+        h1_BG01->setBackgroundColor(tgui::Color(U"#DFD0D0")).setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 16.0f)).setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 5.0f)).setBorderColor(tgui::Color(U"#BFB0B0")).setPadding(tgui::FourDimSize(tgui::SizeType::Pixel, 16.0f));
         h1_HTML->addAttribute(h1_BG01);
         auto h2_TOC = tgui::XhtmlElement::createH2(nullptr, tgui::XhtmlElement::createInnerText(nullptr, U"Table of contents (h2)"));
         h2_TOC->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"TOC"));
         auto h2_BG00 = std::make_shared<tgui::XhtmlStyleEntry>();
-        h2_BG00->setBackgroundColor(tgui::Color(U"#D0DAD0"));
+        h2_BG00->setBackgroundColor(tgui::Color(U"#D0DAD0")).setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 12.0f)).setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 3.0f)).setBorderColor(tgui::Color(U"#B0BAB0")).setPadding(tgui::FourDimSize(tgui::SizeType::Pixel, 12.0f));
         h2_TOC->addAttribute(h2_BG00);
         auto h2_INTRO = tgui::XhtmlElement::createH2(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Introduction to the "),
                                                                tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#880000")), tgui::XhtmlElement::createInnerText(nullptr, U"FormattedTextArea")),
                                                                tgui::XhtmlElement::createInnerText(nullptr, U" widget (h2)")});
         h2_INTRO->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"INTRO"));
         auto h2_BG01 = std::make_shared<tgui::XhtmlStyleEntry>();
-        h2_BG01->setBackgroundColor(tgui::Color(U"#D0DAD0"));
+        h2_BG01->setBackgroundColor(tgui::Color(U"#D0DAD0")).setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 12.0f)).setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 3.0f)).setBorderColor(tgui::Color(U"#B0BAB0")).setPadding(tgui::FourDimSize(tgui::SizeType::Pixel, 12.0f));
         h2_INTRO->addAttribute(h2_BG01);
         tgui::XhtmlElement::addChildrenAndSetPatent(body, {
             h1_HTML,
@@ -358,14 +358,14 @@ public:
                                                                tgui::XhtmlElement::createInnerText(nullptr, U" (h2)")});
         h2_TEXTS->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"TEXTS"));
         auto h2_BG02 = std::make_shared<tgui::XhtmlStyleEntry>();
-        h2_BG02->setBackgroundColor(tgui::Color(U"#D0DAD0"));
+        h2_BG02->setBackgroundColor(tgui::Color(U"#D0DAD0")).setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 12.0f)).setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 3.0f)).setBorderColor(tgui::Color(U"#B0BAB0")).setPadding(tgui::FourDimSize(tgui::SizeType::Pixel, 12.0f));
         h2_TEXTS->addAttribute(h2_BG02);
         auto h3_FLOATING = tgui::XhtmlElement::createH3(nullptr, {tgui::XhtmlElement::createInnerText(nullptr, U"Floating text and block text "),
                                                                   tgui::XhtmlElement::createSpan(nullptr, std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U"#008800")), tgui::XhtmlElement::createInnerText(nullptr, U"tests")),
                                                                   tgui::XhtmlElement::createInnerText(nullptr, U" (h3)")});
         h3_FLOATING->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"FLOATING"));
         auto h3_BG01 = std::make_shared<tgui::XhtmlStyleEntry>();
-        h3_BG01->setBackgroundColor(tgui::Color(U"#D0D0DF"));
+        h3_BG01->setBackgroundColor(tgui::Color(U"#D0D0DF")).setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8.0f)).setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 1.0f)).setBorderColor(tgui::Color(U"#B0B0BF")).setPadding(tgui::FourDimSize(tgui::SizeType::Pixel, 8.0f));
         h3_FLOATING->addAttribute(h3_BG01);
         tgui::XhtmlElement::addChildrenAndSetPatent(body, {
             h2_TEXTS,
@@ -416,8 +416,7 @@ public:
             tgui::XhtmlElement::createInnerText(nullptr, U"). It shall demonstrate no vertical spacing around this block and automatic line breaks.")});
         tgui::XhtmlElement::addChildAndSetPatent(body, div01);
         auto par_STY = std::make_shared<tgui::XhtmlStyleEntry>();
-        par_STY->setColor(tgui::Color(U"#880088"));
-        par_STY->setBackgroundColor(tgui::Color(U"#D8D8D0"));
+        par_STY->setColor(tgui::Color(U"#880088")).setBackgroundColor(tgui::Color(U"#D8D8D0"));
         auto par01 = tgui::XhtmlElement::createParagraph(nullptr, par_STY);
         tgui::XhtmlElement::addChildrenAndSetPatent(par01, {
             tgui::XhtmlElement::createInnerText(nullptr, U"This is the second "),
@@ -449,7 +448,7 @@ public:
                                                                tgui::XhtmlElement::createInnerText(nullptr, U" (h3)")});
         h3_LISTS->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"LISTS"));
         auto h3_BG02 = std::make_shared<tgui::XhtmlStyleEntry>();
-        h3_BG02->setBackgroundColor(tgui::Color(U"#D0D0DF"));
+        h3_BG02->setBackgroundColor(tgui::Color(U"#D0D0DF")).setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8.0f)).setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 1.0f)).setBorderColor(tgui::Color(U"#B0B0BF")).setPadding(tgui::FourDimSize(tgui::SizeType::Pixel, 8.0f));
         h3_LISTS->addAttribute(h3_BG02);
         tgui::XhtmlElement::addChildrenAndSetPatent(body, {
             h3_LISTS,
@@ -460,8 +459,7 @@ public:
         auto yellowBG = std::make_shared<tgui::XhtmlStyleEntry>();
         yellowBG->setBackgroundColor(tgui::Color(255, 255, 0));
         auto pinkOverlayBG = std::make_shared<tgui::XhtmlStyleEntry>();
-        pinkOverlayBG->setBackgroundColor(tgui::Color(255, 0, 255));
-        pinkOverlayBG->setOpacity(0.6f);
+        pinkOverlayBG->setBackgroundColor(tgui::Color(255, 0, 255)).setOpacity(0.6f);
         auto list01 = tgui::XhtmlElement::createUnorderedList(nullptr, yellowBG);
         tgui::XhtmlElement::addChildrenAndSetPatent(list01, {
             tgui::XhtmlElement::createListItem(nullptr, tgui::XhtmlElement::createInnerText(nullptr, U"First unordered list item")),
@@ -473,8 +471,7 @@ public:
         auto pinkBG = std::make_shared<tgui::XhtmlStyleEntry>();
         pinkBG->setBackgroundColor(tgui::Color(255, 0, 255));
         auto yellowOverlayBG = std::make_shared<tgui::XhtmlStyleEntry>();
-        yellowOverlayBG->setBackgroundColor(tgui::Color(255, 255, 0));
-        yellowOverlayBG->setOpacity(0.6f);
+        yellowOverlayBG->setBackgroundColor(tgui::Color(255, 255, 0)).setOpacity(0.6f);
         auto list02 = tgui::XhtmlElement::createOrderedList(nullptr, pinkBG);
         tgui::XhtmlElement::addChildrenAndSetPatent(list02, {
             tgui::XhtmlElement::createListItem(nullptr, tgui::XhtmlElement::createInnerText(nullptr, U"First ordered list item")),
@@ -491,12 +488,10 @@ public:
                                                               tgui::XhtmlElement::createInnerText(nullptr, U" (h3)")});
         h3_CODE->addAttribute(std::make_shared<tgui::XhtmlAttribute>(U"id", U"CODE"));
         auto h3_BG03 = std::make_shared<tgui::XhtmlStyleEntry>();
-        h3_BG03->setBackgroundColor(tgui::Color(U"#D0D0DF"));
+        h3_BG03->setBackgroundColor(tgui::Color(U"#D0D0DF")).setMargin(tgui::FourDimSize(tgui::SizeType::Pixel, 8.0f)).setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 1.0f)).setBorderColor(tgui::Color(U"#B0B0BF")).setPadding(tgui::FourDimSize(tgui::SizeType::Pixel, 8.0f));
         h3_CODE->addAttribute(h3_BG03);
         auto silverBG = std::make_shared<tgui::XhtmlStyleEntry>(); silverBG->setBackgroundColor(tgui::Color(248, 248, 248, 255));
-        silverBG->setBorderColor(tgui::Color(160, 160, 160, 192));
-        silverBG->setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 1.0f));
-        silverBG->setPadding(tgui::FourDimSize(tgui::SizeType::Pixel, 0.0f, 4.0f));
+        silverBG->setBorderColor(tgui::Color(160, 160, 160, 192)).setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 1.0f)).setPadding(tgui::FourDimSize(tgui::SizeType::Pixel, 0.0f, 4.0f));
         auto code01 = tgui::XhtmlElement::createCode(nullptr);
         tgui::XhtmlElement::addChildrenAndSetPatent(body, {
             list01,
