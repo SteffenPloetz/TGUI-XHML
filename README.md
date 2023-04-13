@@ -2,14 +2,27 @@
 XHTML viewer widget for texus [TGUI](https://github.com/texus/TGUI/).
 
 ## Introduction
-This project is an extension for the [immediate mode GUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) TGUI. It includes a simple XHTML parser, a simple rich text document (which converts the HTML elements, supplied by the XHTML parser, into rich text elements and makes them available for display) and a simple rich text display widget (which displays the rich text elements from the rich text document).
+This project is an extension for the [immediate mode GUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) TGUI. It includes the following main classes:
 
-These three components - parser, document and widget - are largely decoupled and allow for easy further development as well as future support of alternative rich text sources - e.g. markdown.
+<img src="XhtmlViewer_ClassOverview.png"/>
+
+* The **XhtmlParser** parses an XHTML document and creates the DOM from **XhtmlElements**.
+* One **XhtmlElement** holds one document object and all it's formatting and styling information.
+* The **FormattedXhtmlDocument** represents the XHTML DOM and holds the **XhtmlElement**s in a tree.
+* The **MarkupLanguageElement** is the base class of **XhtmlElement** and abstracts XHTML specifics.
+* One **FormattedElement** provides the rendering information of one document object and holds a reference to the underlaying **MarkupLanguageElement**.
+* The **FormattedTextDocument** represets the list of **FormattedElement** to display.
+* The **FormattedTextView** widget displays the **FormattedTextDocument**.
+
+These components are largely decoupled to allow easy further development as well as future support of alternative rich text sources - e.g. markdown.
+
+## Intention
 
 This project does not claim to replace a browser plugin - the functionality available in a browser plugin is simply too powerful for that.<br/>
-Rather, this project aims to provide a rich text display widget that is "easy" to integrate into an application. With "easy" is meant above all: A seamless and painless integration into the already used GUI library. This also means: No glue-code, no external dependencies, no extra effort for deployment on the desired target system (Windows, Linux, ...) and no hassle with changing APIs.
+Rather, this project aims to provide a rich text display widget that is "easy" to integrate into an application. Where "easy" means: A seamless and painless integration into the already used GUI library. This also means: No loading of external components (browser plugin loading can take a lot of time), no glue-code, no external dependencies, no extra effort for deployment on the desired target system (Windows, Linux, ...) and no hassle with changing APIs.
 
-There are several similar projects around, that address the same problem: An application/framework integrated rich text/XHTML document view without the hassle / complexity of a Browser PlugIn.
+There are several similar projects around, that address the same problem: An application/framework integrated rich text/XHTML document view without the hassle/complexity of a Browser PlugIn. Here are two samples:
+* [XHTMLStatic](https://www.codeproject.com/Articles/2900/XHTMLStatic-An-Extra-Lean-Custom-Control-to-Displa) by Hans Dietrich 2002-2007 (C++, Windows)
 * [GMarkupLabel](https://www.codeproject.com/Articles/31237/GMarkupLabel-A-C-Windows-Forms-control-to-display) by Georgi Atanasov, 2008 (C#, .NET)
 
 Typical use cases include boosting static displays and an integrated help system.
