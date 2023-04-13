@@ -60,8 +60,8 @@ Also planned for the future is the possibility to select and copy.
 Nevertheless, the functionality already available is so extensive that a description would be very laborious. Instead, I recommend studying the sample application - it tests all the currently available functionality and is an excellent source of knowledge.
 
 # <a name="foldera-and-files">Folders and files</a>
-* `include/TGUI              ` - folder of include files
-* `src                       ` - folder of source files
+* `include/TGUI/Xhtml        ` - folder of include files
+* `src/Xhtml                 ` - folder of source files
 * `sample-app                ` - folder of a test application (project files for **Code::Blocks** and **Visual Studio 2022** included)
 * `LICENSE                   ` - license text file
 * `README.md                 ` - this file
