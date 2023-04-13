@@ -9,6 +9,9 @@ These three components - parser, document and widget - are largely decoupled and
 This project does not claim to replace a browser plugin - the functionality available in a browser plugin is simply too powerful for that.<br/>
 Rather, this project aims to provide a rich text display widget that is "easy" to integrate into an application. With "easy" is meant above all: A seamless and painless integration into the already used GUI library. This also means: No glue-code, no external dependencies, no extra effort for deployment on the desired target system (Windows, Linux, ...) and no hassle with changing APIs.
 
+There are several similar projects around, that address the same problem: An application/framework integrated rich text/XHTML document view without the hassle / complexity of a Browser PlugIn.
+* [GMarkupLabel](https://www.codeproject.com/Articles/31237/GMarkupLabel-A-C-Windows-Forms-control-to-display) by Georgi Atanasov, 2008 (C#, .NET)
+
 Typical use cases include boosting static displays and an integrated help system.
 
 Two unfortunately not yet implemented but important functionalities of rich text are: tables and links/anchors<br/>
