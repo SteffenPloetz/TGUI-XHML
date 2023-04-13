@@ -1,38 +1,10 @@
 # TGUI-XHTML
-XHTML viewer widget for texus [TGUI](https://github.com/texus/TGUI/).
-
-## Introduction
-This project is an extension for the [immediate mode GUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) TGUI. It includes the following main classes:
-
-<img src="XhtmlViewer_ClassOverview.png"/>
-
-* The **XhtmlParser** parses an XHTML document and creates the DOM from **XhtmlElements**.
-* One **XhtmlElement** holds one document object and all it's formatting and styling information.
-* The **FormattedXhtmlDocument** represents the XHTML DOM and holds the **XhtmlElement**s in a tree.
-* The **MarkupLanguageElement** is the base class of **XhtmlElement** and abstracts XHTML specifics.
-* One **FormattedElement** provides the rendering information of one document object and holds a reference to the underlaying **MarkupLanguageElement**.
-* The **FormattedTextDocument** represets the list of **FormattedElement** to display.
-* The **FormattedTextView** widget displays the **FormattedTextDocument**.
-
-These components are largely decoupled to allow easy further development as well as future support of alternative rich text sources - e.g. markdown.
-
-## Intention
-
-This project does not claim to replace a browser plugin - the functionality available in a browser plugin is simply too powerful for that.<br/>
-Rather, this project aims to provide a rich text display widget that is "easy" to integrate into an application. Where "easy" means: A seamless and painless integration into the already used GUI library. This also means: No loading of external components (browser plugin loading can take a lot of time), no glue-code, no external dependencies, no extra effort for deployment on the desired target system (Windows, Linux, ...) and no hassle with changing APIs.
-
-There are several similar projects around, that address the same problem: An application/framework integrated rich text/XHTML document view without the hassle/complexity of a Browser PlugIn. Here are two samples:
-* [XHTMLStatic](https://www.codeproject.com/Articles/2900/XHTMLStatic-An-Extra-Lean-Custom-Control-to-Displa) by Hans Dietrich 2002-2007 (C++, Windows)
-* [GMarkupLabel](https://www.codeproject.com/Articles/31237/GMarkupLabel-A-C-Windows-Forms-control-to-display) by Georgi Atanasov, 2008 (C#, .NET)
-
-Typical use cases include boosting static displays and an integrated help system.
-
-Two unfortunately not yet implemented but important functionalities of rich text are: tables and links/anchors<br/>
-I hope to provide this in the near future.
-
-Nevertheless, the functionality already available is so extensive that a description would be very laborious. Instead, I recommend studying the sample application - it tests all the currently available functionality and is an excellent source of knowledge.
+A XHTML viewer widget (or more beneral a ***rich text display widget***, but only XHTML formatting is currently impemented) for texus [TGUI](https://github.com/texus/TGUI/).
 
 ## Table of contents
+* [Introduction](#introduction)
+* [Intention](#intention)
+* [Limitations](#limitations)
 * [First impression](#first-impression)
 * [Folders and files](#foldera-and-files)
 * [Features](#features)
@@ -43,6 +15,42 @@ Nevertheless, the functionality already available is so extensive that a descrip
 * [The TGUI-XHTML code](#extension-code)
 * [The FormattedTextView widget](#formatted-text-widget)
 * [The sample application](#sample-app)
+
+## <a name="introduction">Introduction</a>
+This project is an extension for the [immediate mode GUI](https://en.wikipedia.org/wiki/Immediate_mode_GUI) TGUI. It includes the following main classes:
+
+<img src="XhtmlViewer_ClassOverview.png"/>
+
+* The `XhtmlParser` parses an XHTML document and creates the DOM from **XhtmlElements**.
+* One `XhtmlElement` holds one document object and all it's formatting and styling information.
+* The `FormattedXhtmlDocument` represents the XHTML DOM and holds the `XhtmlElement`s in a tree.
+* The `MarkupLanguageElement` is the base class of `XhtmlElement` and abstracts XHTML specifics.
+* One `FormattedElement` provides the rendering information of one document object and holds a reference to the underlaying `MarkupLanguageElement`.
+* The `FormattedTextDocument` represets the list of `FormattedElement` to display.
+* The `FormattedTextView` widget displays the `FormattedTextDocument`.
+
+These components are largely decoupled to allow easy further development as well as future support of alternative rich text formatting - e.g. markdown.
+
+## <a name="intention">Intention</a>
+
+This project does not claim to replace a browser plugin - the functionality available in a browser plugin is simply too powerful for that.<br/>
+Rather, this project aims to provide a ***rich text display widget*** that is **easy** to integrate into an application. Where "easy" means: A seamless and painless integration into the already used GUI library. This also means: No loading of external components (browser plugin loading can take a lot of time), no glue-code, no external dependencies, no extra effort for deployment on the desired target system (Windows, Linux, ...) and no hassle with changing APIs.
+
+There are several similar projects around, that address the same problem: An application/framework integrated rich text/XHTML document view without the hassle/complexity of a Browser PlugIn. Here are two samples:
+* [XHTMLStatic](https://www.codeproject.com/Articles/2900/XHTMLStatic-An-Extra-Lean-Custom-Control-to-Displa) by Hans Dietrich 2002-2007 (C++, Windows)
+* [GMarkupLabel](https://www.codeproject.com/Articles/31237/GMarkupLabel-A-C-Windows-Forms-control-to-display) by Georgi Atanasov, 2008 (C#, .NET)
+
+Typical use cases for a ***rich text display widget*** include boosting static text displays (either in the application window or in a dialog - in both cases the response time is an important factor for the user experience) and an integrated help system (that should be able to browse through topics). I also recommend to read the *Introduction* of the article [XHTMLStatic](https://www.codeproject.com/Articles/2900/XHTMLStatic-An-Extra-Lean-Custom-Control-to-Displa) by Hans Dietrich - apart from his opinion on tables, I agree with him on all points.
+
+## <a name="limitations">Limitations</a>
+Not yet implemented but important functionalities of a ***rich text display widget*** are:
+* tables and
+* links/anchors.</br>
+I hope to provide both in the near future.
+
+Also planned for the future is the possibility to select and copy.
+
+Nevertheless, the functionality already available is so extensive that a description would be very laborious. Instead, I recommend studying the sample application - it tests all the currently available functionality and is an excellent source of knowledge.
 
 # <a name="first-impression">First impression</a>
 The next two images show the sample aplication on Linux
@@ -68,7 +76,7 @@ The next two images show the sample aplication on Linux
 * `dllmain.cpp               ` - ***Microsoft (R) Windows*** dynamic link library entry point (not needed for ***Linux***)
 
 # <a name="features">Features</a>
-List od supported XHTML features
+List of supported XHTML features
 * [CSS styles](#css-styling)
 * [Inline and CSS styling](#inline-styling)
 * [Supported style attributes](#supported-style-attributes)
