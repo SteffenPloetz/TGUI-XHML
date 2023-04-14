@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Formatted text XHTML document (zlib license) provided for TGUI - Texus' Graphical User Interface
+// Formatted XHTML document (zlib license) provided for TGUI - Texus' Graphical User Interface
 // Copyright (C) 2023 Steffen Ploetz (Steffen.Ploetz@cityweb.de)
 //
 // This software is provided 'as-is', without any express or implied warranty.
@@ -26,7 +26,7 @@
 #ifndef TGUI_FORMATTED_TEXT_XHTML_DOCUMENT_HPP
 #define TGUI_FORMATTED_TEXT_XHTML_DOCUMENT_HPP
 
-#include "FormattedTextDocument.hpp"
+#include "FormattedDocument.hpp"
 
 namespace tgui  { namespace xhtml
 {
@@ -44,8 +44,9 @@ namespace tgui  { namespace xhtml
 
         Fonts            =  8,  //!< Apply the font properties
 
-        BorderWidth      = 16,  //!< Apply the border width property properties
-        BorderColor      = 32   //!< Apply the border color property properties
+        BorderStyle      = 16,  //!< Apply the border style property
+        BorderWidth      = 32,  //!< Apply the border width property
+        BorderColor      = 64   //!< Apply the border color property
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -75,17 +76,17 @@ namespace tgui  { namespace xhtml
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// @brief The formatted text XHTML document
+    /// @brief The formatted XHTML document
     ///
-    /// A (specialized) XHTML formatted text data holder with XHTML element support.
+    /// A (specialized) XHTML formatted data holder with XHTML element support.
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    class TGUI_API FormattedTextXhtmlDocument : public FormattedTextDocument
+    class TGUI_API FormattedXhtmlDocument : public FormattedDocument
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public:
 
-        using Ptr = std::shared_ptr<FormattedTextXhtmlDocument>;            //!< Shared formatted text XHTML document pointer
-        using ConstPtr = std::shared_ptr<const FormattedTextXhtmlDocument>; //!< Shared constant formatted text XHTML document pointer
+        using Ptr = std::shared_ptr<FormattedXhtmlDocument>;            //!< Shared formatted XHTML document pointer
+        using ConstPtr = std::shared_ptr<const FormattedXhtmlDocument>; //!< Shared constant formatted XHTML document pointer
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -149,29 +150,29 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief The default constructor
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        FormattedTextXhtmlDocument();
+        FormattedXhtmlDocument();
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief The virtual default destructor
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        ~FormattedTextXhtmlDocument()
+        ~FormattedXhtmlDocument()
         { ; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Creates a new formatted text XHTML document
+        /// @brief Creates a new formatted XHTML document
         ///
-        /// Prefer the factory method in cases where the formatted text section needs to be shared, otherwise prefer the constructor.
+        /// Prefer the factory method in cases where the formatted XHTML document needs to be shared, otherwise prefer the constructor.
         ///
-        /// @return The new formatted text XHTML document
+        /// @return The new formatted XHTML document
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static inline FormattedTextXhtmlDocument::Ptr create() { return std::make_shared<FormattedTextXhtmlDocument>(); }
+        static inline FormattedXhtmlDocument::Ptr create() { return std::make_shared<FormattedXhtmlDocument>(); }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the formatted text content of this document
+        /// @brief Gets the formatted content of this document
         ///
-        /// @return The formatted text content of this document
+        /// @return The formatted content of this document
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline const std::vector<std::shared_ptr<FormattedElement>>& getContent() const
         {   return m_content;   }
@@ -230,7 +231,7 @@ namespace tgui  { namespace xhtml
         /// @param styleCategories                          The style categories to apply
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void applyStyleEntriesToFormattingState(const std::vector<XhtmlStyleEntry::Ptr> styleEntries,
-            const FormattedTextDocument::FontCollection& fontCollection,
+            const FormattedDocument::FontCollection& fontCollection,
             StyleCategoryFlags categories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -241,7 +242,7 @@ namespace tgui  { namespace xhtml
         /// @param styleCategories                          The style categories to apply
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement, const std::vector<XhtmlStyleEntry::Ptr> styleEntries,
-            const FormattedTextDocument::FontCollection& fontCollection,
+            const FormattedDocument::FontCollection& fontCollection,
             StyleCategoryFlags categories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -267,7 +268,7 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates and basically initializes a FormattedImage
         ///
-        /// @param xhtmlElement                             The XHTML element,  represented by the formatted lmage section to create
+        /// @param xhtmlElement                             The XHTML element, represented by the formatted lmage section to create
         ///
         /// @return The newly created FormattedImage
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -297,7 +298,7 @@ namespace tgui  { namespace xhtml
         /// @param keepSelection    Determine whether to keep the selection
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void layout(Vector2f clientSize, float defaultTextSize, Color defaultForeColor, float defaultOpacity,
-                    const FormattedTextDocument::FontCollection& fontCollection, bool keepSelection);
+                    const FormattedDocument::FontCollection& fontCollection, bool keepSelection);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Returns the layout size
@@ -335,7 +336,7 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void layout(bool& predecessorElementProvidesExtraSpace, bool parentElementSuppressesInitialExtraSpace,
                     bool& lastchildAcceptsRunLengtExpansion, XhtmlElement::Ptr xhtmlElement,
-                    const FormattedTextDocument::FontCollection& fontCollection, bool keepSelection);
+                    const FormattedDocument::FontCollection& fontCollection, bool keepSelection);
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

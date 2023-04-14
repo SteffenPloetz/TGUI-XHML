@@ -16,7 +16,7 @@
 #include "TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
 #include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedElements.hpp"
-#include "TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp"
+#include "TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp"
 
 #include "TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedTextView.hpp"
@@ -283,7 +283,7 @@ namespace tgui  { namespace xhtml
             m_horizontalScrollbar->mouseNoLongerOnWidget();
         }
 
-        Vector2f adoptedPos = pos + Vector2f(m_paddingCached.getLeft(), m_paddingCached.getTop()) +
+        Vector2f adoptedPos = pos - Vector2f(m_paddingCached.getLeft(), m_paddingCached.getTop()) +
             Vector2f(static_cast<float>(m_horizontalScrollbar->getValue()), static_cast<float>(m_verticalScrollbar->getValue()));
         for (FormattedLink::Ptr anchorSource : m_anchorSources)
         {
@@ -347,7 +347,7 @@ namespace tgui  { namespace xhtml
 
                         if (innerSize.y >= layoutSize.y)
                             break;
-                        auto scrollPosY = static_cast<int>(elementLayoutPosition.y / (layoutSize.y - innerSize.y) * m_verticalScrollbar->getMaximum() + 0.49F);
+                        auto scrollPosY = static_cast<unsigned int>(elementLayoutPosition.y + 0.49f);// / (layoutSize.y - innerSize.y) * m_verticalScrollbar->getMaximum() + 0.49F);
 
                         m_verticalScrollbar->setValue(scrollPosY);
                     }
@@ -575,18 +575,9 @@ namespace tgui  { namespace xhtml
                     //target.drawTriangle(states, vertices[0], vertices[1], vertices[2]);
                     //target.drawTriangle(states, vertices[1], vertices[3], vertices[2]);
                 }
-                if (!formattedRectangle->getBoderWidth().isEmpty(innerSize))
+
+                if (!formattedRectangle->getBoderWidth().isEmpty(innerSize) && !formattedRectangle->getBoderStyle().isNoneOrHidden())
                 {
-                    //////////////////////
-                    // 0---1----------6 //
-                    // |              | //
-                    // |   8------7   | //
-                    // |   |      |   | //
-                    // |   |      |   | //
-                    // |   3------5   | //
-                    // |              | //
-                    // 2--------------4 //
-                    //////////////////////
                     Outline borderWidth(std::max(1.0f, formattedRectangle->getBoderWidth().left),  std::max(1.0f, formattedRectangle->getBoderWidth().top),
                                         std::max(1.0f, formattedRectangle->getBoderWidth().right), std::max(1.0f, formattedRectangle->getBoderWidth().bottom));
                     auto color = Vertex::Color(formattedRectangle->getBorderColor().getRed(),
@@ -597,28 +588,572 @@ namespace tgui  { namespace xhtml
                                         formattedRectangle->getLayoutTop()    + formattedRectangle->getBoderMargin().top,
                                         formattedRectangle->getLayoutRight()  - formattedRectangle->getBoderMargin().right,
                                         formattedRectangle->getLayoutBottom() - formattedRectangle->getBoderMargin().bottom };
-                    const std::array<Vertex, 9> vertices = {{
-                        {{borderArea.getLeft(),                           borderArea.getTop()                             }, color},
-                        {{borderArea.getLeft()  + borderWidth.getLeft(),  borderArea.getTop()                             }, color},
-                        {{borderArea.getLeft(),                           borderArea.getBottom()                          }, color},
-                        {{borderArea.getLeft()  + borderWidth.getLeft(),  borderArea.getBottom() - borderWidth.getBottom()}, color},
-                        {{borderArea.getRight(),                          borderArea.getBottom()                          }, color},
-                        {{borderArea.getRight() - borderWidth.getRight(), borderArea.getBottom() - borderWidth.getBottom()}, color},
-                        {{borderArea.getRight(),                          borderArea.getTop()                             }, color},
-                        {{borderArea.getRight() - borderWidth.getRight(), borderArea.getTop()    + borderWidth.getTop()   }, color},
-                        {{borderArea.getLeft()  + borderWidth.getLeft(),  borderArea.getTop()    + borderWidth.getTop()   }, color}
-                    }};
-                    const std::array<unsigned int, 8*3> indices = {{
-                        0, 2, 1,
-                        1, 2, 3,
-                        2, 4, 3,
-                        3, 4, 5,
-                        4, 6, 5,
-                        5, 6, 7,
-                        6, 1, 7,
-                        7, 1, 8
-                    }};
-                    target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+
+                    //        lft1 lft2  lft3 lft4 lft5                rgt5 rgt4  rgt3 rgt2 rgt1
+                    //        |       |   |   |       |                |       |   |   |       |
+                    // top1-- +----------------------------------------------------------------+
+                    //        | \                                                            / |
+                    //        |   \                                                        /   |
+                    //        |     \                                                    /     |
+                    // top2-- |       +------------------------------------------------+       |
+                    //        |       |                                                |       |
+                    // top3-- |       |                                                |       |
+                    //        |       |                                                |       |
+                    // top4-- |       |       +--------------------------------+       |       |
+                    //        |       |       | \                            / |       |       |
+                    //        |       |       |   \                        /   |       |       |
+                    //        |       |       |     \                    /     |       |       |
+                    // top5-- |       |       |       +----------------+       |       |       |
+                    //        |       |       |       |                |       |       |       |
+                    //        |       |       |       |                |       |       |       |
+                    //        :       :       :       :                :       :       :       :
+                    //
+                    //        :           :           :                :           :           :
+                    //        |           |           |                |           |           |
+                    //        |           |           |                |           |           |
+                    // btm5-- |           |           +----------------+           |           |
+                    //        |           |                                        |           |
+                    //        |           |                                        |           |
+                    //        |           |                                        |           |
+                    // btm4-- |           |                                        |           |
+                    //        |           |                                        |           |
+                    // btm3-- |           +----------------------------------------+           |
+                    //        |         /                                            \         |
+                    // btm2-- |       /                                                \       |
+                    //        |     /                                                    \     |
+                    //        |   /                                                        \   |
+                    //        | /                                                            \ |
+                    // btm1-- +----------------------------------------------------------------+
+                    //        |       |   |   |       |                |       |   |   |       |
+                    //        lft1 lft2  lft3 lft4 lft5                rgt5 rgt4  rgt3 rgt2 rgt1
+                    if (formattedRectangle->getBoderWidth().left > 0.0f)
+                    {
+                        if (formattedRectangle->getBoderStyle().left == BorderStyle::Solid)
+                        {
+                            const std::array<Vertex, 4> vertices = { {
+                                { { borderArea.getLeft(),                           borderArea.getTop()    }, color },
+                                { { borderArea.getLeft() + borderWidth.getLeft(),   borderArea.getTop()    }, color },
+                                { { borderArea.getLeft() + borderWidth.getLeft(),   borderArea.getBottom() }, color },
+                                { { borderArea.getLeft(),                           borderArea.getBottom() }, color }
+                            } };
+                            const std::array<unsigned int, 2 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().left == BorderStyle::Dotted ||
+                                 formattedRectangle->getBoderStyle().left == BorderStyle::Dashed)
+                        {
+                            auto distance = borderArea.getBottom() - borderArea.getTop();
+                            if ((formattedRectangle->getBoderStyle().left == BorderStyle::Dotted && distance > borderWidth.getLeft()) ||
+                                (formattedRectangle->getBoderStyle().left == BorderStyle::Dashed && distance > borderWidth.getLeft() * 3))
+                            {
+                                int   numDots   = 1;
+                                float stepWidth = 1.0f;
+                                float dotSize   = 1.0f;
+                                calculateBorderDots(distance, borderWidth.getLeft(), formattedRectangle->getBoderStyle().left == BorderStyle::Dashed, numDots, stepWidth, dotSize);
+
+                                std::vector<Vertex> vertices; vertices.resize(numDots * 4);
+                                std::vector<unsigned int> indices; indices.resize(numDots * 6);
+                                calculateDottedBorderVerticesAndIndices(numDots, stepWidth, color, true, borderArea.getLeft(), borderArea.getLeft() + borderWidth.getLeft(),
+                                    borderArea.getTop(), borderArea.getTop() + dotSize, borderArea.getBottom() - dotSize, borderArea.getBottom(), vertices, indices);
+                                target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                            }
+                        }
+                        else if (formattedRectangle->getBoderStyle().left == BorderStyle::Double)
+                        {
+                            float top1 = borderArea.getTop();
+                            float top2 = borderArea.getTop() + borderWidth.getTop() / 3;
+                            float top4 = borderArea.getTop() + borderWidth.getTop() - borderWidth.getTop() / 3;
+                            float top5 = borderArea.getTop() + borderWidth.getTop();
+                            float btm1 = borderArea.getBottom() - borderWidth.getBottom();
+                            float btm2 = borderArea.getBottom() - borderWidth.getBottom() + borderWidth.getBottom() / 3;
+                            float btm4 = borderArea.getBottom() - borderWidth.getBottom() / 3;
+                            float btm5 = borderArea.getBottom();
+                            float lft1 = borderArea.getLeft();
+                            float lft2 = borderArea.getLeft() + borderWidth.getLeft() / 3;
+                            float lft4 = borderArea.getLeft() + borderWidth.getLeft() - borderWidth.getLeft() / 3;
+                            float lft5 = borderArea.getLeft() + borderWidth.getLeft();
+                            const std::array<Vertex, 8> vertices = { {
+                                { { lft1, top1 }, color },
+                                { { lft2, top2 }, color },
+                                { { lft2, btm4 }, color },
+                                { { lft1, btm5 }, color },
+
+                                { { lft4, top4 }, color },
+                                { { lft5, top5 }, color },
+                                { { lft5, btm1 }, color },
+                                { { lft4, btm2 }, color }
+                            } };
+                            const std::array<unsigned int, 4 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3,
+                                4, 5, 7,
+                                5, 6, 7
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().left == BorderStyle::Groove ||
+                                 formattedRectangle->getBoderStyle().left == BorderStyle::Ridge)
+                        {
+                            color = formattedRectangle->getBoderStyle().left == BorderStyle::Groove ?
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+                            auto colo2 = formattedRectangle->getBoderStyle().left == BorderStyle::Groove ?
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+
+                            float top1 = borderArea.getTop();
+                            float top3 = borderArea.getTop() + borderWidth.getTop() / 2;
+                            float top5 = borderArea.getTop() + borderWidth.getTop();
+                            float btm1 = borderArea.getBottom() - borderWidth.getBottom();
+                            float btm3 = borderArea.getBottom() - borderWidth.getBottom() / 2;
+                            float btm5 = borderArea.getBottom();
+                            float lft1 = borderArea.getLeft();
+                            float lft3 = borderArea.getLeft() + borderWidth.getLeft() / 2;
+                            float lft5 = borderArea.getLeft() + borderWidth.getLeft();
+                            const std::array<Vertex, 8> vertices = { {
+                                { { lft1, top1 }, color },
+                                { { lft3, top3 }, color },
+                                { { lft3, btm3 }, color },
+                                { { lft1, btm5 }, color },
+
+                                { { lft3, top3 }, colo2 },
+                                { { lft5, top5 }, colo2 },
+                                { { lft5, btm1 }, colo2 },
+                                { { lft3, btm3 }, colo2 }
+                            } };
+                            const std::array<unsigned int, 4 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3,
+                                4, 5, 7,
+                                5, 6, 7
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().left == BorderStyle::Inset ||
+                                 formattedRectangle->getBoderStyle().left == BorderStyle::Outset)
+                        {
+                            color = formattedRectangle->getBoderStyle().left == BorderStyle::Inset ?
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+
+                            float top1 = borderArea.getTop();
+                            float top5 = borderArea.getTop() + borderWidth.getTop();
+                            float btm1 = borderArea.getBottom() - borderWidth.getBottom();
+                            float btm5 = borderArea.getBottom();
+                            float lft1 = borderArea.getLeft();
+                            float lft5 = borderArea.getLeft() + borderWidth.getLeft();
+                            const std::array<Vertex, 4> vertices = { {
+                                { { lft1, top1 }, color },
+                                { { lft5, top5 }, color },
+                                { { lft5, btm1 }, color },
+                                { { lft1, btm5 }, color }
+                            } };
+                            const std::array<unsigned int, 2 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                    }
+                    if (formattedRectangle->getBoderWidth().top > 0.0f)
+                    {
+                        if (formattedRectangle->getBoderStyle().top == BorderStyle::Solid)
+                        {
+                            const std::array<Vertex, 4> vertices = { {
+                                { { borderArea.getLeft(),  borderArea.getTop()                        }, color },
+                                { { borderArea.getRight(), borderArea.getTop()                        }, color },
+                                { { borderArea.getRight(), borderArea.getTop() + borderWidth.getTop() }, color },
+                                { { borderArea.getLeft(),  borderArea.getTop() + borderWidth.getTop() }, color }
+                            } };
+                            const std::array<unsigned int, 2 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().top == BorderStyle::Dotted ||
+                                 formattedRectangle->getBoderStyle().top == BorderStyle::Dashed)
+                        {
+                            auto distance = borderArea.getRight() - borderArea.getLeft();
+                            if ((formattedRectangle->getBoderStyle().top == BorderStyle::Dotted && distance > borderWidth.getTop()) ||
+                                (formattedRectangle->getBoderStyle().top == BorderStyle::Dashed && distance > borderWidth.getTop() * 3))
+                            {
+                                int   numDots   = 1;
+                                float stepWidth = 1.0f;
+                                float dotSize   = 1.0f;
+                                calculateBorderDots(distance, borderWidth.getTop(), formattedRectangle->getBoderStyle().top == BorderStyle::Dashed, numDots, stepWidth, dotSize);
+
+                                std::vector<Vertex> vertices; vertices.resize(numDots * 4);
+                                std::vector<unsigned int> indices; indices.resize(numDots * 6);
+                                calculateDottedBorderVerticesAndIndices(numDots, stepWidth, color, false, borderArea.getLeft(), borderArea.getLeft() + dotSize,
+                                    borderArea.getTop(), borderArea.getTop() + borderWidth.getTop(), borderArea.getRight() - dotSize, borderArea.getRight(), vertices, indices);
+                                target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                            }
+                        }
+                        else if (formattedRectangle->getBoderStyle().left == BorderStyle::Double)
+                        {
+                            float top1 = borderArea.getTop();
+                            float top2 = borderArea.getTop() + borderWidth.getTop() / 3;
+                            float top4 = borderArea.getTop() + borderWidth.getTop() - borderWidth.getTop() / 3;
+                            float top5 = borderArea.getTop() + borderWidth.getTop();
+                            float lft1 = borderArea.getLeft();
+                            float lft2 = borderArea.getLeft() + borderWidth.getLeft() / 3;
+                            float lft4 = borderArea.getLeft() + borderWidth.getLeft() - borderWidth.getLeft() / 3;
+                            float lft5 = borderArea.getLeft() + borderWidth.getLeft();
+                            float rgt5 = borderArea.getRight() - borderWidth.getRight();
+                            float rgt4 = borderArea.getRight() - borderWidth.getRight() + borderWidth.getRight() / 3;
+                            float rgt2 = borderArea.getRight() - borderWidth.getRight() / 3;
+                            float rgt1 = borderArea.getRight();
+                            const std::array<Vertex, 8> vertices = { {
+                                { { lft1, top1 }, color },
+                                { { rgt1, top1 }, color },
+                                { { rgt2, top2 }, color },
+                                { { lft2, top2 }, color },
+
+                                { { lft4, top4 }, color },
+                                { { rgt4, top4 }, color },
+                                { { rgt5, top5 }, color },
+                                { { lft5, top5 }, color }
+                            } };
+                            const std::array<unsigned int, 4 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3,
+                                4, 5, 7,
+                                5, 6, 7
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().top == BorderStyle::Groove ||
+                                 formattedRectangle->getBoderStyle().top == BorderStyle::Ridge)
+                        {
+                            color = formattedRectangle->getBoderStyle().left == BorderStyle::Groove ?
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+                            auto colo2 = formattedRectangle->getBoderStyle().left == BorderStyle::Groove ?
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+
+                            float top1 = borderArea.getTop();
+                            float top3 = borderArea.getTop() + borderWidth.getTop() / 2;
+                            float top5 = borderArea.getTop() + borderWidth.getTop();
+                            float lft1 = borderArea.getLeft();
+                            float lft3 = borderArea.getLeft() + borderWidth.getLeft() / 2;
+                            float lft5 = borderArea.getLeft() + borderWidth.getLeft();
+                            float rgt5 = borderArea.getRight() - borderWidth.getRight();
+                            float rgt3 = borderArea.getRight() - borderWidth.getRight() / 2;
+                            float rgt1 = borderArea.getRight();
+                            const std::array<Vertex, 8> vertices = { {
+                                { { lft1, top1 }, color },
+                                { { rgt1, top1 }, color },
+                                { { rgt3, top3 }, color },
+                                { { lft3, top3 }, color },
+
+                                { { lft3, top3 }, colo2 },
+                                { { rgt3, top3 }, colo2 },
+                                { { rgt5, top5 }, colo2 },
+                                { { lft5, top5 }, colo2 }
+                            } };
+                            const std::array<unsigned int, 4 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3,
+                                4, 5, 7,
+                                5, 6, 7
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().top == BorderStyle::Inset ||
+                                 formattedRectangle->getBoderStyle().top == BorderStyle::Outset)
+                        {
+                            color = formattedRectangle->getBoderStyle().left == BorderStyle::Inset ?
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+
+                            float top1 = borderArea.getTop();
+                            float top5 = borderArea.getTop() + borderWidth.getTop();
+                            float lft1 = borderArea.getLeft();
+                            float lft5 = borderArea.getLeft() + borderWidth.getLeft();
+                            float rgt5 = borderArea.getRight() - borderWidth.getRight();
+                            float rgt1 = borderArea.getRight();
+                            const std::array<Vertex, 4> vertices = { {
+                                { { lft1, top1 }, color },
+                                { { rgt1, top1 }, color },
+                                { { rgt5, top5 }, color },
+                                { { lft5, top5 }, color }
+                            } };
+                            const std::array<unsigned int, 2 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                    }
+                    if (formattedRectangle->getBoderWidth().right > 0.0f)
+                    {
+                        if (formattedRectangle->getBoderStyle().right == BorderStyle::Solid)
+                        {
+                            const std::array<Vertex, 4> vertices = { {
+                                { { borderArea.getRight() - borderWidth.getRight(), borderArea.getTop()    }, color },
+                                { { borderArea.getRight(),                          borderArea.getTop()    }, color },
+                                { { borderArea.getRight(),                          borderArea.getBottom() }, color },
+                                { { borderArea.getRight() - borderWidth.getRight(), borderArea.getBottom() }, color }
+                            } };
+                            const std::array<unsigned int, 2 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().right == BorderStyle::Dotted ||
+                                 formattedRectangle->getBoderStyle().right == BorderStyle::Dashed)
+                        {
+                            auto distance = borderArea.getBottom() - borderArea.getTop();
+                            if ((formattedRectangle->getBoderStyle().right == BorderStyle::Dotted && distance > borderWidth.getRight()) ||
+                                (formattedRectangle->getBoderStyle().right == BorderStyle::Dashed && distance > borderWidth.getRight() * 3))
+                            {
+                                int   numDots = 1;
+                                float stepWidth = 1.0f;
+                                float dotSize = 1.0f;
+                                calculateBorderDots(distance, borderWidth.getRight(), formattedRectangle->getBoderStyle().right == BorderStyle::Dashed, numDots, stepWidth, dotSize);
+
+                                std::vector<Vertex> vertices; vertices.resize(numDots * 4);
+                                std::vector<unsigned int> indices; indices.resize(numDots * 6);
+                                calculateDottedBorderVerticesAndIndices(numDots, stepWidth, color, true, borderArea.getRight() - borderWidth.getRight(), borderArea.getRight(),
+                                    borderArea.getTop(), borderArea.getTop() + dotSize, borderArea.getBottom() - dotSize, borderArea.getBottom(), vertices, indices);
+                                target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                            }
+                        }
+                        else if (formattedRectangle->getBoderStyle().left == BorderStyle::Double)
+                        {
+                            float top1 = borderArea.getTop();
+                            float top2 = borderArea.getTop() + borderWidth.getTop() / 3;
+                            float top4 = borderArea.getTop() + borderWidth.getTop() - borderWidth.getTop() / 3;
+                            float top5 = borderArea.getTop() + borderWidth.getTop();
+                            float btm1 = borderArea.getBottom() - borderWidth.getBottom();
+                            float btm2 = borderArea.getBottom() - borderWidth.getBottom() + borderWidth.getBottom() / 3;
+                            float btm4 = borderArea.getBottom() - borderWidth.getBottom() / 3;
+                            float btm5 = borderArea.getBottom();
+                            float rgt5 = borderArea.getRight() - borderWidth.getRight();
+                            float rgt4 = borderArea.getRight() - borderWidth.getRight() + borderWidth.getRight() / 3;
+                            float rgt2 = borderArea.getRight() - borderWidth.getRight() / 3;
+                            float rgt1 = borderArea.getRight();
+                            const std::array<Vertex, 8> vertices = { {
+                                { { rgt5, top5 }, color },
+                                { { rgt4, top4 }, color },
+                                { { rgt4, btm2 }, color },
+                                { { rgt5, btm1 }, color },
+
+                                { { rgt2, top2 }, color },
+                                { { rgt1, top1 }, color },
+                                { { rgt1, btm5 }, color },
+                                { { rgt2, btm4 }, color }
+                            } };
+                            const std::array<unsigned int, 4 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3,
+                                4, 5, 7,
+                                5, 6, 7
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().right == BorderStyle::Groove ||
+                                 formattedRectangle->getBoderStyle().right == BorderStyle::Ridge)
+                        {
+                            color = formattedRectangle->getBoderStyle().left == BorderStyle::Groove ?
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+                            auto colo2 = formattedRectangle->getBoderStyle().left == BorderStyle::Groove ?
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+
+                            float top1 = borderArea.getTop();
+                            float top3 = borderArea.getTop() + borderWidth.getTop() / 2;
+                            float top5 = borderArea.getTop() + borderWidth.getTop();
+                            float btm1 = borderArea.getBottom() - borderWidth.getBottom();
+                            float btm3 = borderArea.getBottom() - borderWidth.getBottom() / 2;
+                            float btm5 = borderArea.getBottom();
+                            float rgt5 = borderArea.getRight() - borderWidth.getRight();
+                            float rgt3 = borderArea.getRight() - borderWidth.getRight() / 2;
+                            float rgt1 = borderArea.getRight();
+                            const std::array<Vertex, 8> vertices = { {
+                                { { rgt3, top3 }, color },
+                                { { rgt1, top1 }, color },
+                                { { rgt1, btm5 }, color },
+                                { { rgt3, btm3 }, color },
+
+                                { { rgt5, top5 }, colo2 },
+                                { { rgt3, top3 }, colo2 },
+                                { { rgt3, btm3 }, colo2 },
+                                { { rgt5, btm1 }, colo2 },
+                            } };
+                            const std::array<unsigned int, 4 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3,
+                                4, 5, 7,
+                                5, 6, 7
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().right == BorderStyle::Inset ||
+                                 formattedRectangle->getBoderStyle().right == BorderStyle::Outset)
+                        {
+                            color = formattedRectangle->getBoderStyle().left == BorderStyle::Inset ?
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+
+                            float top1 = borderArea.getTop();
+                            float top5 = borderArea.getTop() + borderWidth.getTop();
+                            float btm1 = borderArea.getBottom() - borderWidth.getBottom();
+                            float btm5 = borderArea.getBottom();
+                            float rgt5 = borderArea.getRight() - borderWidth.getRight();
+                            float rgt1 = borderArea.getRight();
+                            const std::array<Vertex, 4> vertices = { {
+                                { { rgt5, top5 }, color },
+                                { { rgt1, top1 }, color },
+                                { { rgt1, btm5 }, color },
+                                { { rgt5, btm1 }, color }
+                            } };
+                            const std::array<unsigned int, 2 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                    }
+                    if (formattedRectangle->getBoderWidth().bottom > 0.0f)
+                    {
+                        if (formattedRectangle->getBoderStyle().bottom == BorderStyle::Solid)
+                        {
+                            const std::array<Vertex, 4> vertices = { {
+                                { { borderArea.getLeft(),  borderArea.getBottom() - borderWidth.getBottom() }, color },
+                                { { borderArea.getRight(), borderArea.getBottom() - borderWidth.getBottom() }, color },
+                                { { borderArea.getRight(), borderArea.getBottom()                           }, color },
+                                { { borderArea.getLeft(),  borderArea.getBottom()                           }, color }
+                            } };
+                            const std::array<unsigned int, 2 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().bottom == BorderStyle::Dotted ||
+                                 formattedRectangle->getBoderStyle().bottom == BorderStyle::Dashed)
+                        {
+                            auto distance = borderArea.getRight() - borderArea.getLeft();
+                            if ((formattedRectangle->getBoderStyle().bottom == BorderStyle::Dotted && distance > borderWidth.getBottom()) ||
+                                (formattedRectangle->getBoderStyle().bottom == BorderStyle::Dashed && distance > borderWidth.getBottom() * 3))
+                            {
+                                int   numDots = 1;
+                                float stepWidth = 1.0f;
+                                float dotSize = 1.0f;
+                                calculateBorderDots(distance, borderWidth.getBottom(), formattedRectangle->getBoderStyle().bottom == BorderStyle::Dashed, numDots, stepWidth, dotSize);
+
+                                std::vector<Vertex> vertices; vertices.resize(numDots * 4);
+                                std::vector<unsigned int> indices; indices.resize(numDots * 6);
+                                calculateDottedBorderVerticesAndIndices(numDots, stepWidth, color, false, borderArea.getLeft(), borderArea.getLeft() + dotSize,
+                                    borderArea.getBottom() - borderWidth.getBottom(), borderArea.getBottom(), borderArea.getRight() - dotSize, borderArea.getRight(), vertices, indices);
+                                target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                            }
+                        }
+                        else if (formattedRectangle->getBoderStyle().left == BorderStyle::Double)
+                        {
+                            float btm1 = borderArea.getBottom() - borderWidth.getBottom();
+                            float btm2 = borderArea.getBottom() - borderWidth.getBottom() + borderWidth.getBottom() / 3;
+                            float btm4 = borderArea.getBottom() - borderWidth.getBottom() / 3;
+                            float btm5 = borderArea.getBottom();
+                            float lft1 = borderArea.getLeft();
+                            float lft2 = borderArea.getLeft() + borderWidth.getLeft() / 3;
+                            float lft4 = borderArea.getLeft() + borderWidth.getLeft() - borderWidth.getLeft() / 3;
+                            float lft5 = borderArea.getLeft() + borderWidth.getLeft();
+                            float rgt5 = borderArea.getRight() - borderWidth.getRight();
+                            float rgt4 = borderArea.getRight() - borderWidth.getRight() + borderWidth.getRight() / 3;
+                            float rgt2 = borderArea.getRight() - borderWidth.getRight() / 3;
+                            float rgt1 = borderArea.getRight();
+                            const std::array<Vertex, 8> vertices = { {
+                                { { lft1, btm5 }, color },
+                                { { rgt1, btm5 }, color },
+                                { { rgt2, btm4 }, color },
+                                { { lft2, btm4 }, color },
+
+                                { { lft4, btm2 }, color },
+                                { { rgt4, btm2 }, color },
+                                { { rgt5, btm1 }, color },
+                                { { lft5, btm1 }, color }
+                            } };
+                            const std::array<unsigned int, 4 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3,
+                                4, 5, 7,
+                                5, 6, 7
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().bottom == BorderStyle::Groove ||
+                                 formattedRectangle->getBoderStyle().bottom == BorderStyle::Ridge)
+                        {
+                            color = formattedRectangle->getBoderStyle().left == BorderStyle::Groove ?
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+                            auto colo2 = formattedRectangle->getBoderStyle().left == BorderStyle::Groove ?
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+
+                            float btm1 = borderArea.getBottom() - borderWidth.getBottom();
+                            float btm3 = borderArea.getBottom() - borderWidth.getBottom() / 2;
+                            float btm5 = borderArea.getBottom();
+                            float lft1 = borderArea.getLeft();
+                            float lft3 = borderArea.getLeft() + borderWidth.getLeft() / 2;
+                            float lft5 = borderArea.getLeft() + borderWidth.getLeft();
+                            float rgt5 = borderArea.getRight() - borderWidth.getRight();
+                            float rgt3 = borderArea.getRight() - borderWidth.getRight() / 2;
+                            float rgt1 = borderArea.getRight();
+                            const std::array<Vertex, 8> vertices = { {
+                                { { lft3, btm3 }, color },
+                                { { rgt3, btm3 }, color },
+                                { { rgt1, btm5 }, color },
+                                { { lft1, btm5 }, color },
+
+                                { { lft5, btm1 }, colo2 },
+                                { { rgt5, btm1 }, colo2 },
+                                { { rgt3, btm3 }, colo2 },
+                                { { lft3, btm3 }, colo2 },
+                            } };
+                            const std::array<unsigned int, 4 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3,
+                                4, 5, 7,
+                                5, 6, 7
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                        else if (formattedRectangle->getBoderStyle().bottom == BorderStyle::Inset ||
+                                 formattedRectangle->getBoderStyle().bottom == BorderStyle::Outset)
+                        {
+                            color = formattedRectangle->getBoderStyle().left == BorderStyle::Inset ?
+                                calculateLighterColor(formattedRectangle->getBorderColor(), formattedRectangle->getOpacity()) :
+                                calculateDarkerColor (formattedRectangle->getBorderColor(), formattedRectangle->getOpacity());
+
+                            float btm1 = borderArea.getBottom() - borderWidth.getBottom();
+                            float btm5 = borderArea.getBottom();
+                            float lft1 = borderArea.getLeft();
+                            float lft5 = borderArea.getLeft() + borderWidth.getLeft();
+                            float rgt5 = borderArea.getRight() - borderWidth.getRight();
+                            float rgt1 = borderArea.getRight();
+                            const std::array<Vertex, 4> vertices = { {
+                                { { lft5, btm1 }, color },
+                                { { rgt5, btm1 }, color },
+                                { { rgt1, btm5 }, color },
+                                { { lft1, btm5 }, color }
+                            } };
+                            const std::array<unsigned int, 2 * 3> indices = { {
+                                0, 1, 3,
+                                1, 2, 3
+                            } };
+                            target.drawVertexArray(states, vertices.data(), vertices.size(), indices.data(), indices.size(), nullptr);
+                        }
+                    }
                 }
             }
         }
@@ -648,4 +1183,94 @@ namespace tgui  { namespace xhtml
                 std::max(0.f, innerSize.y - m_paddingCached.getTop() - m_paddingCached.getBottom() - (m_horizontalScrollbar->isShown() ? m_horizontalScrollbar->getSize().y : 0.0f))};
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    void FormattedTextView::calculateBorderDots(float distance, float borderWidth, bool dashed, int& numDots, float& stepWidth, float& dotSize)
+    {
+        numDots = (int)(distance * 0.5f / borderWidth);
+        if (dashed)
+            numDots = (int)(distance * 0.25f / borderWidth);
+        if (numDots % 2 == 0 && numDots > 3)
+            numDots--;
+
+        stepWidth = (distance - borderWidth) / (numDots - 1);
+        if (dashed)
+            stepWidth = (distance - borderWidth * 3) / (numDots - 1);
+        dotSize = borderWidth;
+        if (dashed)
+            dotSize = borderWidth * 3;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    void FormattedTextView::calculateDottedBorderVerticesAndIndices(int numDots, float stepWidth, tgui::Vertex::Color color, bool vertical,
+        float xLO, float xHI, float yLO, float yHI, float tLO, float tHI, std::vector<tgui::Vertex>& vertices, std::vector<unsigned int>& indices)
+    {
+        for (auto cntDots = 0; cntDots < numDots; cntDots++)
+        {
+            if (vertical)
+            {
+                if (cntDots < numDots - 1)
+                {
+                    vertices[cntDots * 4]     = { { xLO, yLO + stepWidth * cntDots }, color };
+                    vertices[cntDots * 4 + 1] = { { xHI, yLO + stepWidth * cntDots }, color };
+                    vertices[cntDots * 4 + 2] = { { xHI, yHI + stepWidth * cntDots }, color };
+                    vertices[cntDots * 4 + 3] = { { xLO, yHI + stepWidth * cntDots }, color };
+                }
+                else
+                {
+                    vertices[cntDots * 4]     = { { xLO, tLO }, color };
+                    vertices[cntDots * 4 + 1] = { { xHI, tLO }, color };
+                    vertices[cntDots * 4 + 2] = { { xHI, tHI }, color };
+                    vertices[cntDots * 4 + 3] = { { xLO, tHI }, color };
+                }
+            }
+            else
+            {
+                if (cntDots < numDots - 1)
+                {
+                    vertices[cntDots * 4]     = { { xLO + stepWidth * cntDots, yLO }, color };
+                    vertices[cntDots * 4 + 1] = { { xHI + stepWidth * cntDots, yLO }, color };
+                    vertices[cntDots * 4 + 2] = { { xHI + stepWidth * cntDots, yHI }, color };
+                    vertices[cntDots * 4 + 3] = { { xLO + stepWidth * cntDots, yHI }, color };
+                }
+                else
+                {
+                    vertices[cntDots * 4]     = { { tLO, yLO }, color };
+                    vertices[cntDots * 4 + 1] = { { tHI, yLO }, color };
+                    vertices[cntDots * 4 + 2] = { { tHI, yHI }, color };
+                    vertices[cntDots * 4 + 3] = { { tLO, yHI }, color };
+                }
+            }
+        }
+        for (auto cntDots = 0; cntDots < numDots; cntDots++)
+        {
+            indices[cntDots * 6]     = cntDots * 4 + 0;
+            indices[cntDots * 6 + 1] = cntDots * 4 + 1;
+            indices[cntDots * 6 + 2] = cntDots * 4 + 2;
+            indices[cntDots * 6 + 3] = cntDots * 4 + 0;
+            indices[cntDots * 6 + 4] = cntDots * 4 + 2;
+            indices[cntDots * 6 + 5] = cntDots * 4 + 3;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    tgui::Vertex::Color FormattedTextView::calculateDarkerColor(tgui::Color color, float opacity)
+    {
+        return Vertex::Color(color.getRed()   - (255 - color.getRed())   / 4,
+                             color.getGreen() - (255 - color.getGreen()) / 4,
+                             color.getBlue()  - (255 - color.getBlue())  / 4,
+                             std::max(std::min((int)(opacity * color.getAlpha()), 255), 0));
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    tgui::Vertex::Color FormattedTextView::calculateLighterColor(tgui::Color color, float opacity)
+    {
+        return Vertex::Color(color.getRed()   + (255 - color.getRed())   / 4,
+                             color.getGreen() + (255 - color.getGreen()) / 4,
+                             color.getBlue()  + (255 - color.getBlue())  / 4,
+                             std::max(std::min((int)(opacity * color.getAlpha()), 255), 0));
+    }
 } }

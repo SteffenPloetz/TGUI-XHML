@@ -374,7 +374,8 @@ namespace tgui  { namespace xhtml
             m_fontSize        = std::move(styleEntry.m_fontSize);
             m_fontStyle       = std::move(styleEntry.m_fontStyle);
             m_margin          = std::move(styleEntry.m_margin);
-            m_border          = std::move(styleEntry.m_border);
+            m_borderStyle     = std::move(styleEntry.m_borderStyle);
+            m_borderWidth     = std::move(styleEntry.m_borderWidth);
             m_padding         = std::move(styleEntry.m_padding);
             m_styleEntryFlags = std::move(styleEntry.m_styleEntryFlags);
         }
@@ -397,7 +398,8 @@ namespace tgui  { namespace xhtml
             std::swap(m_fontSize,        temp.m_fontSize);
             std::swap(m_fontStyle,       temp.m_fontStyle);
             std::swap(m_margin,          temp.m_margin),
-            std::swap(m_border,          temp.m_border);
+            std::swap(m_borderStyle,     temp.m_borderStyle);
+            std::swap(m_borderWidth,     temp.m_borderWidth);
             std::swap(m_padding,         temp.m_padding);
             std::swap(m_styleEntryFlags, temp.m_styleEntryFlags);
         }
@@ -416,7 +418,8 @@ namespace tgui  { namespace xhtml
         if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::FontSize)    == StyleEntryFlags::FontSize)    m_fontSize        = styleEntry->m_fontSize;
         if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::FontStyle)   == StyleEntryFlags::FontStyle)   m_fontStyle       = styleEntry->m_fontStyle;
         if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::Margin)      == StyleEntryFlags::Margin)      m_margin          = styleEntry->m_margin;
-        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::BorderWidth) == StyleEntryFlags::BorderWidth) m_border          = styleEntry->m_border;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::BorderStyle) == StyleEntryFlags::BorderStyle) m_borderStyle     = styleEntry->m_borderStyle;
+        if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::BorderWidth) == StyleEntryFlags::BorderWidth) m_borderWidth     = styleEntry->m_borderWidth;
         if ((styleEntry->m_styleEntryFlags & StyleEntryFlags::Padding)     == StyleEntryFlags::Padding)     m_padding         = styleEntry->m_padding;
         m_styleEntryFlags = m_styleEntryFlags | styleEntry->m_styleEntryFlags;
 
@@ -542,6 +545,13 @@ namespace tgui  { namespace xhtml
                     tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 }
+                continue;
+            }
+            else if (styleEntryParts[0].equalIgnoreCase(U"border-style"))
+            {
+                FourDimBorderStyle borderStyle = getBorderStyle();
+                borderStyle.parse(StringEx::split(styleEntryParts[1], U' '));
+                setBorderStyle(borderStyle);
                 continue;
             }
             else if (styleEntryParts[0].equalIgnoreCase(U"border-width"))

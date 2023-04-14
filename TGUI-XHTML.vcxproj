@@ -147,32 +147,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\TGUI\MarkupLanguageElement.hpp" />
-    <ClInclude Include="include\TGUI\Renderers\FormattedTextRenderer.hpp" />
-    <ClInclude Include="include\TGUI\StringHelper.hpp" />
-    <ClInclude Include="include\TGUI\UtfHelper.hpp" />
-    <ClInclude Include="include\TGUI\Widgets\FormattedElements.hpp" />
-    <ClInclude Include="include\TGUI\Widgets\FormattedTextDocument.hpp" />
-    <ClInclude Include="include\TGUI\Widgets\FormattedTextView.hpp" />
-    <ClInclude Include="include\TGUI\Widgets\FormattedTextXhtmlDocument.hpp" />
-    <ClInclude Include="include\TGUI\Xhtml\XhtmlAttributes.hpp" />
-    <ClInclude Include="include\TGUI\Xhtml\XhtmlElements.hpp" />
-    <ClInclude Include="include\TGUI\Xhtml\XhtmlEntityResolver.hpp" />
-    <ClInclude Include="include\TGUI\Xhtml\XhtmlParser.hpp" />
+    <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="src\Xhtml\Dom\XhtmlAttributes.cpp" />
+    <ClCompile Include="src\Xhtml\Dom\XhtmlElements.cpp" />
+    <ClCompile Include="src\Xhtml\Dom\XhtmlEntityResolver.cpp" />
+    <ClCompile Include="src\Xhtml\Dom\XhtmlParser.cpp" />
+    <ClCompile Include="src\Xhtml\MarkupLanguageElement.cpp" />
+    <ClCompile Include="src\Xhtml\Renderers\FormattedTextRenderer.cpp" />
+    <ClCompile Include="src\Xhtml\StringHelper.cpp" />
+    <ClCompile Include="src\Xhtml\UtfHelper.cpp" />
+    <ClCompile Include="src\Xhtml\Widgets\FormattedElements.cpp" />
+    <ClCompile Include="src\Xhtml\Widgets\FormattedTextView.cpp" />
+    <ClCompile Include="src\Xhtml\Widgets\FormattedXhtmlDocument.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="src\MarkupLanguageElement.cpp" />
-    <ClCompile Include="src\Renderers\FormattedTextRenderer.cpp" />
-    <ClCompile Include="src\StringHelper.cpp" />
-    <ClCompile Include="src\UtfHelper.cpp" />
-    <ClCompile Include="src\Widgets\FormattedElements.cpp" />
-    <ClCompile Include="src\Widgets\FormattedTextView.cpp" />
-    <ClCompile Include="src\Widgets\FormattedTextXhtmlDocument.cpp" />
-    <ClCompile Include="src\Xhtml\XhtmlAttributes.cpp" />
-    <ClCompile Include="src\Xhtml\XhtmlElements.cpp" />
-    <ClCompile Include="src\Xhtml\XhtmlEntityResolver.cpp" />
-    <ClCompile Include="src\Xhtml\XhtmlParser.cpp" />
+    <ClInclude Include="include\TGUI\Xhtml\Dom\XhtmlAttributes.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\Dom\XhtmlElements.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\Dom\XhtmlEntityResolver.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\Dom\XhtmlParser.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\MarkupLanguageElement.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\Renderers\FormattedTextRenderer.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\StringHelper.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\UtfHelper.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\Widgets\FormattedDocument.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\Widgets\FormattedElements.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\Widgets\FormattedTextView.hpp" />
+    <ClInclude Include="include\TGUI\Xhtml\Widgets\FormattedXhtmlDocument.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

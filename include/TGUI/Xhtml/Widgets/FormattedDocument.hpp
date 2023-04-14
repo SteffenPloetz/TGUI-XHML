@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Formatted text document (zlib license) provided for TGUI - Texus' Graphical User Interface
+// Formatted document (zlib license) provided for TGUI - Texus' Graphical User Interface
 // Copyright (C) 2023 Steffen Ploetz (Steffen.Ploetz@cityweb.de)
 //
 // This software is provided 'as-is', without any express or implied warranty.
@@ -23,8 +23,8 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-#ifndef TGUI_FORMATTED_TEXT_DOCUMENT_HPP
-#define TGUI_FORMATTED_TEXT_DOCUMENT_HPP
+#ifndef TGUI_FORMATTED_DOCUMENT_HPP
+#define TGUI_FORMATTED_DOCUMENT_HPP
 
 namespace tgui  { namespace xhtml
 {
@@ -89,22 +89,22 @@ namespace tgui  { namespace xhtml
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// @brief The formatted text document
+    /// @brief The formatted document
     ///
-    /// The generic base class for formatted (XHTML, markdown, RTF, ...) text data holder.
-    /// Specialized formatted text data holder are derived from this class.
+    /// The generic base class for formatted (XHTML, markdown, RTF, ...) data holder.
+    /// Specialized formatted data holder are derived from this class.
     ///
-    /// This class defines abstract methods, that are at least to implement by dericed (specialized) formatted text data holder
+    /// This class defines abstract methods, that are at least to implement by dericed (specialized) formatted data holder
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    class TGUI_API FormattedTextDocument
+    class TGUI_API FormattedDocument
     {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public:
 
-        using Ptr = std::shared_ptr<FormattedTextDocument>;            //!< Shared widget pointer
-        using ConstPtr = std::shared_ptr<const FormattedTextDocument>; //!< Shared constant widget pointer
+        using Ptr = std::shared_ptr<FormattedDocument>;            //!< Shared widget pointer
+        using ConstPtr = std::shared_ptr<const FormattedDocument>; //!< Shared constant widget pointer
 
-        static constexpr const char StaticWidgetType[] = "FormattedTextDocument";
+        static constexpr const char StaticWidgetType[] = "FormattedDocument";
         static constexpr const wchar_t LinebreakDelimitercharacters[] = L"\r\n\t\v -";
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -315,7 +315,7 @@ namespace tgui  { namespace xhtml
             /// @param fontCollection  The collection of available fonts
             /// @param forceOnNoMatch  The flag to determine whether an unrecognized font is forced to the sans regular font weight
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            inline void setFontToSansFamily(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
+            inline void setFontToSansFamily(const FormattedDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
                 if      (TextFont == fontCollection.Sans->Regular    || TextFont == fontCollection.Serif->Regular    || TextFont == fontCollection.Mono->Regular)
                    TextFont = fontCollection.Sans->Regular;
@@ -333,7 +333,7 @@ namespace tgui  { namespace xhtml
             /// @param fontCollection  The collection of available fonts
             /// @param forceOnNoMatch  The flag to determine whether an unrecognized font is forced to the serif regular font weight
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            inline void setFontToSerifFamily(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
+            inline void setFontToSerifFamily(const FormattedDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
                 if      (TextFont == fontCollection.Sans->Regular    || TextFont == fontCollection.Serif->Regular    || TextFont == fontCollection.Mono->Regular)
                     TextFont = fontCollection.Serif->Regular;
@@ -351,7 +351,7 @@ namespace tgui  { namespace xhtml
             /// @param fontCollection  The collection of available fonts
             /// @param forceOnNoMatch  The flag to determine whether an unrecognized font is forced to the mono regular font weight
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            inline void setFontToMonoFamily(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
+            inline void setFontToMonoFamily(const FormattedDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
                 if      (TextFont == fontCollection.Sans->Regular    || TextFont == fontCollection.Serif->Regular    || TextFont == fontCollection.Mono->Regular)
                     TextFont = fontCollection.Mono->Regular;
@@ -370,7 +370,7 @@ namespace tgui  { namespace xhtml
             /// @param fontCollection  The collection of available fonts
             /// @param forceOnNoMatch  The flag to determine whether an unrecognized font family is forced to the sans font family
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            inline void setFontFamily(const String& fontFamily, const FormattedTextDocument::FontCollection& fontCollection,
+            inline void setFontFamily(const String& fontFamily, const FormattedDocument::FontCollection& fontCollection,
                                       bool forceOnNoMatch = false)
             {
                 if      (DefaultFontFamilies::isSans(fontFamily))  setFontToSansFamily(fontCollection);
@@ -385,7 +385,7 @@ namespace tgui  { namespace xhtml
             /// @param fontCollection  The collection of available fonts
             /// @param forceOnNoMatch  The flag to determine whether an unrecognized font is forced to the sans regular font weight
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            inline void setFontToRegularWeight(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
+            inline void setFontToRegularWeight(const FormattedDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
                 if      (TextFont == fontCollection.Sans->Regular  || TextFont == fontCollection.Sans->Bold)
                     TextFont = fontCollection.Sans->Regular;
@@ -409,7 +409,7 @@ namespace tgui  { namespace xhtml
             /// @param fontCollection  The collection of available fonts
             /// @param forceOnNoMatch  The flag to determine whether an unrecognized font is forced to the sans bold font
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            inline void setFontToBold(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
+            inline void setFontToBold(const FormattedDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
                 if      (TextFont == fontCollection.Sans->Regular  || TextFont == fontCollection.Sans->Bold)
                     TextFont = fontCollection.Sans->Bold;
@@ -433,7 +433,7 @@ namespace tgui  { namespace xhtml
             /// @param bold            The requested font weight (bold or regular)
             /// @param fontCollection  The collection of available fonts
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            inline void setFontWeight(bool bold, const FormattedTextDocument::FontCollection& fontCollection)
+            inline void setFontWeight(bool bold, const FormattedDocument::FontCollection& fontCollection)
             {   if (bold) setFontToBold(fontCollection); else setFontToRegularWeight(fontCollection);   }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -442,7 +442,7 @@ namespace tgui  { namespace xhtml
             /// @param fontCollection  The collection of available fonts
             /// @param forceOnNoMatch  The flag to determine whether an unrecognized font is forced to the sans regular font
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            inline void setFontToRegularSlant(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
+            inline void setFontToRegularSlant(const FormattedDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
                 if      (TextFont == fontCollection.Sans->Regular  || TextFont == fontCollection.Sans->Italic)
                     TextFont = fontCollection.Sans->Regular;
@@ -466,7 +466,7 @@ namespace tgui  { namespace xhtml
             /// @param fontCollection  The collection of available fonts
             /// @param forceOnNoMatch  The flag to determine whether an unrecognized font is forced to the sans italic font
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            inline void setFontToItalic(const FormattedTextDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
+            inline void setFontToItalic(const FormattedDocument::FontCollection& fontCollection, bool forceOnNoMatch = false)
             {
                 if      (TextFont == fontCollection.Sans->Regular  || TextFont == fontCollection.Sans->Italic)
                     TextFont = fontCollection.Sans->Italic;
@@ -490,7 +490,7 @@ namespace tgui  { namespace xhtml
             /// @param italic          The requested font slant (italic or regular)
             /// @param fontCollection  The collection of available fonts
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            inline void setFontSlant(bool italic, const FormattedTextDocument::FontCollection& fontCollection)
+            inline void setFontSlant(bool italic, const FormattedDocument::FontCollection& fontCollection)
             {   if (italic) setFontToItalic(fontCollection); else setFontToRegularSlant(fontCollection);   }
 
         public:
@@ -511,9 +511,9 @@ namespace tgui  { namespace xhtml
     public:
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the formatted text content of this document
+        /// @brief Gets the formatted content of this document
         ///
-        /// @return The formatted text content of this document
+        /// @return The formatted content of this document
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         virtual const std::vector<std::shared_ptr<FormattedElement>>& getContent() const = 0;
 
@@ -528,7 +528,7 @@ namespace tgui  { namespace xhtml
         /// @param keepSelection    Determine whether to keep the selection
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         virtual void layout(Vector2f clientSize, float defaultTextSize, Color defaultForeColor, float defaultOpacity,
-                            const FormattedTextDocument::FontCollection& fontCollection, bool keepSelection) = 0;
+                            const FormattedDocument::FontCollection& fontCollection, bool keepSelection) = 0;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Returns the layout size
@@ -539,4 +539,4 @@ namespace tgui  { namespace xhtml
     };
 } }
 
-#endif // TGUI_FORMATTED_TEXT_DOCUMENT_HPP
+#endif // TGUI_FORMATTED_DOCUMENT_HPP

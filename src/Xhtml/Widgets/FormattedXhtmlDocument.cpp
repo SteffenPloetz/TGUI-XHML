@@ -19,14 +19,14 @@
 #include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedElements.hpp"
 
-#include "TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp"
+#include "TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp"
 
 namespace tgui  { namespace xhtml
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    FormattedTextXhtmlDocument::FormattedTextXhtmlDocument()
-        : FormattedTextDocument(), m_textures(), m_content(), m_rootElement(), m_defaultTextSize(14.0f),
+    FormattedXhtmlDocument::FormattedXhtmlDocument()
+        : FormattedDocument(), m_textures(), m_content(), m_rootElement(), m_defaultTextSize(14.0f),
           m_defaultForeColor(Color(0, 0, 0)), m_defaultOpacity(1), m_defaultFont(nullptr), m_availableClientSize(0.0f, 0.0f),
           m_occupiedLayoutSize(0.0f, 0.0f), m_evolvingLayoutArea(0.0f, 0.0f, 0.0f, 0.0f),
           m_evolvingLineExtraHeight(0.0f), m_evolvingLineRunLength(0.0f), m_preformattedTextFlagCnt(0), m_formattingState(Color(0, 0, 0)),
@@ -37,7 +37,7 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    XhtmlContainerElement::Ptr FormattedTextXhtmlDocument::getHeadElement() const
+    XhtmlContainerElement::Ptr FormattedXhtmlDocument::getHeadElement() const
     {
         for (size_t index = 0; index < m_rootElement->countChildren(); index++)
         {
@@ -51,7 +51,7 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    XhtmlContainerElement::Ptr FormattedTextXhtmlDocument::getBodyElement() const
+    XhtmlContainerElement::Ptr FormattedXhtmlDocument::getBodyElement() const
     {
         for (size_t index = 0; index < m_rootElement->countChildren(); index++)
         {
@@ -65,7 +65,7 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    XhtmlStyle::Ptr FormattedTextXhtmlDocument::getStyleElement() const
+    XhtmlStyle::Ptr FormattedXhtmlDocument::getStyleElement() const
     {
         auto headElement = getHeadElement();
         if (headElement != nullptr)
@@ -76,7 +76,7 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    std::vector<XhtmlStyleEntry::Ptr> FormattedTextXhtmlDocument::getApplicableStyleElements(XhtmlElement::Ptr xhtmlElement)
+    std::vector<XhtmlStyleEntry::Ptr> FormattedXhtmlDocument::getApplicableStyleElements(XhtmlElement::Ptr xhtmlElement)
     {
         std::vector<XhtmlStyleEntry::Ptr> styleEntries;
         auto styleElement = getStyleElement();
@@ -103,8 +103,8 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void FormattedTextXhtmlDocument::applyStyleEntriesToFormattingState(std::vector<XhtmlStyleEntry::Ptr> styleEntries,
-        const FormattedTextDocument::FontCollection& fontCollection, StyleCategoryFlags categories)
+    void FormattedXhtmlDocument::applyStyleEntriesToFormattingState(std::vector<XhtmlStyleEntry::Ptr> styleEntries,
+        const FormattedDocument::FontCollection& fontCollection, StyleCategoryFlags categories)
     {
         for (auto styleEntry : styleEntries)
         {
@@ -134,9 +134,9 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void FormattedTextXhtmlDocument::applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement,
+    void FormattedXhtmlDocument::applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement,
         const std::vector<XhtmlStyleEntry::Ptr> styleEntries,
-        const FormattedTextDocument::FontCollection& fontCollection, StyleCategoryFlags categories)
+        const FormattedDocument::FontCollection& fontCollection, StyleCategoryFlags categories)
     {
 
         for (auto styleEntry : styleEntries)
@@ -157,6 +157,12 @@ namespace tgui  { namespace xhtml
             if (formattedRect == nullptr)
                 continue;
 
+            if ((categories & StyleCategoryFlags::BorderStyle) == StyleCategoryFlags::BorderStyle &&
+                !styleEntry->getBorderStyle().isNoneOrHidden())
+            {
+                if ((styleEntryFlags & StyleEntryFlags::BorderWidth) == StyleEntryFlags::BorderWidth)
+                    formattedRect->setBoderStyle(styleEntry->getBorderStyle());
+            }
             if ((categories & StyleCategoryFlags::BorderWidth) == StyleCategoryFlags::BorderWidth &&
                 !styleEntry->getBorderWidth().isEmpty(m_availableClientSize))
             {
@@ -173,7 +179,7 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    FormattedRectangle::Ptr FormattedTextXhtmlDocument::createFormattedRectangleWithPosition(XhtmlElement::Ptr xhtmlElement, bool applyLineRunLength)
+    FormattedRectangle::Ptr FormattedXhtmlDocument::createFormattedRectangleWithPosition(XhtmlElement::Ptr xhtmlElement, bool applyLineRunLength)
     {
         auto formattedRectangle = std::make_shared<FormattedRectangle>();
         formattedRectangle->setContentOrigin(xhtmlElement);
@@ -189,7 +195,7 @@ namespace tgui  { namespace xhtml
         return formattedRectangle;
     }
 
-    FormattedLink::Ptr FormattedTextXhtmlDocument::createFormattedLinkWithPosition(XhtmlElement::Ptr xhtmlElement, bool applyLineRunLength)
+    FormattedLink::Ptr FormattedXhtmlDocument::createFormattedLinkWithPosition(XhtmlElement::Ptr xhtmlElement, bool applyLineRunLength)
     {
         auto formattedRectangle = std::make_shared<FormattedLink>();
         formattedRectangle->setContentOrigin(xhtmlElement);
@@ -207,7 +213,7 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    FormattedImage::Ptr FormattedTextXhtmlDocument::createFormattedImageWithPosition(XhtmlElement::Ptr xhtmlElement)
+    FormattedImage::Ptr FormattedXhtmlDocument::createFormattedImageWithPosition(XhtmlElement::Ptr xhtmlElement)
     {
         auto formattedImage = std::make_shared<FormattedImage>();
         formattedImage->setContentOrigin(xhtmlElement);
@@ -225,7 +231,7 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    FormattedTextSection::Ptr FormattedTextXhtmlDocument::createFormattedTextSectionWithFontAndPosition(XhtmlElement::Ptr xhtmlElement,
+    FormattedTextSection::Ptr FormattedXhtmlDocument::createFormattedTextSectionWithFontAndPosition(XhtmlElement::Ptr xhtmlElement,
         Font font, float indentOffset, float superscriptOrSubsciptTextHeightReduction)
     {
         auto formattedTextSection = std::make_shared<FormattedTextSection>(m_formattingState.ForeColor, m_formattingState.Style);
@@ -247,7 +253,7 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    size_t FormattedTextXhtmlDocument::calculateAutoLineBreak(const String remainingText, float runLength) const
+    size_t FormattedXhtmlDocument::calculateAutoLineBreak(const String remainingText, float runLength) const
     {
         // Determine SECURE auto-line-break position: For a mono-space font, the runLength is distributed equally to the characters.
         // For a proportional font, the runLength typically is smaller and the SECURE auto-line-break position is a good starting point.
@@ -281,8 +287,8 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void FormattedTextXhtmlDocument::layout(Vector2f clientSize, float defaultTextSize, Color defaultForeColor,  float defaultOpacity,
-                                            const FormattedTextDocument::FontCollection& fontCollection, bool keepSelection)
+    void FormattedXhtmlDocument::layout(Vector2f clientSize, float defaultTextSize, Color defaultForeColor,  float defaultOpacity,
+                                            const FormattedDocument::FontCollection& fontCollection, bool keepSelection)
     {
         if(!fontCollection.assertValid())
             std::cerr << "Invalid font collection!\n";
@@ -319,9 +325,9 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    void FormattedTextXhtmlDocument::layout(bool& predecessorElementProvidesExtraSpace, bool parentElementSuppressesInitialExtraSpace,
+    void FormattedXhtmlDocument::layout(bool& predecessorElementProvidesExtraSpace, bool parentElementSuppressesInitialExtraSpace,
                                             bool& lastchildAcceptsRunLengtExpansion, XhtmlElement::Ptr xhtmlElement,
-                                            const FormattedTextDocument::FontCollection& fontCollection, bool keepSelection)
+                                            const FormattedDocument::FontCollection& fontCollection, bool keepSelection)
     {
         auto typeName = xhtmlElement->getTypeName();
         if (typeName == XhtmlElementType::Head)
@@ -488,7 +494,7 @@ namespace tgui  { namespace xhtml
 
                 // -- Prepare X
 
-                auto newListMetric = std::make_shared<FormattedTextDocument::ListData>();
+                auto newListMetric = std::make_shared<FormattedDocument::ListData>();
                 newListMetric->Ordered = (typeName == XhtmlElementType::OrderedList);
                 newListMetric->ActualItemIndex = 0;
                 newListMetric->ItemType = ListItemType::InheritOrDefault;
@@ -512,7 +518,7 @@ namespace tgui  { namespace xhtml
                 m_evolvingLineExtraHeight = 0;
 
                 auto xhtmlListItem = std::dynamic_pointer_cast<XhtmlListItem>(xhtmlStyleableElement);
-                FormattedTextDocument::ListData::Ptr listMetrics = m_formattingState.ListMetrics.back();
+                FormattedDocument::ListData::Ptr listMetrics = m_formattingState.ListMetrics.back();
                 listMetrics->ActualItemIndex++;
                 if (listMetrics->ActualItemIndex == 1)
                 {
@@ -675,7 +681,8 @@ namespace tgui  { namespace xhtml
                 if (formattedRectSection)
                 {
                     applyStyleEntriesToFormattedElement(formattedRectSection, styleEntries, fontCollection,
-                        StyleCategoryFlags::BackColor | StyleCategoryFlags::Opacity | StyleCategoryFlags::BorderWidth | StyleCategoryFlags::BorderColor);
+                        StyleCategoryFlags::BackColor | StyleCategoryFlags::Opacity |
+                        StyleCategoryFlags::BorderStyle | StyleCategoryFlags::BorderWidth | StyleCategoryFlags::BorderColor);
                 }
             }
 
@@ -775,7 +782,7 @@ namespace tgui  { namespace xhtml
                         // typically the the text sections are always open to add new charachters (in other words: not finalized with line break / carriage return)
                         // which implies, that m_evolvingLayoutArea.top points still to the top of the  text sections, while they might have a heigth
                         if (typeName == XhtmlElementType::Span || typeName == XhtmlElementType::Anchor)
-                            currentFormattedElement->setLayoutRightBottom(Vector2f(m_evolvingLineRunLength, lastTextSection->getLayoutRefLine() + m_formattingState.TextHeight / 4 + bottomExtraSpace));
+                            currentFormattedElement->setLayoutRightBottom(Vector2f(m_evolvingLayoutArea.left + m_evolvingLineRunLength, lastTextSection->getLayoutRefLine() + m_formattingState.TextHeight / 4 + bottomExtraSpace));
                         else
                             currentFormattedElement->setLayoutRightBottom(Vector2f(right(m_evolvingLayoutArea), lastTextSection->getLayoutRefLine() + m_formattingState.TextHeight / 4 + bottomExtraSpace));
                     }
@@ -1029,7 +1036,7 @@ namespace tgui  { namespace xhtml
                         formattedImage->setPhysicalSize(phsicSize);
                     }
                     else
-                        std::cerr << "FormattedTextXhtmlDocument::layout -> Unable to determine physical size from texture!";
+                        std::cerr << "FormattedXhtmlDocument::layout -> Unable to determine physical size from texture!";
                 }
                 else
                 {
@@ -1054,11 +1061,11 @@ namespace tgui  { namespace xhtml
                             m_textures.insert(std::pair<size_t, Texture>(hash, texture));
                         }
                         else
-                            std::cerr << "FormattedTextXhtmlDocument::layout -> Unable to determine physical size from texture!";
+                            std::cerr << "FormattedXhtmlDocument::layout -> Unable to determine physical size from texture!";
                     }
                     catch (const Exception&)
                     {
-                        std::cerr << "FormattedTextXhtmlDocument::layout -> Unable to load the texture!";
+                        std::cerr << "FormattedXhtmlDocument::layout -> Unable to load the texture!";
                     }
                 }
             }

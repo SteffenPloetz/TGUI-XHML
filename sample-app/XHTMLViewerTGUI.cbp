@@ -50,10 +50,10 @@
 		<Unit filename="../include/TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/StringHelper.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/UtfHelper.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/Widgets/FormattedDocument.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/Widgets/FormattedElements.hpp" />
-		<Unit filename="../include/TGUI/Xhtml/Widgets/FormattedTextDocument.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/Widgets/FormattedTextView.hpp" />
-		<Unit filename="../include/TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp" />
 		<Unit filename="../src/Xhtml/Dom/XhtmlAttributes.cpp" />
 		<Unit filename="../src/Xhtml/Dom/XhtmlElements.cpp" />
 		<Unit filename="../src/Xhtml/Dom/XhtmlEntityResolver.cpp" />
@@ -64,7 +64,7 @@
 		<Unit filename="../src/Xhtml/UtfHelper.cpp" />
 		<Unit filename="../src/Xhtml/Widgets/FormattedElements.cpp" />
 		<Unit filename="../src/Xhtml/Widgets/FormattedTextView.cpp" />
-		<Unit filename="../src/Xhtml/Widgets/FormattedTextXhtmlDocument.cpp" />
+		<Unit filename="../src/Xhtml/Widgets/FormattedXhtmlDocument.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />

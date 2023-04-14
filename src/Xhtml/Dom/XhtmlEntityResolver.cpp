@@ -29,11 +29,7 @@ namespace tgui  { namespace xhtml
         {  U"lt",      U'\x3C'  },
         {  U"gt",      U'\x3E'  },
         /** ISO 8859-1 (Latin-1) characters */
-#if defined(TGUI_SYSTEM_WINDOWS)
-        {  U"nbsp",    U'\x20'  },
-#else
         {  U"nbsp",    U'\xA0'  },
-#endif
         {  U"iexcl",   U'\xA1'  },
         {  U"cent",    U'\xA2'  },
         {  U"pound",   U'\xA3'  },
@@ -137,14 +133,14 @@ namespace tgui  { namespace xhtml
     {
         if (m_charEntityRefs.empty())
         {
-            tgui::String message(U"TinyXhtmlEntityResolver::resolveEntity() -> Entity references not initialized!");
+            tgui::String message(U"XhtmlEntityResolver::resolveEntity() -> Entity references not initialized!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return 0;
         }
 
         if (encode == nullptr)
         {
-            tgui::String message(U"TinyXhtmlEntityResolver::resolveEntity() -> Entity to encode not valid!");
+            tgui::String message(U"XhtmlEntityResolver::resolveEntity() -> Entity to encode not valid!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             return 0;
         }
@@ -154,11 +150,11 @@ namespace tgui  { namespace xhtml
         while (encode[length] != U';' && length < 10)
             length++;
         if (length >= 10)
-            return 0; // throw "TinyXhtmlEntityResolver::resolveEntity() -> Buffer overrun on search for end marker!"
+            return 0; // throw "XhtmlEntityResolver::resolveEntity() -> Buffer overrun on search for end marker!"
 
         // entity references always end with a semi-colon ';'
         if (length == 0)
-            return 0; // throw "TinyXhtmlEntityResolver::resolveEntity() -> No end marker found!"
+            return 0; // throw "XhtmlEntityResolver::resolveEntity() -> No end marker found!"
 
         // skip leading white-space characters
         while (tgui::isWhitespace(*begin) && length > 0)
@@ -169,11 +165,11 @@ namespace tgui  { namespace xhtml
         // remaining string (including semi-colon)
         // must be at least 4 characters in length
         if (length < 3)
-            return 0; // throw "TinyXhtmlEntityResolver::resolveEntity() -> Buffer underrun on search for end marker!"
+            return 0; // throw "XhtmlEntityResolver::resolveEntity() -> Buffer underrun on search for end marker!"
 
         // entity references always begin with an ampersand '&' symbol
         if (*begin != U'&')
-            return 0; // throw "TinyXhtmlEntityResolver::resolveEntity() -> No begin marker!"
+            return 0; // throw "XhtmlEntityResolver::resolveEntity() -> No begin marker!"
 
         begin++;
 

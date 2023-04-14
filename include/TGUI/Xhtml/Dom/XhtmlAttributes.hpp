@@ -125,6 +125,141 @@ namespace tgui  { namespace xhtml
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief The enumeration of border styles (applied to a border of a block element like h1...h6, div, p, table, ...)
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    enum class BorderStyle
+    {
+        None,          //!< No border
+        Hidden,        //!< No border
+        Dotted,        //!< A dotted border
+        Dashed,        //!< A dashed border
+        Solid,         //!< A solid border
+        Double,        //!< A double-line solid border
+        Groove,        //!< A two-color solid border with 3D-look of a surrounding cavitation and the impression of a light source at top left
+        Ridge,         //!< A two-color solid border with 3D-look of a surrounding cumulation and the impression of a light source at top left
+        Inset,         //!< A two-color solid border with 3D-look of a sunken center and the impression of a light source at top left
+        Outset         //!< A two-color solid border with 3D-look of a raised center and the impression of a light source at top left
+    };
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// @brief The one dimensional size (can be used for font, ...)
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    struct FourDimBorderStyle
+    {
+        BorderStyle left;       //!< The left border style
+        BorderStyle top;        //!< The top border style
+        BorderStyle right;      //!< The width border style
+        BorderStyle bottom;     //!< The height border style
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief The default constructor
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        FourDimBorderStyle()
+            : left(BorderStyle::None), top(BorderStyle::None), right(BorderStyle::None), bottom(BorderStyle::None)
+        {   ;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief The default and initializing constructor
+        ///
+        /// @param ltrb   The left/top/right/bottom border style
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        FourDimBorderStyle(BorderStyle ltrb)
+            : left(ltrb), top(ltrb), right(ltrb), bottom(ltrb)
+        {   ;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the flag whether this four dimension border style is none
+        ///
+        /// @return The flag whether this four dimension border style is none
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline bool isNoneOrHidden() const
+        {
+            if ((left   != BorderStyle::None && left   != BorderStyle::Hidden) ||
+                (top    != BorderStyle::None && top    != BorderStyle::Hidden) ||
+                (right  != BorderStyle::None && right  != BorderStyle::Hidden) ||
+                (bottom != BorderStyle::None && bottom != BorderStyle::Hidden))
+                return false;
+            else
+                return true;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Determines the border style
+        ///
+        /// @param borderStylePart  The string that should contain information about the border style
+        ///
+        /// @return                 The border style
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static inline BorderStyle determineBorderStyle(tgui::String borderStylePart)
+        {
+            if (borderStylePart.length() == 0)
+                return BorderStyle::None;
+
+            if(borderStylePart.equalIgnoreCase(U"none"))
+                return BorderStyle::None;
+            else if (borderStylePart.equalIgnoreCase(U"hidden"))
+                return BorderStyle::Hidden;
+            else if (borderStylePart.equalIgnoreCase(U"dotted"))
+                return BorderStyle::Dotted;
+            else if (borderStylePart.equalIgnoreCase(U"dashed"))
+                return BorderStyle::Dashed;
+            else if (borderStylePart.equalIgnoreCase(U"solid"))
+                return BorderStyle::Solid;
+            else if (borderStylePart.equalIgnoreCase(U"double"))
+                return BorderStyle::Double;
+            else if (borderStylePart.equalIgnoreCase(U"groove"))
+                return BorderStyle::Groove;
+            else if (borderStylePart.equalIgnoreCase(U"ridge"))
+                return BorderStyle::Ridge;
+            else if (borderStylePart.equalIgnoreCase(U"inset"))
+                return BorderStyle::Inset;
+            else if (borderStylePart.equalIgnoreCase(U"outset"))
+                return BorderStyle::Outset;
+            else
+                return BorderStyle::None;
+        }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Parsed the four size values
+        ///
+        /// @param borderStyleParts  The string array that should contain information about the border style values
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline void parse(std::vector<tgui::String> borderStyleParts)
+        {
+            if (borderStyleParts.size() == 1)
+            {
+                top = left = bottom = right = determineBorderStyle(borderStyleParts[0]);
+            }
+            if (borderStyleParts.size() == 2)
+            {
+                top = bottom = determineBorderStyle(borderStyleParts[0]);
+                left = right = determineBorderStyle(borderStyleParts[1]);
+            }
+            if (borderStyleParts.size() == 3)
+            {
+                top = determineBorderStyle(borderStyleParts[0]);
+                left = right = determineBorderStyle(borderStyleParts[1]);
+                bottom = determineBorderStyle(borderStyleParts[2]);
+            }
+            if (borderStyleParts.size() == 4)
+            {
+                top = determineBorderStyle(borderStyleParts[0]);
+                right = determineBorderStyle(borderStyleParts[1]);
+                bottom = determineBorderStyle(borderStyleParts[2]);
+                left = determineBorderStyle(borderStyleParts[3]);
+            }
+        }
+    };
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief The enumeration of size types (size of font, border, margin, padding, ...)
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     enum class SizeType
@@ -217,13 +352,12 @@ namespace tgui  { namespace xhtml
             : sizeType(type), top(t), right(r), bottom(b), left(l)
         { ; }
 
-
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the flag whether this four dimension size in pixel
+        /// @brief Gets the flag whether this four dimension four dimansional size in pixel is empty
         ///
         /// @param parentSize  The parent size for the calculation of a relative defined size
         ///
-        /// @return The flag whether this four dimension size in pixel
+        /// @return            The flag whether this four dimension size in pixel is empty
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline bool isEmpty(Vector2f parentSize) const
         {
@@ -258,7 +392,7 @@ namespace tgui  { namespace xhtml
         ///
         /// @param sizePart  The string that should contain information about the size type
         ///
-        /// @return The size type
+        /// @return          The size type
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static inline SizeType determineSizeType(tgui::String sizePart)
         {
@@ -319,8 +453,9 @@ namespace tgui  { namespace xhtml
         FontSize    = 1 << 6,  //!< The font size is captured by this style entry
         FontStyle   = 1 << 7,  //!< The font style (slant, weight, underline, strike-through) is captured by this style entry
         Margin      = 1 << 8,  //!< The margin is captured by this style entry
-        BorderWidth = 1 << 9,  //!< The border width is captured by this style entry
-        Padding     = 1 << 10  //!< The padding is captured by this style entry
+        BorderStyle = 1 << 9,  //!< The border style is captured by this style entry
+        BorderWidth = 1 << 10, //!< The border width is captured by this style entry
+        Padding     = 1 << 11  //!< The padding is captured by this style entry
     };
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -393,7 +528,7 @@ namespace tgui  { namespace xhtml
         XhtmlStyleEntry()
             : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(Color(0, 0, 0)), m_backgroundColor(Color::Transparent), m_borderColor(Color(0, 0, 0)),
               m_opacity(1.0f), m_fontFamily(U"Sans-serif"), m_fontSize({SizeType::Relative, 1.0f}), m_fontStyle(TextStyle::Regular),
-              m_margin({SizeType::Relative, 0.0f}), m_border({SizeType::Relative, 0.0f}),
+              m_margin({SizeType::Relative, 0.0f}), m_borderStyle(FourDimBorderStyle()), m_borderWidth({SizeType::Relative, 0.0f}),
               m_padding({SizeType::Relative, 0.0f}), m_styleEntryFlags(StyleEntryFlags::None)
         {   ;   }
 
@@ -405,7 +540,7 @@ namespace tgui  { namespace xhtml
         XhtmlStyleEntry(Color color)
             : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(color), m_backgroundColor(Color::Transparent), m_borderColor(Color(0, 0, 0)),
             m_opacity(1.0f), m_fontFamily(U"Sans-serif"), m_fontSize({ SizeType::Relative, 1.0f }), m_fontStyle(TextStyle::Regular),
-            m_margin({ SizeType::Relative, 0.0f }), m_border({ SizeType::Relative, 0.0f }),
+            m_margin({ SizeType::Relative, 0.0f }), m_borderStyle(FourDimBorderStyle()), m_borderWidth({ SizeType::Relative, 0.0f }),
             m_padding({ SizeType::Relative, 0.0f }), m_styleEntryFlags(StyleEntryFlags::ForeColor)
         {
             ;
@@ -420,7 +555,7 @@ namespace tgui  { namespace xhtml
         XhtmlStyleEntry(const XhtmlStyleEntryInitializer& initializer)
             : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(Color(0, 0, 0)), m_backgroundColor(Color::Transparent), m_borderColor(Color(0, 0, 0)),
               m_opacity(1.0f), m_fontFamily(U"Sans-serif"), m_fontSize({SizeType::Relative, 1.0f}), m_fontStyle(TextStyle::Regular),
-              m_margin({SizeType::Relative, 0.0f}), m_border({SizeType::Relative, 0.0f}),
+              m_margin({SizeType::Relative, 0.0f}), m_borderStyle(FourDimBorderStyle()), m_borderWidth({ SizeType::Relative, 0.0f }),
               m_padding({SizeType::Relative, 0.0f}), m_styleEntryFlags(StyleEntryFlags::None)
         {
             if (initializer.ForeColor != Color::Transparent)
@@ -460,7 +595,7 @@ namespace tgui  { namespace xhtml
               m_borderColor(styleEntry.m_borderColor), m_opacity(styleEntry.m_opacity),
               m_fontFamily(styleEntry.m_fontFamily), m_fontSize(styleEntry.m_fontSize),
               m_fontStyle(styleEntry.m_fontStyle),
-              m_margin(styleEntry.m_margin), m_border(styleEntry.m_border),
+              m_margin(styleEntry.m_margin), m_borderStyle(styleEntry.m_borderStyle), m_borderWidth(styleEntry.m_borderWidth),
               m_padding(styleEntry.m_padding), m_styleEntryFlags(styleEntry.m_styleEntryFlags)
         {   ;   }
 
@@ -474,7 +609,7 @@ namespace tgui  { namespace xhtml
               m_borderColor(std::move(styleEntry.m_borderColor)), m_opacity(std::move(styleEntry.m_opacity)),
               m_fontFamily(std::move(styleEntry.m_fontFamily)), m_fontSize(std::move(styleEntry.m_fontSize)),
               m_fontStyle(std::move(styleEntry.m_fontStyle)),
-              m_margin(std::move(styleEntry.m_margin)), m_border(std::move(styleEntry.m_border)),
+              m_margin(std::move(styleEntry.m_margin)), m_borderStyle(std::move(styleEntry.m_borderStyle)), m_borderWidth(std::move(styleEntry.m_borderWidth)),
               m_padding(std::move(styleEntry.m_padding)), m_styleEntryFlags(std::move(styleEntry.m_styleEntryFlags))
         {   ;   }
 
@@ -681,6 +816,24 @@ namespace tgui  { namespace xhtml
         {   return m_margin;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Sets the new border style
+        ///
+        /// @param borderWidth  The new border style
+        ///
+        /// @return             A reference to this style entry
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline XhtmlStyleEntry& setBorderStyle(FourDimBorderStyle borderStyle)
+        {   m_borderStyle = borderStyle; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::BorderStyle; return *this;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the border style
+        ///
+        /// @return The border style
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline FourDimBorderStyle getBorderStyle() const
+        {   return m_borderStyle;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the new border width
         ///
         /// @param borderWidth  The new border width
@@ -688,7 +841,7 @@ namespace tgui  { namespace xhtml
         /// @return             A reference to this style entry
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline XhtmlStyleEntry& setBorderWidth(FourDimSize borderWidth)
-        {   m_border = borderWidth; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::BorderWidth; return *this;   }
+        {   m_borderWidth = borderWidth; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::BorderWidth; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the border width
@@ -696,7 +849,7 @@ namespace tgui  { namespace xhtml
         /// @return The border width
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline FourDimSize getBorderWidth() const
-        {   return m_border;   }
+        {   return m_borderWidth;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the new padding
@@ -752,17 +905,18 @@ namespace tgui  { namespace xhtml
         static bool containsAnyIgnoreCase(const tgui::String& nocaseLeft, const std::vector<tgui::String>& patterns);
 
     private:
-        Color            m_color;             //!< The foreground/text color
-        Color            m_backgroundColor;   //!< The background color
-        Color            m_borderColor;       //!< The border color
-        float            m_opacity;           //!< The color opacity
-        tgui::String     m_fontFamily;        //!< The font family name
-        OneDimSize       m_fontSize;          //!< The font size (in pixels)
-        TextStyle        m_fontStyle;         //!< The font style (slant, weight, underline, strike-through)
-        FourDimSize      m_margin;            //!< The margin width (around the element and around it's border, if any)
-        FourDimSize      m_border;            //!< The border width (around the element)
-        FourDimSize      m_padding;           //!< The padding width (inside the element and inside it's border, if any)
-        StyleEntryFlags  m_styleEntryFlags;   //!< The flags of style entry properties, that are actively set for this style entry
+        Color              m_color;             //!< The foreground/text color
+        Color              m_backgroundColor;   //!< The background color
+        Color              m_borderColor;       //!< The border color
+        float              m_opacity;           //!< The color opacity
+        tgui::String       m_fontFamily;        //!< The font family name
+        OneDimSize         m_fontSize;          //!< The font size (in pixels)
+        TextStyle          m_fontStyle;         //!< The font style (slant, weight, underline, strike-through)
+        FourDimSize        m_margin;            //!< The margin width (around the element and around it's border, if any)
+        FourDimBorderStyle m_borderStyle;       //!< The border style (around the element)
+        FourDimSize        m_borderWidth;       //!< The border width (around the element)
+        FourDimSize        m_padding;           //!< The padding width (inside the element and inside it's border, if any)
+        StyleEntryFlags    m_styleEntryFlags;   //!< The flags of style entry properties, that are actively set for this style entry
     };
 
 } }

@@ -13,90 +13,93 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Renderers">
-      <UniqueIdentifier>{75f88056-cb2a-4b8b-bec3-f98c054dadcc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Widgets">
-      <UniqueIdentifier>{1433038f-f6b2-4ef5-b534-4bc8a46b01fb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Xhtml">
       <UniqueIdentifier>{67911c62-cbcb-4d7b-a354-6a34f7f99599}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="include\TGUI\Renderers\FormattedTextRenderer.hpp">
-      <Filter>Renderers</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\Widgets\FormattedElements.hpp">
-      <Filter>Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\Widgets\FormattedTextView.hpp">
-      <Filter>Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\Widgets\FormattedTextXhtmlDocument.hpp">
-      <Filter>Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\Xhtml\XhtmlAttributes.hpp">
-      <Filter>Xhtml</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\Xhtml\XhtmlElements.hpp">
-      <Filter>Xhtml</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\Xhtml\XhtmlEntityResolver.hpp">
-      <Filter>Xhtml</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\Xhtml\XhtmlParser.hpp">
-      <Filter>Xhtml</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\UtfHelper.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\StringHelper.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\Widgets\FormattedTextDocument.hpp">
-      <Filter>Widgets</Filter>
-    </ClInclude>
-    <ClInclude Include="include\TGUI\MarkupLanguageElement.hpp">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
+    <Filter Include="Xhtml\Renderers">
+      <UniqueIdentifier>{75f88056-cb2a-4b8b-bec3-f98c054dadcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xhtml\Widgets">
+      <UniqueIdentifier>{bd34036e-92b3-4a01-ab25-e0ef22e56d10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Xhtml\Dom">
+      <UniqueIdentifier>{7fb833b7-e4ea-4f11-847f-fdf8362cb077}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="src\StringHelper.cpp">
-      <Filter>Quelldateien</Filter>
+    <ClCompile Include="src\Xhtml\Renderers\FormattedTextRenderer.cpp">
+      <Filter>Xhtml\Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Renderers\FormattedTextRenderer.cpp">
-      <Filter>Renderers</Filter>
+    <ClCompile Include="src\Xhtml\Widgets\FormattedElements.cpp">
+      <Filter>Xhtml\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="src\Widgets\FormattedElements.cpp">
-      <Filter>Widgets</Filter>
+    <ClCompile Include="src\Xhtml\Widgets\FormattedTextView.cpp">
+      <Filter>Xhtml\Widgets</Filter>
     </ClCompile>
-    <ClCompile Include="src\Widgets\FormattedTextView.cpp">
-      <Filter>Widgets</Filter>
+    <ClCompile Include="src\Xhtml\Dom\XhtmlAttributes.cpp">
+      <Filter>Xhtml\Dom</Filter>
     </ClCompile>
-    <ClCompile Include="src\Widgets\FormattedTextXhtmlDocument.cpp">
-      <Filter>Widgets</Filter>
+    <ClCompile Include="src\Xhtml\Dom\XhtmlElements.cpp">
+      <Filter>Xhtml\Dom</Filter>
     </ClCompile>
-    <ClCompile Include="src\Xhtml\XhtmlAttributes.cpp">
+    <ClCompile Include="src\Xhtml\Dom\XhtmlEntityResolver.cpp">
+      <Filter>Xhtml\Dom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Xhtml\Dom\XhtmlParser.cpp">
+      <Filter>Xhtml\Dom</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Xhtml\MarkupLanguageElement.cpp">
       <Filter>Xhtml</Filter>
     </ClCompile>
-    <ClCompile Include="src\Xhtml\XhtmlElements.cpp">
+    <ClCompile Include="src\Xhtml\StringHelper.cpp">
       <Filter>Xhtml</Filter>
     </ClCompile>
-    <ClCompile Include="src\Xhtml\XhtmlEntityResolver.cpp">
+    <ClCompile Include="src\Xhtml\UtfHelper.cpp">
       <Filter>Xhtml</Filter>
     </ClCompile>
-    <ClCompile Include="src\Xhtml\XhtmlParser.cpp">
+    <ClCompile Include="src\Xhtml\Widgets\FormattedXhtmlDocument.cpp">
+      <Filter>Xhtml\Widgets</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\TGUI\Xhtml\Renderers\FormattedTextRenderer.hpp">
+      <Filter>Xhtml\Renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\Widgets\FormattedElements.hpp">
+      <Filter>Xhtml\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\Widgets\FormattedTextView.hpp">
+      <Filter>Xhtml\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\Dom\XhtmlAttributes.hpp">
+      <Filter>Xhtml\Dom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\Dom\XhtmlElements.hpp">
+      <Filter>Xhtml\Dom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\Dom\XhtmlEntityResolver.hpp">
+      <Filter>Xhtml\Dom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\Dom\XhtmlParser.hpp">
+      <Filter>Xhtml\Dom</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\MarkupLanguageElement.hpp">
       <Filter>Xhtml</Filter>
-    </ClCompile>
-    <ClCompile Include="src\UtfHelper.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MarkupLanguageElement.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\StringHelper.hpp">
+      <Filter>Xhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\UtfHelper.hpp">
+      <Filter>Xhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\Widgets\FormattedDocument.hpp">
+      <Filter>Xhtml\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\Widgets\FormattedXhtmlDocument.hpp">
+      <Filter>Xhtml\Widgets</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

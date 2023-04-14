@@ -119,10 +119,6 @@ namespace tgui  { namespace xhtml
                         isOpeningTag        = false;
                         isClosingTag        = false;
 
-#if _DEBUG
-                        auto parentElement  = parentElements.back();
-                        auto children = (parentElement != nullptr ? parentElement->getChildren() : nullptr);
-#endif
                         // try to recognize element tag, if recognition of a comment tag failed
                         if ((newElement = parseElement(nullptr, isOpeningTag, isClosingTag, isInsideScript)) != nullptr)
                         {
@@ -134,9 +130,6 @@ namespace tgui  { namespace xhtml
                                 isOpeningTag = true;
                                 isClosingTag = true;
                             }
-#if _DEBUG
-                            tgui::String currentlyParsed = m_buffer.substr(workStartPosition, workDataLen);
-#endif
                             // special script mode handling
                             if (isOpeningTag && !isInsideScript)
                             {
@@ -155,9 +148,6 @@ namespace tgui  { namespace xhtml
                         {
                             workDataLen++;
                             acquireChar();
-#if _DEBUG
-                            tgui::String currentlyParsed = m_buffer.substr(workStartPosition, workDataLen);
-#endif
                             break;
                         }
                     }
@@ -325,6 +315,7 @@ namespace tgui  { namespace xhtml
         characters.replace(U'\v', U' ');
         while(characters.contains(U"  "))
             characters.replace(U"  ", U" ");
+        characters.replace(U'\xA0', U'\x20');
 
         if (parentElement != nullptr && characters.size() > 0 && characters[0] == U' ')
         {

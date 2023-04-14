@@ -35,7 +35,7 @@ namespace tgui  { namespace xhtml
     /// A formatted text view widget is a multi-line formatted text output field which supports word-wrap and scrollbars.
     /// If you are looking for a multi-line text input field then check out the TextArea class (that doesn't support format).
     ///
-    /// It displays the content of a FormattedTextDocument
+    /// It displays the content of a FormattedDocument
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     class TGUI_API FormattedTextView : public ClickableWidget
     {
@@ -142,7 +142,7 @@ namespace tgui  { namespace xhtml
         ///
         /// @param document  The underlying XHTML document to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setDocument(FormattedTextXhtmlDocument::Ptr document)
+        inline void setDocument(FormattedXhtmlDocument::Ptr document)
         {   m_document = document;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -150,7 +150,7 @@ namespace tgui  { namespace xhtml
         ///
         /// @return The underlying XHTML document
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline FormattedTextDocument::Ptr getDocument()
+        inline FormattedDocument::Ptr getDocument()
         {   return m_document;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -158,7 +158,7 @@ namespace tgui  { namespace xhtml
         ///
         /// @param height  The font collection to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setFontCollection(const FormattedTextDocument::FontCollection& fontCollection)
+        inline void setFontCollection(const FormattedDocument::FontCollection& fontCollection)
         {
             if (fontCollection.assertValid())
                 m_fontCollection = fontCollection;
@@ -171,7 +171,7 @@ namespace tgui  { namespace xhtml
         ///
         /// @return The font collection
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline const FormattedTextDocument::FontCollection& getFontCollection() const
+        inline const FormattedDocument::FontCollection& getFontCollection() const
         {   return m_fontCollection;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -190,18 +190,18 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Changes whether the horizontal scroll-bar should be displayed
         ///
-        /// @param policy  The policy for displaying the horizontal scroll-bar
-        ///
         /// The default policy is Automatic, which means word-wrap will be used to keep the text within the FormattedTextView.
+        ///
+        /// @param policy  The policy for displaying the horizontal scroll-bar
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void setHorizontalScrollbarPolicy(Scrollbar::Policy policy);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Returns whether the horizontal scroll- bar should be displayed
         ///
-        /// @return The policy for displaying the horizontal scroll-bar
-        ///
         /// The default policy is Automatic, which means word-wrap will be used to keep the text within the FormattedTextView.
+        ///
+        /// @return The policy for displaying the horizontal scroll-bar
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline Scrollbar::Policy getHorizontalScrollbarPolicy() const
         {   return m_horizontalScrollbarPolicy;   }
@@ -209,18 +209,18 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Changes whether the vertical scroll-bar should be displayed
         ///
-        /// @param policy  The policy for displaying the vertical scroll-bar
-        ///
         /// The default policy is Always, which means word-wrap will be used to keep the text within the FormattedTextView.
+        ///
+        /// @param policy  The policy for displaying the vertical scroll-bar
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void setVerticalScrollbarPolicy(Scrollbar::Policy policy);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Returns whether the vertical scroll- bar should be displayed
         ///
-        /// @return The policy for displaying the vertical scroll-bar
-        ///
         /// The default policy is Always, which means word-wrap will be used to keep the text within the FormattedTextView.
+        ///
+        /// @return The policy for displaying the vertical scroll-bar
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline Scrollbar::Policy getVerticalScrollbarPolicy() const
         {   return m_verticalScrollbarPolicy;   }
@@ -288,7 +288,7 @@ namespace tgui  { namespace xhtml
         ///
         /// @param newZoom  The new zoom
         ///
-        /// @return The flag whether zomm set was successful (true) or not (false)
+        /// @return         The flag whether zomm set was successful (true) or not (false)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         bool setZoom(float newZoom);
 
@@ -336,7 +336,7 @@ namespace tgui  { namespace xhtml
         void setFocused(bool focused) override;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Updates the physical size of the scroll-bars, as well as the view-port size.
+        /// @brief Updates the physical size of the scroll-bars, as well as the view-port size.
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void updateScrollbars();
 
@@ -359,14 +359,65 @@ namespace tgui  { namespace xhtml
     protected:
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Gets the size without the borders
+        /// @brief Gets the size without the borders
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Vector2f getInnerSize() const;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Gets the size without the borders, padding and scrollbars
+        /// @brief Gets the size without the borders, padding and scrollbars
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         Vector2f getRenderSize() const;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Calculates the number and size of dots/dashes as well as their step width for a dotted/dashed border line
+        ///
+        /// @param distance    The distance to fill with a dotted/dashed border line
+        /// @param borderWidth The border width (dot size, dash length and (ideally) step widtht are a multiple of the width)
+        /// @param numDots     [out] The number of dots/dashes to draw on distance
+        /// @param stepWidth   [out] The step width from a dot/dash start coordinate to the next dot/dash start coordinate
+        /// @param dotSize     [out] The dot/dash size
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static void calculateBorderDots(float distance, float borderWidth, bool dashed, int& numDots, float& stepWidth, float& dotSize);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Calculates the vertices and indices for a dotted/dashed border line
+        ///
+        /// @param numDots     The number of dots/dashes to draw on distance
+        /// @param stepWidth   The step width from a dot/dash start coordinate to the next dot/dash start coordinate
+        /// @param color       The color of the border line
+        /// @param vertical    The orientation of the border line (false for horizontal)
+        /// @param xLO         The lower x-ccordinate of the first dot/dash
+        /// @param xHI         The higher x-ccordinate of the first dot/dash
+        /// @param yLO         The lower y-ccordinate of the first dot/dash
+        /// @param yHI         The higher y-ccordinate of the first dot/dash
+        /// @param tLO         The lower y-ccordinate (vertical orientation) or x-ccordinate (horizontal orientation) of the last dot/dash
+        /// @param tHI         The higher x-ccordinate (vertical orientation) or y-ccordinate (horizontal orientation) of the last dot/dash
+        /// @param vertices    [out] The vertices of 2D plane
+        /// @param indices     [out] The indices into the vertices of 2D plane, that create triangles representing the 2D plane
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static void calculateDottedBorderVerticesAndIndices(int numDots, float stepWidth, tgui::Vertex::Color color, bool vertical,
+            float xLO, float xHI, float yLO, float yHI, float tLO, float tHI,
+            std::vector<tgui::Vertex>& vertices, std::vector<unsigned int>& indices);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Calculates a color, darker than the indicated color and applies the indicated opacity
+        ///
+        /// @param color   The color, to calculate a darker color from
+        /// @param opacity The opacity to apply (in addition to the color's alpha value)
+        ///
+        /// @return        The darker color on success or the same color otherwise (if color is already darker than #040404)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static tgui::Vertex::Color calculateDarkerColor(tgui::Color color, float opacity);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Calculates a color, lighter than the indicated color and applies the indicated opacity
+        ///
+        /// @param color   The color, to calculate a lighter color from
+        /// @param opacity The opacity to apply (in addition to the color's alpha value)
+        ///
+        /// @return        The lighter color on success or the same color otherwise (if color is already lighter than #FBFBFB)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static tgui::Vertex::Color calculateLighterColor(tgui::Color color, float opacity);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public:
@@ -376,7 +427,7 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private:
 
-        FormattedTextDocument::Ptr               m_document;              //!< The formatted document to display
+        FormattedDocument::Ptr               m_document;              //!< The formatted document to display
         float                                    m_zoom = 1.0f;           //!< The zoom
 
         Borders                                  m_bordersCached;
@@ -393,7 +444,7 @@ namespace tgui  { namespace xhtml
         bool                                     m_possibleDoubleClick = false;
 
         // The fonts
-        FormattedTextDocument::FontCollection    m_fontCollection;
+        FormattedDocument::FontCollection    m_fontCollection;
         std::vector<FormattedLink::Ptr>          m_anchorSources;         //!< The list of formatted links
         std::map<String, FormattedElement::Ptr>  m_anchorTargets;         //!< The list of link targets
     };
