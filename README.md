@@ -1,5 +1,5 @@
 # TGUI-XHTML
-A XHTML module with the main purpose to provide an XHTML viewer widget (or more beneral a ***rich text display widget***, but only XHTML formatting is currently impemented) for texus [TGUI](https://github.com/texus/TGUI/).
+A XHTML module with the main purpose to provide an XHTML viewer widget (or more general: a ***rich text display widget***, but only XHTML formatting is impemented yet) for texus [TGUI](https://github.com/texus/TGUI/).
 
 ## Table of contents
 * [First impression](#first-impression)
