@@ -46,7 +46,10 @@
 		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlElements.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlParser.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/MarkupBorderStyle.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/MarkupLanguageElement.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/MarkupListItemType.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/MarkupSizeType.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/StringHelper.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/UtfHelper.hpp" />
@@ -62,6 +65,7 @@
 		<Unit filename="../src/Xhtml/Renderers/FormattedTextRenderer.cpp" />
 		<Unit filename="../src/Xhtml/StringHelper.cpp" />
 		<Unit filename="../src/Xhtml/UtfHelper.cpp" />
+		<Unit filename="../src/Xhtml/Widgets/FormattedDocument.cpp" />
 		<Unit filename="../src/Xhtml/Widgets/FormattedElements.cpp" />
 		<Unit filename="../src/Xhtml/Widgets/FormattedTextView.cpp" />
 		<Unit filename="../src/Xhtml/Widgets/FormattedXhtmlDocument.cpp" />

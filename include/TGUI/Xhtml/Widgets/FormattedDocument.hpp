@@ -26,6 +26,9 @@
 #ifndef TGUI_FORMATTED_DOCUMENT_HPP
 #define TGUI_FORMATTED_DOCUMENT_HPP
 
+#include "TGUI/Xhtml/MarkupListItemType.hpp"
+#include "TGUI/Xhtml/Widgets/FormattedElements.hpp"
+
 namespace tgui  { namespace xhtml
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -133,10 +136,23 @@ namespace tgui  { namespace xhtml
                 Italic     = tgui::Font::getGlobalFont();
                 BoldItalic = tgui::Font::getGlobalFont();
             }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Asserts the validity of this font collection
+            ///
+            /// @return Either true on a valid font collection, or false otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            bool inline assertValid() const
+            {
+                return Regular != nullptr &&
+                       Bold != nullptr &&
+                       Italic != nullptr &&
+                       BoldItalic != nullptr;
+            }
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief The font-collection supports the minimum variety of font-faces (sans, serif, mono)
+        /// @brief The font-collection supports the required minimum variety of font-faces (sans, serif, mono)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         class TGUI_API FontCollection
         {
@@ -150,7 +166,7 @@ namespace tgui  { namespace xhtml
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             FontCollection()
                 : Sans(), Serif(), Mono()
-            { ; }
+            {   ;   }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             /// @brief Asserts the validity of this font collection
@@ -159,10 +175,20 @@ namespace tgui  { namespace xhtml
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             bool inline assertValid() const
             {
-                return Sans != nullptr &&
-                       Serif != nullptr &&
-                       Mono != nullptr;
+                return Sans != nullptr && Sans->assertValid() &&
+                       Serif != nullptr && Serif->assertValid() &&
+                       Mono != nullptr && Mono->assertValid();
             }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Returns the operation system specific font collection (currently optimized for Windows, Open Suse and Manjaro)
+            ///
+            /// The font collection includes the font faces sans/serif/mono and font styles regular/bold/italic/bold-italic
+            ///
+            /// @return The operation system specific font collection
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            static std::shared_ptr<FormattedDocument::FontCollection> platformOptimizedFontCollection();
+
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

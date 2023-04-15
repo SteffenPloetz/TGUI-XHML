@@ -12,12 +12,6 @@
 #endif
 
 #include "TGUI/Xhtml/StringHelper.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
-#include "TGUI/Xhtml/Widgets/FormattedElements.hpp"
-#include "TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp"
-
 #include "TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedTextView.hpp"
 
@@ -39,6 +33,10 @@ namespace tgui  { namespace xhtml
         m_verticalScrollbar->setVisible(true);
         setHorizontalScrollbarPolicy(Scrollbar::Policy::Automatic);
         setVerticalScrollbarPolicy(Scrollbar::Policy::Always);
+
+        std::shared_ptr<FormattedDocument::FontCollection> platformOptimizedFontCollection = FormattedDocument::FontCollection::platformOptimizedFontCollection();
+        if (platformOptimizedFontCollection->assertValid())
+            m_fontCollection = *platformOptimizedFontCollection;
 
         if (initRenderer)
         {
@@ -562,10 +560,10 @@ namespace tgui  { namespace xhtml
                                                formattedRectangle->getBackgroundColor().getBlue(),
                                                std::max(std::min((int)(formattedRectangle->getOpacity() * formattedRectangle->getBackgroundColor().getAlpha()), 255), 0));
                     const std::array<Vertex, 4> vertices = {{
-                        {{formattedRectangle->getLayoutLeft(),  formattedRectangle->getLayoutTop()   }, color},
-                        {{formattedRectangle->getLayoutLeft(),  formattedRectangle->getLayoutBottom()}, color},
-                        {{formattedRectangle->getLayoutRight(), formattedRectangle->getLayoutTop()   }, color},
-                        {{formattedRectangle->getLayoutRight(), formattedRectangle->getLayoutBottom()}, color}
+                        {{formattedRectangle->getLayoutLeft()  + formattedRectangle->getMargin().left,  formattedRectangle->getLayoutTop()    + formattedRectangle->getMargin().top   }, color},
+                        {{formattedRectangle->getLayoutLeft()  + formattedRectangle->getMargin().left,  formattedRectangle->getLayoutBottom() - formattedRectangle->getMargin().bottom}, color},
+                        {{formattedRectangle->getLayoutRight() - formattedRectangle->getMargin().right, formattedRectangle->getLayoutTop()    + formattedRectangle->getMargin().top   }, color},
+                        {{formattedRectangle->getLayoutRight() - formattedRectangle->getMargin().right, formattedRectangle->getLayoutBottom() - formattedRectangle->getMargin().bottom}, color}
                     }};
                     const std::array<unsigned int, 2*3> indices = {{
                         0, 1, 2,
@@ -584,10 +582,10 @@ namespace tgui  { namespace xhtml
                                                formattedRectangle->getBorderColor().getGreen(),
                                                formattedRectangle->getBorderColor().getBlue(),
                                                std::max(std::min((int)(formattedRectangle->getOpacity() * formattedRectangle->getBorderColor().getAlpha()), 255), 0));
-                    Outline borderArea{ formattedRectangle->getLayoutLeft()   + formattedRectangle->getBoderMargin().left,
-                                        formattedRectangle->getLayoutTop()    + formattedRectangle->getBoderMargin().top,
-                                        formattedRectangle->getLayoutRight()  - formattedRectangle->getBoderMargin().right,
-                                        formattedRectangle->getLayoutBottom() - formattedRectangle->getBoderMargin().bottom };
+                    Outline borderArea{ formattedRectangle->getLayoutLeft()   + formattedRectangle->getMargin().left,
+                                        formattedRectangle->getLayoutTop()    + formattedRectangle->getMargin().top,
+                                        formattedRectangle->getLayoutRight()  - formattedRectangle->getMargin().right,
+                                        formattedRectangle->getLayoutBottom() - formattedRectangle->getMargin().bottom };
 
                     //        lft1 lft2  lft3 lft4 lft5                rgt5 rgt4  rgt3 rgt2 rgt1
                     //        |       |   |   |       |                |       |   |   |       |

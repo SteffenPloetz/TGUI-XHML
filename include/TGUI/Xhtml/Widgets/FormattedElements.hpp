@@ -26,6 +26,9 @@
 #ifndef TGUI_FORMATTED_ELEMENTS_HPP
 #define TGUI_FORMATTED_ELEMENTS_HPP
 
+
+#include "TGUI/Xhtml/MarkupSizeType.hpp"
+#include "TGUI/Xhtml/MarkupBorderStyle.hpp"
 #include "TGUI/Xhtml/MarkupLanguageElement.hpp"
 
 namespace tgui  { namespace xhtml
@@ -312,26 +315,26 @@ namespace tgui  { namespace xhtml
         /// @brief The default constructor
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         FormattedRectangle()
-            : FormattedElement(), m_borderMargin(SizeType::Pixel, 0.0f), m_borderWidth(SizeType::Pixel, 0.0f), m_borderColor(Color(0, 0, 0))
+            : FormattedElement(), m_margin(SizeType::Pixel, 0.0f), m_borderWidth(SizeType::Pixel, 0.0f), m_borderColor(Color(0, 0, 0))
         { ; }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Sets the area border margin (should always be in px)
+        /// @brief Sets the area margin (should always be in px)
         ///
-        /// @param boderMargin  The new area border margin (should always be in px)
+        /// @param boderMargin  The new area margin (should always be in px)
         ///
         /// @return             A reference to this formatted rectangle
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline FormattedRectangle& setBorderMargin(FourDimSize boderMargin)
-        {   m_borderMargin = boderMargin; return *this;   }
+        inline FormattedRectangle& setMargin(FourDimSize margin)
+        {   m_margin = margin; return *this;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the area border margin (should always be in px)
+        /// @brief Gets the area margin (should always be in px)
         ///
-        /// @return The area border margin (should always be in px)
+        /// @return The area margin (should always be in px)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline FourDimSize getBoderMargin() const
-        {    return m_borderMargin;   }
+        inline FourDimSize getMargin() const
+        {    return m_margin;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the area border style
@@ -388,7 +391,7 @@ namespace tgui  { namespace xhtml
         {   return m_borderColor;   }
 
     protected:
-        FourDimSize        m_borderMargin;        //!< The border margin (should always be in px)
+        FourDimSize        m_margin;              //!< The margin (should always be in px)
         FourDimBorderStyle m_borderStyle;         //!< The border style
         FourDimSize        m_borderWidth;         //!< The border width (should always be in px)
         Color              m_borderColor;         //!< The border color

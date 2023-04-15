@@ -14,11 +14,6 @@
 #endif
 
 #include "TGUI/Xhtml/StringHelper.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
-#include "TGUI/Xhtml/Widgets/FormattedElements.hpp"
-
 #include "TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp"
 
 namespace tgui  { namespace xhtml
@@ -699,7 +694,7 @@ namespace tgui  { namespace xhtml
                         auto margin = styleEntry->getMargin().toPixel(m_availableClientSize);
                         inflate(m_evolvingLayoutArea, -margin.left, -margin.top, -margin.right, 0);
                         if (formattedRectSection)
-                            formattedRectSection->setBorderMargin(margin);
+                            formattedRectSection->setMargin(margin);
                     }
                 }
             }

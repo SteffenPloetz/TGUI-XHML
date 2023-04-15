@@ -16,7 +16,6 @@
 #endif
 
 #include "TGUI/Xhtml/StringHelper.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
 #include "TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
 
 namespace tgui  { namespace xhtml

@@ -14,8 +14,6 @@
 #endif
 
 #include "TGUI/Xhtml/StringHelper.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
 #include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
 
 // intense tracing
@@ -373,7 +371,7 @@ namespace tgui  { namespace xhtml
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlElement::Ptr child)
     {
         auto styleEntry = std::make_shared<XhtmlStyleEntry>();
-        styleEntry->setMargin(FourDimSize(SizeType::Pixel, 8));
+        styleEntry->setPadding(FourDimSize(SizeType::Pixel, 8));
 
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
@@ -386,7 +384,7 @@ namespace tgui  { namespace xhtml
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, const std::vector<XhtmlElement::Ptr> children)
     {
         auto styleEntry = std::make_shared<XhtmlStyleEntry>();
-        styleEntry->setMargin(FourDimSize(SizeType::Pixel, 8));
+        styleEntry->setPadding(FourDimSize(SizeType::Pixel, 8));
 
         auto element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
@@ -399,7 +397,7 @@ namespace tgui  { namespace xhtml
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, XhtmlElement::Ptr child)
     {
         if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) != StyleEntryFlags::Margin)
-            styleEntry->setMargin(FourDimSize(SizeType::Pixel, 8));
+            styleEntry->setPadding(FourDimSize(SizeType::Pixel, 8));
 
         std::shared_ptr<XhtmlStyleableContainerElement> element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);
@@ -412,7 +410,7 @@ namespace tgui  { namespace xhtml
     std::shared_ptr<XhtmlStyleableContainerElement> XhtmlElement::createBody(XhtmlElement::Ptr parent, XhtmlStyleEntry::Ptr styleEntry, const std::vector<XhtmlElement::Ptr> children)
     {
         if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) != StyleEntryFlags::Margin)
-            styleEntry->setMargin(FourDimSize(SizeType::Pixel, 8));
+            styleEntry->setPadding(FourDimSize(SizeType::Pixel, 8));
 
         std::shared_ptr<XhtmlStyleableContainerElement> element = std::make_shared<XhtmlStyleableContainerElement>(XhtmlElementType::Body, styleEntry);
         addChildAndSetPatent(parent, element);

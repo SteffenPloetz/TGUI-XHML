@@ -12,8 +12,6 @@
 
 #include "TGUI/String.hpp"
 #include "TGUI/Xhtml/StringHelper.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
-#include "TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
 #include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
 
 #include "TGUI/Xhtml/Widgets/FormattedElements.hpp"

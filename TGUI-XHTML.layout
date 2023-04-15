@@ -7,24 +7,9 @@
 			<Cursor1 position="1398" topLine="26" />
 		</Cursor>
 	</File>
-	<File name="src/Xhtml/UtfHelper.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="include/TGUI/Xhtml/MarkupLanguageElement.hpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="490" topLine="5" />
-		</Cursor>
-	</File>
-	<File name="include/TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp" open="0" top="0" tabpos="21" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1553" topLine="29" />
-		</Cursor>
-	</File>
-	<File name="include/TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1466" topLine="12" />
-		</Cursor>
-	</File>
-	<File name="src/Xhtml/MarkupLanguageElement.cpp" open="0" top="0" tabpos="22" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="522" topLine="0" />
+			<Cursor1 position="1405" topLine="26" />
 		</Cursor>
 	</File>
 	<File name="src/Xhtml/Dom/XhtmlParser.cpp" open="1" top="0" tabpos="2" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -32,27 +17,12 @@
 			<Cursor1 position="681" topLine="1" />
 		</Cursor>
 	</File>
-	<File name="include/TGUI/Xhtml/StringHelper.hpp" open="0" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/Xhtml/MarkupLanguageElement.cpp" open="0" top="0" tabpos="22" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1480" topLine="31" />
+			<Cursor1 position="522" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="src/Xhtml/StringHelper.cpp" open="0" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="595" topLine="18" />
-		</Cursor>
-	</File>
-	<File name="include/TGUI/Xhtml/UtfHelper.hpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="704" topLine="15" />
-		</Cursor>
-	</File>
-	<File name="src/Xhtml/Dom/XhtmlEntityResolver.cpp" open="1" top="1" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="505" topLine="0" />
-		</Cursor>
-	</File>
-	<File name="src/Xhtml/Dom/XhtmlAttributes.cpp" open="1" top="0" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/Xhtml/Dom/XhtmlAttributes.cpp" open="1" top="1" tabpos="3" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="611" topLine="1" />
 		</Cursor>
@@ -62,14 +32,54 @@
 			<Cursor1 position="611" topLine="8" />
 		</Cursor>
 	</File>
-	<File name="src/Xhtml/Renderers/FormattedTextRenderer.cpp" open="0" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/Xhtml/UtfHelper.cpp" open="0" top="0" tabpos="10" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="699" topLine="0" />
+			<Cursor1 position="490" topLine="5" />
+		</Cursor>
+	</File>
+	<File name="include/TGUI/Xhtml/Widgets/FormattedElements.hpp" open="0" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1444" topLine="28" />
+		</Cursor>
+	</File>
+	<File name="src/Xhtml/Dom/XhtmlEntityResolver.cpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="505" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include/TGUI/Xhtml/StringHelper.hpp" open="0" top="0" tabpos="14" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1480" topLine="31" />
+		</Cursor>
+	</File>
+	<File name="include/TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp" open="0" top="0" tabpos="21" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1553" topLine="29" />
+		</Cursor>
+	</File>
+	<File name="src/Xhtml/StringHelper.cpp" open="0" top="0" tabpos="16" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="595" topLine="18" />
+		</Cursor>
+	</File>
+	<File name="include/TGUI/Xhtml/Widgets/FormattedTextDocument.hpp" open="0" top="0" tabpos="23" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1410" topLine="12" />
+		</Cursor>
+	</File>
+	<File name="include/TGUI/Xhtml/UtfHelper.hpp" open="0" top="0" tabpos="9" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="704" topLine="15" />
 		</Cursor>
 	</File>
 	<File name="src/Xhtml/Dom/XhtmlElements.cpp" open="1" top="0" tabpos="1" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
 			<Cursor1 position="627" topLine="0" />
+		</Cursor>
+	</File>
+	<File name="include/TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp" open="0" top="0" tabpos="4" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+		<Cursor>
+			<Cursor1 position="1466" topLine="12" />
 		</Cursor>
 	</File>
 	<File name="src/Xhtml/Widgets/FormattedTextView.cpp" open="0" top="0" tabpos="11" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
@@ -82,19 +92,9 @@
 			<Cursor1 position="606" topLine="0" />
 		</Cursor>
 	</File>
-	<File name="include/TGUI/Xhtml/Widgets/FormattedTextDocument.hpp" open="0" top="0" tabpos="23" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
+	<File name="src/Xhtml/Renderers/FormattedTextRenderer.cpp" open="0" top="0" tabpos="17" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
 		<Cursor>
-			<Cursor1 position="1410" topLine="12" />
-		</Cursor>
-	</File>
-	<File name="include/TGUI/Xhtml/MarkupLanguageElement.hpp" open="0" top="0" tabpos="5" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1405" topLine="26" />
-		</Cursor>
-	</File>
-	<File name="include/TGUI/Xhtml/Widgets/FormattedElements.hpp" open="0" top="0" tabpos="18" split="0" active="1" splitpos="0" zoom_1="0" zoom_2="0">
-		<Cursor>
-			<Cursor1 position="1444" topLine="28" />
+			<Cursor1 position="699" topLine="0" />
 		</Cursor>
 	</File>
 </CodeBlocks_layout_file>

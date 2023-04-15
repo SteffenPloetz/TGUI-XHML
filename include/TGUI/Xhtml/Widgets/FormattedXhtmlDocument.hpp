@@ -26,7 +26,8 @@
 #ifndef TGUI_FORMATTED_TEXT_XHTML_DOCUMENT_HPP
 #define TGUI_FORMATTED_TEXT_XHTML_DOCUMENT_HPP
 
-#include "FormattedDocument.hpp"
+#include "TGUI/Xhtml/Widgets/FormattedDocument.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlElements.hpp"
 
 namespace tgui  { namespace xhtml
 {

@@ -26,6 +26,8 @@
 #ifndef TGUI_FORMATTED_TEXT_VIEW_HPP
 #define TGUI_FORMATTED_TEXT_VIEW_HPP
 
+#include "TGUI/Xhtml/Widgets/FormattedDocument.hpp"
+
 namespace tgui  { namespace xhtml
 {
 
@@ -142,7 +144,7 @@ namespace tgui  { namespace xhtml
         ///
         /// @param document  The underlying XHTML document to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void setDocument(FormattedXhtmlDocument::Ptr document)
+        inline void setDocument(FormattedDocument::Ptr document)
         {   m_document = document;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -427,7 +429,7 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     private:
 
-        FormattedDocument::Ptr               m_document;              //!< The formatted document to display
+        FormattedDocument::Ptr                   m_document;              //!< The formatted document to display
         float                                    m_zoom = 1.0f;           //!< The zoom
 
         Borders                                  m_bordersCached;
@@ -444,7 +446,7 @@ namespace tgui  { namespace xhtml
         bool                                     m_possibleDoubleClick = false;
 
         // The fonts
-        FormattedDocument::FontCollection    m_fontCollection;
+        FormattedDocument::FontCollection        m_fontCollection;
         std::vector<FormattedLink::Ptr>          m_anchorSources;         //!< The list of formatted links
         std::map<String, FormattedElement::Ptr>  m_anchorTargets;         //!< The list of link targets
     };
