@@ -1,17 +1,19 @@
 # TGUI-XHTML
-A XHTML viewer widget (or more beneral a ***rich text display widget***, but only XHTML formatting is currently impemented) for texus [TGUI](https://github.com/texus/TGUI/).
+A XHTML module with the main purpose to provide an XHTML viewer widget (or more general: a ***rich text display widget***, but only XHTML formatting is impemented yet) for texus [TGUI](https://github.com/texus/TGUI/).
 
 ## Table of contents
 * [First impression](#first-impression)
 * [Introduction](#introduction)
 * [Intention](#intention)
 * [Limitations](#limitations)
+  * [XHTML parser](#xhtml-parser)
+  * [XHTML functionality](#xhtml-functionality)
 * [Folders and files](#foldera-and-files)
 * [Features](#features)
-* [CSS styles](#css-styling)
-* [Inline and CSS styling](#inline-styling)
-* [Supported style attributes](#supported-style-attributes)
-* [Supported tags](#supported-tags)
+  * [CSS styles](#css-styles)
+  * [Inline and CSS styling](#inline-styling)
+  * [Supported style attributes](#supported-style-attributes)
+  * [Supported tags](#supported-tags)
 * [The TGUI-XHTML code](#extension-code)
 * [The FormattedTextView widget](#formatted-text-widget)
 * [The sample application](#sample-app)
@@ -28,7 +30,7 @@ This project is an extension for the [immediate mode GUI](https://en.wikipedia.o
 
 <img src="XhtmlViewer_Classes.png"/>
 
-* The `XhtmlParser` parses an XHTML document and creates the DOM from **XhtmlElements**.
+* The `XhtmlParser` parses an XHTML document and creates the DOM from `XhtmlElements`.
 * One `XhtmlElement` holds one document object and all it's formatting and styling information.
 * The `FormattedXhtmlDocument` represents the XHTML DOM and holds the `XhtmlElement`s in a tree.
 * The `MarkupLanguageElement` is the base class of `XhtmlElement` and abstracts XHTML specifics.
@@ -50,14 +52,28 @@ There are several similar projects around, that address the same problem: An app
 Typical use cases for a ***rich text display widget*** include boosting static text displays (either in the application window or in a dialog - in both cases the response time is an important factor for the user experience) and an integrated help system (that should be able to browse through topics). I also recommend to read the *Introduction* of the article [XHTMLStatic](https://www.codeproject.com/Articles/2900/XHTMLStatic-An-Extra-Lean-Custom-Control-to-Displa) by Hans Dietrich - apart from his opinion on tables, I agree with him on all points.
 
 # <a name="limitations">Limitations</a>
-Not yet implemented but important functionalities of a ***rich text display widget*** are:
-* tables and
-* links/anchors.</br>
-I hope to provide both in the near future.
+## <a name="xhtml-functionality">XHTML functionality</a>
+Since the focus of this module is the **simple** integration of a ***rich text display widget*** and not on the full-fledged replacement for a browser control, a choice has to be made about the functionality to be implemented.
+Unfortunately, there is no clear line between something simple and compact on the one hand and something complex and excessive on the other - and so the choice of the functionality to be implemented is naturally subject to personal preferences and project requirements.
 
+Not yet implemented but important functionalities (in my opinion) of a ***rich text display widget*** are:
+* tables and
+* links/anchors.
+
+Tables aren't implemented at all yet, but planned.</br>
+Links/anchors are implemented for document internal anchors yet. A navigation from document to document is planned.</br>
 Also planned for the future is the possibility to select and copy.
 
 Nevertheless, the functionality already available is so extensive that a description would be very laborious. Instead, I recommend studying the sample application - it tests all the currently available functionality and is an excellent source of knowledge.
+
+## <a name="xhtml-parser">XHTML parser</a>
+This XHTML module includes a lightweight XHTML parser to make the module easy to use without external dependencies. This parser is heavily inspired by the great work [HTML Reader C++ Class Library](https://www.codeproject.com/Articles/6561/HTML-Reader-C-Class-Library), version dated 29 March 2004 and written by Gurmeet S. Kochar <gomzygotit@hotmail.com> aka [gUrM33T](https://www.codeproject.com/script/Membership/View.aspx?mid=547523).
+
+Unfortunately, the original code is not cross-platform (uses MS Windows data types instead of STL data types) and has an customized infecting license. For these reasons, the lightweight XHTML parser included in this XHTML module is a complete re-implementation - with platform independence and robustness in mind.
+
+Nevertheless, a visit to the original is worthwhile in any case.
+
+In case the included lightweight XHTML parser is insufficient for a specific use case, I recommend to take a look at the [POCO C++ libraries](https://pocoproject.org/). These powerful cross-platform C++ libraries provide both a DOM and a SAX parser for XHTML (and many more).
 
 # <a name="foldera-and-files">Folders and files</a>
 * `include/TGUI/Xhtml        ` - folder of include files
@@ -78,12 +94,12 @@ Nevertheless, the functionality already available is so extensive that a descrip
 
 # <a name="features">Features</a>
 List of supported XHTML features
-* [CSS styles](#css-styling)
+* [CSS styles](#css-styles)
 * [Inline and CSS styling](#inline-styling)
 * [Supported style attributes](#supported-style-attributes)
 * [Supported tags](#supported-tags)
 
-# <a name="css-styling">CSS styling</a>
+## <a name="css-styles">CSS styles</a>
 CSS styles are always to be registered to the `<head>` [tag](#supported-tags). Currently supported are:
 * ***element type*** selectors (like `<h1>`, `<div>` or `<pre>`),
 * ***class*** selectors (like `.centered`, `.colored` or `.highlight`) and
@@ -93,7 +109,7 @@ To apply a CSS style, the respective element must have a CSS registered for it's
 
 If multiple CSS styles are applicable, all styles are applied but the most specific ones are applied last. The sequende is: ***element type*** based styles first, ***class*** based styles next and the combination of ***element type*** and ***class*** bases styles last. Thus, later applied styles can (partially) override earlier applied styles.
 
-## CSS styles - to be created from DOM element C++ constructor calls
+### CSS styles - to be created from DOM element C++ constructor calls
 ```
 auto htmlHead  = tgui::XhtmlElement::createHead(htmlRoot);
 auto thmlStyle = tgui::XhtmlElement::createStyle(htmlHead);
@@ -107,7 +123,7 @@ thmlStyle->setEntry(U"kt", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U
 ```
 
 
-## CSS styles - to be parsed from HTML file
+### CSS styles - to be parsed from HTML file
 ```
 <html>
     <head>
@@ -120,10 +136,10 @@ thmlStyle->setEntry(U"kt", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U
 </html>
 ```
 
-# <a name="inline-styling">Inline styling</a>
+## <a name="inline-styling">Inline styling</a>
 If there are applicable CSS styles, they are applid before the inline styles. Thus, an inline style can (partially) override CSS styles.
 
-## Inline style - to be created from DOM element C++ constructor calls
+### Inline style - to be created from DOM element C++ constructor calls
 ***auto*** **span1** = *tgui::XhtmlElement::createSpan*(***nullptr***, *tgui::Color*(U"#008800"),<br/>
 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *tgui::XhtmlElement::createInnerText*(***nullptr***, U"test local color"));<br/>
 ***auto*** **silverBG** = ***std::make_shared***<*tgui::XhtmlStyleEntry>*();<br/>
@@ -133,14 +149,14 @@ If there are applicable CSS styles, they are applid before the inline styles. Th
 **silverBG**->*setPadding*(*tgui::FourDimSize*(*tgui::SizeType::Pixel*, 0.0f, 4.0f));<br/>
 ***auto*** **div1** = *tgui::XhtmlElement::createDivision*(***nullptr***, **silverBG**, *tgui::XhtmlElement::createInnerText*(***nullptr***, U"test style"));
         
-## Inline style - to be parsed from HTML file
+### Inline style - to be parsed from HTML file
 ***&lt;span*** **style**="color:green"&gt; test inline color ***&lt;/span&gt;***<br/>
 ***&lt;style&gt;***<br/>
 &nbsp; &nbsp; **silverBG** {***background-color***:#f0f0f0; ***border-color***:#a0a0a0; ***border-width***:1px; ***padding***:0px 4px;}<br/>
 ***&lt;/style&gt;***<br/>
 ***&lt;div*** **class**="silverBG"&gt; test style ***&lt;/div&gt;***<br/>
 
-# <a name="supported-style-attributes">Supported style attributes</a>
+## <a name="supported-style-attributes">Supported style attributes</a>
 * background-color<sup>[1]</sup>
 * border-color<sup>[1]</sup>
 * color<sup>[1]</sup>
@@ -163,7 +179,7 @@ If there are applicable CSS styles, they are applid before the inline styles. Th
 <sup>[7]</sup> supported are *regular* and *italic*<br/>
 <sup>[8]</sup> supported are *regular* and *bold*
 
-# <a name="supported-tags">Supported tags</a>
+## <a name="supported-tags">Supported tags</a>
 * `<!doctype>` (in that way, that it doesn't create errors or warnings)
 * `<document>` (in that way, that it doesn't create errors or warnings)
 * `<html>`<sup>[1]</sup> (ready to contain `<head>` and `<body>`)
