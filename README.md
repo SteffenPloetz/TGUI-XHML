@@ -21,7 +21,7 @@ A XHTML module with the main purpose to provide an XHTML viewer widget (or more 
 # <a name="first-impression">First impression</a>
 The next two images show the sample aplication on Linux
 * image one: document created from DOM element C++ constructor calls (no XHTML parser involved) and
-* image two: document parsed from HTML file (minmum of code required):
+* image two: document parsed from HTML file (minmum of C++ code required):
 
 <img src="XhtmlViewer_01.png" width="48%"/>  <img src="XhtmlViewer_02.png" width="48%"/>
 
@@ -53,7 +53,7 @@ Typical use cases for a ***rich text display widget*** include boosting static t
 
 # <a name="limitations">Limitations</a>
 ## <a name="xhtml-functionality">XHTML functionality</a>
-Since the focus of this module is the **simple** integration of a ***rich text display widget*** and not on the full-fledged replacement for a browser control, a choice has to be made about the functionality to be implemented.
+Since the focus of this module is the **easy** integration of a ***rich text display widget*** and not on the full-fledged replacement for a browser control, a choice has to be made about the functionality to be implemented.
 Unfortunately, there is no clear line between something simple and compact on the one hand and something complex and excessive on the other - and so the choice of the functionality to be implemented is naturally subject to personal preferences and project requirements.
 
 Not yet implemented but important functionalities (in my opinion) of a ***rich text display widget*** are:
@@ -140,36 +140,41 @@ thmlStyle->setEntry(U"kt", std::make_shared<tgui::XhtmlStyleEntry>(tgui::Color(U
 ## <a name="inline-styling">Inline styling</a>
 If there are applicable CSS styles, they are applid before the inline styles. Thus, an inline style can (partially) override CSS styles.
 
-### Inline style - to be created from DOM element C++ constructor calls
-***auto*** **span1** = *tgui::XhtmlElement::createSpan*(***nullptr***, *tgui::Color*(U"#008800"),<br/>
-&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; *tgui::XhtmlElement::createInnerText*(***nullptr***, U"test local color"));<br/>
-***auto*** **silverBG** = ***std::make_shared***<*tgui::XhtmlStyleEntry>*();<br/>
-**silverBG**->*setBackgroundColor*(*tgui::Color*(248, 248, 248, 255));<br/>
-**silverBG**->*setBorderColor*(*tgui::Color*(160, 160, 160, 192));<br/>
-**silverBG**->*setBorderWidth*(*tgui::FourDimSize*(*tgui::SizeType::Pixel*, 1.0f));<br/>
-**silverBG**->*setPadding*(*tgui::FourDimSize*(*tgui::SizeType::Pixel*, 0.0f, 4.0f));<br/>
-***auto*** **div1** = *tgui::XhtmlElement::createDivision*(***nullptr***, **silverBG**, *tgui::XhtmlElement::createInnerText*(***nullptr***, U"test style"));
+### Inline styles - to be created from DOM element C++ constructor calls
+```
+[1] auto silverBG = std::make_shared<tgui::XhtmlStyleEntry>()
+        .setBackgroundColor(tgui::Color(248, 248, 248, 255))
+        .setBorderColor(tgui::Color(160, 160, 160, 192))
+        .setBorderWidth(tgui::FourDimSize(tgui::SizeType::Pixel, 1.0f))
+        .setPadding(tgui::FourDimSize(tgui::SizeType::Pixel, 0.0f, 4.0f));
+[2] auto span1 = tgui::XhtmlElement::createSpan(nullptr, tgui::Color(U"#008800"),
+        tgui::XhtmlElement::createInnerText(nullptr, U"test local color"));
+[2] auto div1 = tgui::XhtmlElement::createDivision(nullptr,
+        silverBG, tgui::XhtmlElement::createInnerText(nullptr, U"test style"));
+```
         
-### Inline style - to be parsed from HTML file
-***&lt;span*** **style**="color:green"&gt; test inline color ***&lt;/span&gt;***<br/>
-***&lt;style&gt;***<br/>
-&nbsp; &nbsp; **silverBG** {***background-color***:#f0f0f0; ***border-color***:#a0a0a0; ***border-width***:1px; ***padding***:0px 4px;}<br/>
-***&lt;/style&gt;***<br/>
-***&lt;div*** **class**="silverBG"&gt; test style ***&lt;/div&gt;***<br/>
+### Inline styles - to be parsed from HTML file
+```
+[2] <span style="color:green;">test inline color</span>
+[2] <div style="background-color:#f0f0f0; border-color:#a0a0a0; border-width:1px; padding:0px 4px;">test style</div>
+```
+
+<sup>[1]</sup> Inline style declaration<br/>
+<sup>[2]</sup> Inline style application
 
 ## <a name="supported-style-attributes">Supported style attributes</a>
 <table style="width:100%">
 <tr><th>style attribute</th><th>note</th><th>purpose</th></tr>
-<tr><td>background-color</td><td><sup>[1]</sup></td><td>background color</td></tr>
-<tr><td>border-color</td><td><sup>[1]</sup></td><td>border color</td></tr>
-<tr><td>color</td><td><sup>[1]</sup></td><td>foreground/text color</td></tr>
-<tr><td>opacity</td><td><sup>[1]</sup></td><td>color opacity</td></tr>
-<tr><td>border-style</td><td> </td><td>border style</td></tr>
-<tr><td>border-width</td><td><sup>[3], [5], [6]</sup></td><td>border width</td></tr>
-<tr><td>margin</td><td><sup>[4], [5], [6]</sup></td><td>margin</td></tr>
-<tr><td>padding</td><td><sup>[4], [5], [6]</sup></td><td>padding</td></tr>
-<tr><td>font-style</td><td><sup>[7]</sup></td><td>font style</td></tr>
-<tr><td>font-weight</td><td><sup>[8]</sup></td><td>font weight</td></tr>
+<tr><td><code>background-color</code></td><td><sup>[1]</sup></td><td>background color</td></tr>
+<tr><td><code>border-color</code></td><td><sup>[1]</sup></td><td>border color</td></tr>
+<tr><td><code>color</code></td><td><sup>[1]</sup></td><td>foreground/text color</td></tr>
+<tr><td><code>opacity</code></td><td><sup>[1]</sup></td><td>color opacity</td></tr>
+<tr><td><code>border-style</code></td><td> </td><td>border style</td></tr>
+<tr><td><code>border-width</code></td><td><sup>[3], [5], [6]</sup></td><td>border width</td></tr>
+<tr><td><code>margin</code></td><td><sup>[4], [5], [6]</sup></td><td>margin</td></tr>
+<tr><td><code>padding</code></td><td><sup>[4], [5], [6]</sup></td><td>padding</td></tr>
+<tr><td><code>font-style</code></td><td><sup>[7]</sup></td><td>font style</td></tr>
+<tr><td><code>font-weight</code></td><td><sup>[8]</sup></td><td>font weight</td></tr>
 </table>
 
 <sup>[1]</sup> supported are all 142 web [color names](https://www.w3schools.com/colors/colors_names.asp) and values with *#RRGGBB* syntax<br/>
