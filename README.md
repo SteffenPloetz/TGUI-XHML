@@ -157,19 +157,23 @@ If there are applicable CSS styles, they are applid before the inline styles. Th
 ***&lt;div*** **class**="silverBG"&gt; test style ***&lt;/div&gt;***<br/>
 
 ## <a name="supported-style-attributes">Supported style attributes</a>
-* background-color<sup>[1]</sup>
-* border-color<sup>[1]</sup>
-* color<sup>[1]</sup>
-* opacity<sup>[2]</sup>
-* border-width<sup>[356]</sup>
-* padding<sup>[456]</sup>
-* margin<sup>[456]</sup>
-* font-style<sup>[7]</sup>
-* font-weight<sup>[8]</sup>
+<table style="width:100%">
+<tr><th>style attribute</th><th>note</th><th>purpose</th></tr>
+<tr><td>background-color</td><td><sup>[1]</sup></td><td>background color</td></tr>
+<tr><td>border-color</td><td><sup>[1]</sup></td><td>border color</td></tr>
+<tr><td>color</td><td><sup>[1]</sup></td><td>foreground/text color</td></tr>
+<tr><td>opacity</td><td><sup>[1]</sup></td><td>color opacity</td></tr>
+<tr><td>border-style</td><td> </td><td>border style</td></tr>
+<tr><td>border-width</td><td><sup>[3], [5], [6]</sup></td><td>border width</td></tr>
+<tr><td>margin</td><td><sup>[4], [5], [6]</sup></td><td>margin</td></tr>
+<tr><td>padding</td><td><sup>[4], [5], [6]</sup></td><td>padding</td></tr>
+<tr><td>font-style</td><td><sup>[7]</sup></td><td>font style</td></tr>
+<tr><td>font-weight</td><td><sup>[8]</sup></td><td>font weight</td></tr>
+</table>
 
 <sup>[1]</sup> supported are all 142 web [color names](https://www.w3schools.com/colors/colors_names.asp) and values with *#RRGGBB* syntax<br/>
 <sup>[2]</sup> values between *0.0* = full transparency and *1.0* = full opacity<br/>
-<sup>[3]</sup> supported are the alias names *thin* translated to 1px, *medium* translated to 3px and *thick* translated to 5px as well as 1...4 numeric values, optionally with prefix for the measuring unit<br/>
+<sup>[3]</sup> supported are the alias names *thin* translated to 1px, *medium* translated to 3px and *thick* translated to 5px as well as 1...4 numeric values, optionally with postfix for the measuring unit<br/>
 <sup>[4]</sup> supported are 1...4 numeric values, optionally with prefix for the measuring unit<br/>
 <sup>[5]</sup> if one numeric value is provided, it is applied to top, right, bottom and left<br/>
 &nbsp; &nbsp;if two numeric values are provided, they are applied to top/bottom and right/left<br/>
@@ -179,25 +183,47 @@ If there are applicable CSS styles, they are applid before the inline styles. Th
 <sup>[7]</sup> supported are *regular* and *italic*<br/>
 <sup>[8]</sup> supported are *regular* and *bold*
 
+### Border styles (along with margin and padding)
+The image shows the border styles `dashed`, `dotted`, `solid`, `double`, `groove`, `ridge`, `inset`, `outset` and `none`/`hidden`.
+
+<img src="Xhtml-Viewer_Borders.png"/>
+
 ## <a name="supported-tags">Supported tags</a>
+**Declarative tags**
 * `<!doctype>` (in that way, that it doesn't create errors or warnings)
 * `<document>` (in that way, that it doesn't create errors or warnings)
-* `<html>`<sup>[1]</sup> (ready to contain `<head>` and `<body>`)
-* `<head>` (ready to contain `<meta>`, `<title>` and `<style>`)
 * `<meta>` (in that way, that it doesn't create errors or warnings)
 * `<title>` (in that way, that it doesn't create errors or warnings)
 * `<style>` (see [CSS styles](#css-styling))
+
+**Structuring tags**
+* `<html>`<sup>[1]</sup> (ready to contain `<head>` and `<body>`)
+* `<head>` (ready to contain `<meta>`, `<title>` and `<style>`)
 * `<body>`<sup>[1]</sup> (ready to contain all the tags below)
 * `<h1>`<sup>[1]</sup> ... `<h6>`<sup>[1]</sup> for head line 1st order ... 6th order
-* `<em>` for emphasized and `<i>` for italic
-* `<s>` for strong `<b>` for bold
-* `<u>` for underline
-* `<sup>` for superscript and `<sub>` for subscript
-* `<ul>`<sup>[1]</sup> for unordered list, `<ol>`<sup>[1]</sup> for ordered list and `<li>`<sup>[1]</sup> for list item
-* `<span>`<sup>[1]</sup>, `<div>`<sup>[1]</sup> for division and `<p>`<sup>[1]</sup> for paragraph
-* `<pre>`<sup>[1]</sup> for preformatted and `<code>`<sup>[1]</sup> for code
-* `<br/>` for line break
+* `<ul>`<sup>[1]</sup> for unordered list
+* `<ol>`<sup>[1]</sup> for ordered list
+* `<li>`<sup>[1]</sup> for list item
+* `<span>`<sup>[1]</sup> for a range
+* `<div>`<sup>[1]</sup> for division
+* `<p>`<sup>[1]</sup> for paragraph
+* `<pre>`<sup>[1]</sup> for preformatted
+* `<code>`<sup>[1]</sup> for code
+* `<a>` for anchor
 * `<img>` for image
+
+**Formatting tags**
+* `<em>` for emphasized
+* `<i>` for italic
+* `<s>` for strong
+* `<b>` for bold
+* `<u>` for underline
+* `<sup>` for superscript
+* `<sub>` for subscript
+* `<br/>` for line break
+
+**None-tags**
+* inner text<sup>[1]</sup>
 
 <sup>[1]</sup> can be styled with [inline and CSS styling](#inline-styling)
 
