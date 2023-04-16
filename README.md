@@ -87,6 +87,7 @@ In case the included lightweight XHTML parser is insufficient for a specific use
 * `TGUI-XHTML.vcxproj        ` - **Visual Studio 2022** project file for a ***Microsoft (R) Windows*** dynamic link library
 * `TGUI-XHTML.vcxproj.filters` - **Visual Studio 2022** file filters
 * `TGUI-XHTML.vcxproj.user   ` - **Visual Studio 2022** personal preferences
+* `Xhtml-Viewer_Borders.png  ` - Image of the supported border types
 * `XhtmlViewer_01.png        ` - Image of sample application, with a document created from DOM element C++ constructor calls
 * `XhtmlViewer_02.png        ` - Image of sample application, with a document parsed from HTML file
 * `XhtmlViewer_Classes.png   ` - Image of class ctructure
