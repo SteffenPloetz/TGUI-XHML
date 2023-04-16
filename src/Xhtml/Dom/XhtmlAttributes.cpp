@@ -336,15 +336,15 @@ namespace tgui  { namespace xhtml
         m_value.replace(U'\v', U' ');
 
         /** resolve entity reference(s) */
-        size_t    workPosition = -1;
-        int       substitutionLength = 0;
-        char32_t  substituteCharacter = 0;
+        size_t       workPosition = -1;
+        unsigned int substitutionLength = 0;
+        char32_t     substituteCharacter = 0;
         do
         {
-            if ((workPosition = m_value.find(U'&', ++workPosition)) == (size_t)-1)
+            if ((workPosition = m_value.find(U'&', ++workPosition)) == tgui::String::npos)
                 break;
 
-            substitutionLength = XhtmlEntityResolver::resolveEntity(messages, (char32_t*)m_value.substr(workPosition).c_str(), substituteCharacter);
+            substitutionLength = XhtmlEntityResolver::resolveEntity(messages, m_value.substr(workPosition).c_str(), substituteCharacter);
             if (substitutionLength)
             {
                 tgui::String strSubst; strSubst += substituteCharacter;

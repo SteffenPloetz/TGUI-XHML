@@ -108,7 +108,7 @@ namespace tgui  { namespace xhtml
         using ConstPtr = std::shared_ptr<const FormattedDocument>; //!< Shared constant widget pointer
 
         static constexpr const char StaticWidgetType[] = "FormattedDocument";
-        static constexpr const wchar_t LinebreakDelimitercharacters[] = L"\r\n\t\v -";
+        static constexpr const char32_t LinebreakDelimitercharacters[] = U"\r\n\t\v -";
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public:
@@ -200,7 +200,7 @@ namespace tgui  { namespace xhtml
             typedef std::shared_ptr<ListData> Ptr; //!< Shared list data pointer
 
             bool         Ordered;          //!< Determine whether the list is ordered or unordered
-            int          ActualItemIndex;  //!< The 1-based index of the actual list item
+            unsigned int ActualItemIndex;  //!< The 1-based index of the actual list item
             ListItemType ItemType;         //!< Determine the bullet to apply
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -212,7 +212,7 @@ namespace tgui  { namespace xhtml
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             String calculateBullet(size_t nestingDepth)
             {
-                String bullet = L"";
+                String bullet = U"";
                 if (!Ordered)
                 {
                     if     (nestingDepth % 3 == 1)
@@ -250,20 +250,20 @@ namespace tgui  { namespace xhtml
                         if(ItemType == ListItemType::InheritOrDefault || ItemType == ListItemType::Arabic)
                             bullet = std::to_wstring(ActualItemIndex);
                         else if(ItemType == ListItemType::UpperAlpha)
-                            bullet = (wchar_t)((wchar_t)'@' + (wchar_t)ActualItemIndex);
+                            bullet = static_cast<char32_t>('@' + (wchar_t)ActualItemIndex);
                         else if(ItemType == ListItemType::LowerAlpha)
-                            bullet = (wchar_t)((wchar_t)'`' + (wchar_t)ActualItemIndex);
+                            bullet = static_cast<char32_t>('`' + (wchar_t)ActualItemIndex);
                     }
                     else
                     {
                         if(ItemType == ListItemType::InheritOrDefault || ItemType == ListItemType::LowerAlpha)
-                            bullet = (wchar_t)((wchar_t)'`' + (wchar_t)ActualItemIndex);
+                            bullet = static_cast<char32_t>('`' + (wchar_t)ActualItemIndex);
                         else if(ItemType == ListItemType::UpperAlpha)
-                            bullet = (wchar_t)((wchar_t)'@' + (wchar_t)ActualItemIndex);
+                            bullet = static_cast<char32_t>('@' + (wchar_t)ActualItemIndex);
                         else if(ItemType == ListItemType::Arabic)
                             bullet = std::to_wstring(ActualItemIndex);
                     }
-                    bullet += L".";
+                    bullet += U".";
                 }
                 return bullet;
             }
@@ -535,6 +535,12 @@ namespace tgui  { namespace xhtml
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public:
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Virtual destructor
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        virtual ~FormattedDocument() = default;
+
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the formatted content of this document

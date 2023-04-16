@@ -129,7 +129,7 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    unsigned int XhtmlEntityResolver::resolveEntity(std::vector<std::tuple<tgui::xhtml::MessageType,String>>& messages, char32_t* encode, char32_t& substitute)
+    unsigned int XhtmlEntityResolver::resolveEntity(std::vector<std::tuple<tgui::xhtml::MessageType,String>>& messages, const char32_t* encode, char32_t& substitute)
     {
         if (m_charEntityRefs.empty())
         {
@@ -145,8 +145,8 @@ namespace tgui  { namespace xhtml
             return 0;
         }
 
-        char32_t* begin = encode;
-        int      length = 0;
+        const char32_t* begin = encode;
+        unsigned int    length = 0;
         while (encode[length] != U';' && length < 10)
             length++;
         if (length >= 10)
@@ -177,8 +177,8 @@ namespace tgui  { namespace xhtml
         if (*begin == U'#')
         {
             begin++;
-            char32_t chTemp = *begin;
-            int	radix = (std::isdigit(chTemp) ? 10 :
+            char32_t  chTemp = *begin;
+            const int radix = (std::isdigit(chTemp) ? 10 :
                 (chTemp == U'x' || chTemp == U'X' ? 16 : 0));
             if (radix != 0)
             {
@@ -186,7 +186,7 @@ namespace tgui  { namespace xhtml
                     begin++;
 
                 unsigned long ulNum = toULong(begin, radix);
-                substitute = (char32_t)ulNum;
+                substitute = static_cast<char32_t>(ulNum);
                 length++;
                 return length;
             }
@@ -253,10 +253,9 @@ namespace tgui  { namespace xhtml
     unsigned long XhtmlEntityResolver::toULong(const char32_t* value, int radix)
     {
         std::string buffer;
-        while (*value == U'-' || *value == U'0' || *value == U'1' || *value == U'2' || *value == U'3' || *value == U'4' ||
-            *value == U'5' || *value == U'6' || *value == U'7' || *value == U'8' || *value == U'9')
+        while (*value == U'-' || (*value > U'0' && *value < U'9'))
         {
-            buffer.push_back((char)*value);
+            buffer.push_back(static_cast<char>(*value));
             value++;
         }
         return std::stoul(buffer, nullptr, radix);

@@ -250,7 +250,7 @@ namespace tgui  { namespace xhtml
                 {
                     workCharacter = rejectChar();
 
-                    int charOffset = 0;
+                    unsigned int charOffset = 0;
                     if (resolveEntities)
                         charOffset = XhtmlEntityResolver::resolveEntity(m_messages, &m_buffer[m_bufferPos], workCharacter);
 

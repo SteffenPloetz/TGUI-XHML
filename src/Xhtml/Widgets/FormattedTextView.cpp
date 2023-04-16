@@ -82,22 +82,23 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    bool FormattedTextView::mouseWheelScrolled(float delta, Vector2f pos)
+    bool FormattedTextView::scrolled(float delta, Vector2f pos, bool touch)
     {
         if(keyboard::isMultiselectModifierPressed())
             return updateZoom(delta);
 
         bool scrollbarMoved = false;
         if (m_horizontalScrollbar->isShown() &&
+            !touch &&
             (!m_verticalScrollbar->isShown() ||
              m_horizontalScrollbar->isMouseOnWidget(pos - getPosition()) ||
              keyboard::isShiftPressed()))
         {
-            scrollbarMoved = m_horizontalScrollbar->mouseWheelScrolled(delta, pos - getPosition());
+            scrollbarMoved = m_horizontalScrollbar->scrolled(delta, pos - getPosition(), touch);
         }
         else if (m_verticalScrollbar->isShown())
         {
-            scrollbarMoved = m_verticalScrollbar->mouseWheelScrolled(delta, pos - getPosition());
+            scrollbarMoved = m_verticalScrollbar->scrolled(delta, pos - getPosition(), touch);
         }
 
         if (scrollbarMoved)
@@ -558,7 +559,7 @@ namespace tgui  { namespace xhtml
                     auto color = Vertex::Color(formattedRectangle->getBackgroundColor().getRed(),
                                                formattedRectangle->getBackgroundColor().getGreen(),
                                                formattedRectangle->getBackgroundColor().getBlue(),
-                                               std::max(std::min((int)(formattedRectangle->getOpacity() * formattedRectangle->getBackgroundColor().getAlpha()), 255), 0));
+                                               std::max(std::min(static_cast<int>(formattedRectangle->getOpacity() * formattedRectangle->getBackgroundColor().getAlpha()), 255), 0));
                     const std::array<Vertex, 4> vertices = {{
                         {{formattedRectangle->getLayoutLeft()  + formattedRectangle->getMargin().left,  formattedRectangle->getLayoutTop()    + formattedRectangle->getMargin().top   }, color},
                         {{formattedRectangle->getLayoutLeft()  + formattedRectangle->getMargin().left,  formattedRectangle->getLayoutBottom() - formattedRectangle->getMargin().bottom}, color},
@@ -581,7 +582,7 @@ namespace tgui  { namespace xhtml
                     auto color = Vertex::Color(formattedRectangle->getBorderColor().getRed(),
                                                formattedRectangle->getBorderColor().getGreen(),
                                                formattedRectangle->getBorderColor().getBlue(),
-                                               std::max(std::min((int)(formattedRectangle->getOpacity() * formattedRectangle->getBorderColor().getAlpha()), 255), 0));
+                                               std::max(std::min(static_cast<int>(formattedRectangle->getOpacity() * formattedRectangle->getBorderColor().getAlpha()), 255), 0));
                     Outline borderArea{ formattedRectangle->getLayoutLeft()   + formattedRectangle->getMargin().left,
                                         formattedRectangle->getLayoutTop()    + formattedRectangle->getMargin().top,
                                         formattedRectangle->getLayoutRight()  - formattedRectangle->getMargin().right,
@@ -1259,7 +1260,7 @@ namespace tgui  { namespace xhtml
         return Vertex::Color(color.getRed()   - (255 - color.getRed())   / 4,
                              color.getGreen() - (255 - color.getGreen()) / 4,
                              color.getBlue()  - (255 - color.getBlue())  / 4,
-                             std::max(std::min((int)(opacity * color.getAlpha()), 255), 0));
+                             std::max(std::min(static_cast<int>(opacity * color.getAlpha()), 255), 0));
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1269,6 +1270,6 @@ namespace tgui  { namespace xhtml
         return Vertex::Color(color.getRed()   + (255 - color.getRed())   / 4,
                              color.getGreen() + (255 - color.getGreen()) / 4,
                              color.getBlue()  + (255 - color.getBlue())  / 4,
-                             std::max(std::min((int)(opacity * color.getAlpha()), 255), 0));
+                             std::max(std::min(static_cast<int>(opacity * color.getAlpha()), 255), 0));
     }
 } }

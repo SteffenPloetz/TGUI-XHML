@@ -72,7 +72,7 @@ namespace tgui  { namespace xhtml
         ///
         /// @return The number of processed character in encode on success, or 0 otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static unsigned int resolveEntity(std::vector<std::tuple<tgui::xhtml::MessageType, String>>& messages, char32_t* encode, char32_t& substitute);
+        static unsigned int resolveEntity(std::vector<std::tuple<tgui::xhtml::MessageType, String>>& messages, const char32_t* encode, char32_t& substitute);
 
     private:
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

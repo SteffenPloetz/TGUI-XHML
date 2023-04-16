@@ -252,7 +252,7 @@ namespace tgui  { namespace xhtml
     {
         // Determine SECURE auto-line-break position: For a mono-space font, the runLength is distributed equally to the characters.
         // For a proportional font, the runLength typically is smaller and the SECURE auto-line-break position is a good starting point.
-        size_t delimiterPosition = (int)(remainingText.size() * ((1.0f * (m_evolvingLayoutArea.width - m_evolvingLineRunLength)) / (1.0f * runLength)));
+        size_t delimiterPosition = static_cast<size_t>(remainingText.size() * ((1.0f * (m_evolvingLayoutArea.width - m_evolvingLineRunLength)) / (1.0f * runLength)));
         // The line width calculation is not 100% correct. - So some security space is subtracted.
         delimiterPosition -= (delimiterPosition > 333 ? 8 : (delimiterPosition > 99 ? 6 : (delimiterPosition > 33 ? 4 : (delimiterPosition > 9 ? 2 : (delimiterPosition > 3 ? 1 : 0)))));
         size_t linebreakPosition = remainingText.find_last_of(LinebreakDelimitercharacters, delimiterPosition); // Search only includes characters at or before delimiterPosition.
@@ -906,19 +906,19 @@ namespace tgui  { namespace xhtml
             }
             else if (typeName == XhtmlElementType::Text)
             {
-                String remainingText = ((XhtmlInnerText*)&(*xhtmlElement))->getText();
-                auto   runLengt      = Text::getLineWidth(remainingText, m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
+                String remainingText = static_cast<XhtmlInnerText*>(xhtmlElement.get())->getText();
+                auto   runLength     = Text::getLineWidth(remainingText, m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
                 size_t formerCharCnt = remainingText.size() + 1;
 
                 // distribute, if text exceeds available width
-                while ((m_preformattedTextFlagCnt > 0 && remainingText.contains('\r')) ||  // preformatted text has dedicated line bereak instructions
-                       (formerCharCnt > remainingText.size() &&                            // there must be a chance to distribute the text to multiple lines
-                        m_evolvingLayoutArea.width - m_evolvingLineRunLength < runLengt && // there must be a need to distribute the text to multiple lines
-                        remainingText.size() > 0))                                         // there must be remaining text to distribute to multiple lines
+                while ((m_preformattedTextFlagCnt > 0 && remainingText.contains('\r')) ||   // preformatted text has dedicated line bereak instructions
+                       (formerCharCnt > remainingText.size() &&                             // there must be a chance to distribute the text to multiple lines
+                        m_evolvingLayoutArea.width - m_evolvingLineRunLength < runLength && // there must be a need to distribute the text to multiple lines
+                        remainingText.size() > 0))                                          // there must be remaining text to distribute to multiple lines
                 {
                     formerCharCnt = remainingText.size();
 
-                    size_t linebreakPosition = calculateAutoLineBreak(remainingText, runLengt);
+                    size_t linebreakPosition = calculateAutoLineBreak(remainingText, runLength);
 
                     // The preformatted text might force an earlier line-break, that is situated witin the remaining text before auto-line-break 'linebreakPosition'.
                     if (m_preformattedTextFlagCnt > 0)
@@ -947,14 +947,14 @@ namespace tgui  { namespace xhtml
                     }
 
                     formattedTextSection->setString(remainingText.substr(0, linebreakPosition));
-                    runLengt = Text::getLineWidth(formattedTextSection->getString(), m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
-                    formattedTextSection->setRunLength(runLengt + 0.45f);
-                    m_evolvingLineRunLength += runLengt;
+                    runLength = Text::getLineWidth(formattedTextSection->getString(), m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
+                    formattedTextSection->setRunLength(runLength + 0.45f);
+                    m_evolvingLineRunLength += runLength;
                     formattedTextSection->setColor(m_formattingState.ForeColor);
                     formattedTextSection->setStyle(m_formattingState.Style);
 
                     remainingText = remainingText.substr(linebreakPosition + 1);
-                    runLengt = Text::getLineWidth(remainingText, m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
+                    runLength = Text::getLineWidth(remainingText, m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
 
                     if (remainingText.size() > 0)
                     {
@@ -984,9 +984,9 @@ namespace tgui  { namespace xhtml
                 if (remainingText.size() > 0)
                 {
                     formattedTextSection->setString(remainingText);
-                    auto runLengt = Text::getLineWidth(formattedTextSection->getString(), m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
-                    formattedTextSection->setRunLength(runLengt + 0.49f);
-                    m_evolvingLineRunLength += runLengt;
+                    runLength = Text::getLineWidth(formattedTextSection->getString(), m_formattingState.TextFont, static_cast<unsigned int>(m_formattingState.TextHeight + 0.49f));
+                    formattedTextSection->setRunLength(runLength + 0.49f);
+                    m_evolvingLineRunLength += runLength;
                     formattedTextSection->setColor(m_formattingState.ForeColor);
                     formattedTextSection->setStyle(m_formattingState.Style);
                 }
@@ -1111,8 +1111,8 @@ namespace tgui  { namespace xhtml
                     auto formattedTextSection = std::dynamic_pointer_cast<FormattedTextSection>(*rit);
 #endif
                     float oldReferenceLine = (*rit)->getLayoutRefLine();
-                    auto  typeName = (*rit)->getContentOrigin()->getTypeName();
-                    if (oldReferenceLine == renderReferenceLine || typeName == XhtmlElementType::Span)
+                    auto  loopTypeName = (*rit)->getContentOrigin()->getTypeName();
+                    if (oldReferenceLine == renderReferenceLine || loopTypeName == XhtmlElementType::Span)
                     {
                         auto rect = rit->get()->getLayoutArea();
                         rect.top += additionalExtraHeight;

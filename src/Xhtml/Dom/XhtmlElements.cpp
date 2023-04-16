@@ -1398,18 +1398,18 @@ namespace tgui  { namespace xhtml
     void XhtmlElement::trace(std::wstring indent, bool complete)
     {
         XhtmlAttribute::Ptr attribute;
-        tgui::String identity = ((attribute = getAttribute(U"id")) != nullptr ? U", id: '" + (const tgui::String&)(attribute->getValue()) + U"'" :
-            ((attribute = getAttribute(U"class")) != nullptr ? U", class: '" + (const tgui::String&)(attribute->getValue()) + U"'" : U""));
+        tgui::String identity = ((attribute = getAttribute(U"id")) != nullptr ? U", id: '" + attribute->getValue() + U"'" :
+            ((attribute = getAttribute(U"class")) != nullptr ? U", class: '" + attribute->getValue() + U"'" : U""));
         tgui::String parent = U", parent: " + (m_parent == nullptr ? U"none" : U"'" + m_parent->getTypeNameU32() + U"'");
         tgui::String children = (m_children != nullptr ? U", children: " + tgui::String(m_children->size()) : U"");
 
         tgui::String content = U"";
         if (tgui::viewEqualIgnoreCase(getTypeName(), XhtmlElementType::Text))
         {
-            if (((XhtmlInnerText*)this)->getText().length() > 12)
-                content += U", content: \"" + ((XhtmlInnerText*)this)->getText().substr(0, 10) + U"...\"";
+            if (static_cast<XhtmlInnerText*>(this)->getText().length() > 12)
+                content += U", content: \"" + static_cast<XhtmlInnerText*>(this)->getText().substr(0, 10) + U"...\"";
             else
-                content += U", content: \"" + ((XhtmlInnerText*)this)->getText() + U"\"";
+                content += U", content: \"" + static_cast<XhtmlInnerText*>(this)->getText() + U"\"";
         }
 
         // Attention: A 'std::u32string' streamed to console creates readable output, while a 'U"..."' literal streamed to console creates byte code!

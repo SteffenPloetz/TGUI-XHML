@@ -128,6 +128,11 @@ namespace tgui  { namespace xhtml
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+#if defined(__GNUC__)
+#   pragma GCC diagnostic push
+#   pragma GCC diagnostic ignored "-Wshadow"
+#endif
+
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief The enumeration of style entry properties, that are valid for a style entry
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -146,6 +151,10 @@ namespace tgui  { namespace xhtml
         BorderWidth = 1 << 10, //!< The border width is captured by this style entry
         Padding     = 1 << 11  //!< The padding is captured by this style entry
     };
+
+#if defined(__GNUC__)
+#   pragma GCC diagnostic pop
+#endif
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// @brief Combines two style flags with binary OR operator
@@ -187,7 +196,7 @@ namespace tgui  { namespace xhtml
         Color        ForeColor  = Color::Transparent;                     //!< The foreground/text color
         tgui::String FontFamily = U"";                                    //!< The font family
         OneDimSize   FontSize   = OneDimSize(SizeType::Relative, 1.0F);   //!< The font size
-        TextStyle    FontStyle  = (TextStyle)(1 << 4);                    //!< The font style
+        TextStyle    FontStyle  = static_cast<TextStyle>(1 << 4);         //!< The font style
         Color        BackColor  = Color::Transparent;                     //!< The background color
 
         inline XhtmlStyleEntryInitializer& SetForeColor(Color color)              { ForeColor = color; return *this; }
@@ -262,7 +271,7 @@ namespace tgui  { namespace xhtml
                 m_fontSize = initializer.FontSize;
                 m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::FontSize;
             }
-            if ((int)initializer.FontStyle <= (int)TextStyle::StrikeThrough)
+            if (static_cast<int>(initializer.FontStyle) <= static_cast<int>(TextStyle::StrikeThrough))
             {
                 m_fontStyle = initializer.FontStyle;
                 m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::FontStyle;

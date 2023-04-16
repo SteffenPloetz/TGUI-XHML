@@ -233,7 +233,7 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void applyStyleEntriesToFormattingState(const std::vector<XhtmlStyleEntry::Ptr> styleEntries,
             const FormattedDocument::FontCollection& fontCollection,
-            StyleCategoryFlags categories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
+            StyleCategoryFlags styleCategories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Applies a list of XHTML style entries to the formatted element
@@ -244,7 +244,7 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement, const std::vector<XhtmlStyleEntry::Ptr> styleEntries,
             const FormattedDocument::FontCollection& fontCollection,
-            StyleCategoryFlags categories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
+            StyleCategoryFlags styleCategories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Creates and basically initializes a FormattedRectangle

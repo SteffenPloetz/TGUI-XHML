@@ -463,7 +463,7 @@
 
 1681157076 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedTextDocument.hpp
 
-1681540425 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/sample-app/main.cpp
+1681540424 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/sample-app/main.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<TGUI/Base64.hpp>
@@ -529,7 +529,7 @@
 	<TGUI/String.hpp>
 	"TGUI/Xhtml/MarkupLanguageElement.hpp"
 
-1681458548 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/MarkupLanguageElement.hpp
+1681562700 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/MarkupLanguageElement.hpp
 
 1681164786 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/DOM/XhtmlEntityResolver.cpp
 	<TGUI/Config.hpp>
@@ -578,7 +578,7 @@
 	<string>
 	"TGUI/Xhtml/StringHelper.hpp"
 
-1681458552 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/UtfHelper.cpp
+1681563209 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/UtfHelper.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	"TGUI/Xhtml/UtfHelper.hpp"
@@ -596,12 +596,12 @@
 	"TGUI/Xhtml/Dom/XhtmlElements.hpp"
 	"TGUI/Xhtml/Widgets/FormattedElements.hpp"
 
-1681539577 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedElements.hpp
-	"TGUI/Xhtml/FormattedSizeType.hpp"
-	"TGUI/Xhtml/FormattedBorderStyle.hpp"
+1681548578 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedElements.hpp
+	"TGUI/Xhtml/MarkupSizeType.hpp"
+	"TGUI/Xhtml/MarkupBorderStyle.hpp"
 	"TGUI/Xhtml/MarkupLanguageElement.hpp"
 
-1681540485 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Widgets/FormattedTextView.cpp
+1681563209 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Widgets/FormattedTextView.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<TGUI/Keyboard.hpp>
@@ -614,7 +614,7 @@
 
 1681451347 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedTextDocument.hpp
 
-1681539303 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedTextView.hpp
+1681561883 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedTextView.hpp
 	"TGUI/Xhtml/Widgets/FormattedDocument.hpp"
 
 1681451352 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Widgets/FormattedTextXhtmlDocument.cpp
@@ -629,7 +629,7 @@
 	"TGUI/Xhtml/Widgets/FormattedElements.hpp"
 	"TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp"
 
-1681538608 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlAttributes.cpp
+1681564488 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlAttributes.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<TGUI/Vector2.hpp>
@@ -637,19 +637,19 @@
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
 
-1681458548 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp
+1681563209 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp
 	<tuple>
 	<vector>
 
-1681538608 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlAttributes.hpp
+1681562700 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlAttributes.hpp
 	<cwctype>
 	<string>
 	<vector>
-	"TGUI/Xhtml/FormattedSizeType.hpp"
-	"TGUI/Xhtml/FormattedBorderStyle.hpp"
+	"TGUI/Xhtml/MarkupSizeType.hpp"
+	"TGUI/Xhtml/MarkupBorderStyle.hpp"
 	"TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
 
-1681538665 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlElements.cpp
+1681564488 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlElements.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<TGUI/Vector2.hpp>
@@ -657,42 +657,42 @@
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Dom/XhtmlElements.hpp"
 
-1681538788 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlElements.hpp
+1681562743 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlElements.hpp
 	<cstddef>
 	<memory>
 	<vector>
 	<TGUI/String.hpp>
-	"TGUI/Xhtml/FormattedListItemType.hpp"
+	"TGUI/Xhtml/MarkupListItemType.hpp"
 	"TGUI/Xhtml/MarkupLanguageElement.hpp"
 	"TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
 
-1681458552 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlEntityResolver.cpp
+1681564488 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlEntityResolver.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<algorithm>
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
 
-1681538881 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlParser.cpp
+1681564488 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlParser.cpp
 	<TGUI/TGUI.hpp>
 	<iostream>
 	<memory>
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Dom/XhtmlParser.hpp"
 
-1681539727 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlParser.hpp
+1681539726 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlParser.hpp
 	<tuple>
 	<vector>
 	<map>
 	<algorithm>
 	"TGUI/Xhtml/Dom/XhtmlElements.hpp"
 
-1681539785 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp
+1681562700 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp
 	"TGUI/Xhtml/Widgets/FormattedDocument.hpp"
 	"TGUI/Xhtml/Dom/XhtmlElements.hpp"
 
-1681540380 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedDocument.hpp
-	"TGUI/Xhtml/FormattedListItemType.hpp"
+1681564603 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedDocument.hpp
+	"TGUI/Xhtml/MarkupListItemType.hpp"
 	"TGUI/Xhtml/Widgets/FormattedElements.hpp"
 
 1681537547 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/SizeType.hpp
@@ -706,7 +706,7 @@
 
 1681537547 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/FormattedBorderStyle.hpp
 
-1681538935 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Widgets/FormattedDocument.cpp
+1681538934 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Widgets/FormattedDocument.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	"TGUI/String.hpp"
@@ -720,4 +720,11 @@
 	<map>
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp"
+
+1681548144 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/MarkupSizeType.hpp
+
+1681548144 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/MarkupBorderStyle.hpp
+
+1681548520 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/MarkupListItemType.hpp
+	"TGUI/Xhtml/MarkupBorderStyle.hpp"
 
