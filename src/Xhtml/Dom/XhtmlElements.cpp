@@ -86,20 +86,19 @@ namespace tgui  { namespace xhtml
     XhtmlElementType XhtmlElementType::m_dataTypes[] =
     {
         //                                   IsAutoClosed  IsStyleable IsContainer IsStructuringBlock IsTextBlock // IsContainer ==> empty means no closing tag
+        //  Declarative tags
         {   XhtmlElementType::DocType,       true,         false,      false,      false,             false   },
         {   XhtmlElementType::Document,      false,        false,      false,      false,             false   },
+        {   XhtmlElementType::Meta,          true,         false,      true,       false,             false   },
+        {   XhtmlElementType::Title,         false,        false,      true,       false,             false   },
         {   XhtmlElementType::Style,         true,         false,      false,      false,             false   },
-
-        {   XhtmlElementType::Break,         true,         false,      false,      false,             true    },
-        {   XhtmlElementType::Text,          true,         false,      false,      false,             false   },
+        {   XhtmlElementType::Link,          true,         false,      true,       false,             false   },
+        //  Structuring tags
         {   XhtmlElementType::Html,          false,        false,      true,       true,              false   },
         {   XhtmlElementType::Head,          false,        false,      true,       true,              false   },
-        {   XhtmlElementType::Meta,          true,         false,      true,       false,             false   },
-        {   XhtmlElementType::Link,          true,         false,      true,       false,             false   },
-        {   XhtmlElementType::Title,         false,        false,      true,       false,             false   },
         {   XhtmlElementType::Body,          false,        true,       true,       true,              false   },
-        {   XhtmlElementType::Input,         true,         false,      true,       false,             false   },
         {   XhtmlElementType::Label,         false,        true,       true,       false,             false   },
+        {   XhtmlElementType::Input,         true,         false,      true,       false,             false   },
 
         {   XhtmlElementType::H1,            false,        true,       true,       true,              false   },
         {   XhtmlElementType::H2,            false,        true,       true,       true,              false   },
@@ -107,14 +106,6 @@ namespace tgui  { namespace xhtml
         {   XhtmlElementType::H4,            false,        true,       true,       true,              false   },
         {   XhtmlElementType::H5,            false,        true,       true,       true,              false   },
         {   XhtmlElementType::H6,            false,        true,       true,       true,              false   },
-
-        {   XhtmlElementType::Emphasized,    false,        false,      true,       false,             false   },
-        {   XhtmlElementType::Italic,        false,        false,      true,       false,             false   },
-        {   XhtmlElementType::Strong,        false,        false,      true,       false,             false   },
-        {   XhtmlElementType::Bold,          false,        false,      true,       false,             false   },
-        {   XhtmlElementType::Underline,     false,        false,      true,       false,             false   },
-        {   XhtmlElementType::Superscript,   false,        false,      true,       false,             false   },
-        {   XhtmlElementType::Subscript,     false,        false,      true,       false,             false   },
 
         {   XhtmlElementType::UnorderedList, false,        true,       true,       true,              false   },
         {   XhtmlElementType::OrderedList,   false,        true,       true,       true,              false   },
@@ -124,9 +115,20 @@ namespace tgui  { namespace xhtml
         {   XhtmlElementType::Preformatted,  false,        true,       true,       false,             true    },
         {   XhtmlElementType::Code,          false,        true,       true,       false,             true    },
         {   XhtmlElementType::Paragraph,     false,        true,       true,       false,             true    },
-
         {   XhtmlElementType::Anchor,        false,        true,       true,       false,             false   },
         {   XhtmlElementType::Image,         false,        true,       false,      false,             false   },
+        //  Formatting tags
+        {   XhtmlElementType::Emphasized,    false,        false,      true,       false,             false   },
+        {   XhtmlElementType::Italic,        false,        false,      true,       false,             false   },
+        {   XhtmlElementType::Strong,        false,        false,      true,       false,             false   },
+        {   XhtmlElementType::Bold,          false,        false,      true,       false,             false   },
+        {   XhtmlElementType::Underline,     false,        false,      true,       false,             false   },
+        {   XhtmlElementType::Superscript,   false,        false,      true,       false,             false   },
+        {   XhtmlElementType::Subscript,     false,        false,      true,       false,             false   },
+        {   XhtmlElementType::Break,         true,         false,      false,      false,             true    },
+
+
+        {   XhtmlElementType::Text,          true,         false,      false,      false,             false   },
         {   XhtmlElementType::Script,        false,        true,       false,      false,             false   },
 
         {   "empty",                         false,        false,      false,      false,             false   }
@@ -280,13 +282,8 @@ namespace tgui  { namespace xhtml
             element = std::make_shared<XhtmlElement>(typeName);
             addChildAndSetPatent(parent, element);
         }
-#if _DEBUG
         element->setStartTagPositions(beginPosition, endPosition);
         element->setParsedAsAutoClosed(isParsedAsAutoClosed);
-#else
-        UNUSED(beginPosition);
-        UNUSED(endPosition);
-#endif
         return element;
     }
 

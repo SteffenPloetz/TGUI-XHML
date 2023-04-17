@@ -158,6 +158,10 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the font collection
         ///
+        /// Typically a dafault font collection is created during the constructor call. This method is provided to replace or
+        /// adopt the dafault font collection for specific use cases.
+        /// @see FormattedDocument::FontCollection::platformOptimizedFontCollection()
+        ///
         /// @param height  The font collection to set
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setFontCollection(const FormattedDocument::FontCollection& fontCollection)

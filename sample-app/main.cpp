@@ -144,7 +144,7 @@ public:
         auto h1_BG01 = std::make_shared<tgui::xhtml::XhtmlStyleEntry>();
         h1_BG01->setBackgroundColor(tgui::Color(U"#DFD0D0"))
                 .setMargin(tgui::xhtml::FourDimSize(tgui::xhtml::SizeType::Pixel, 16.0f))
-                .setBorderStyle(tgui::xhtml::FourDimBorderStyle(tgui::xhtml::BorderStyle::Double))
+                .setBorderStyle(tgui::xhtml::FourDimBorderStyle(tgui::xhtml::BorderStyle::Dashed))
                 .setBorderWidth(tgui::xhtml::FourDimSize(tgui::xhtml::SizeType::Pixel, 5.0f))
                 .setBorderColor(tgui::Color(U"#BFB0B0"))
                 .setPadding(tgui::xhtml::FourDimSize(tgui::xhtml::SizeType::Pixel, 16.0f));

@@ -1107,9 +1107,7 @@ namespace tgui  { namespace xhtml
                     // skip self
                     if (rit == m_content.rbegin())
                         continue;
-#if _DEBUG
-                    auto formattedTextSection = std::dynamic_pointer_cast<FormattedTextSection>(*rit);
-#endif
+
                     float oldReferenceLine = (*rit)->getLayoutRefLine();
                     auto  loopTypeName = (*rit)->getContentOrigin()->getTypeName();
                     if (oldReferenceLine == renderReferenceLine || loopTypeName == XhtmlElementType::Span)

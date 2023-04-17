@@ -135,9 +135,7 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         XhtmlElement()
             : m_elementType(XhtmlElementType::getType()), m_parent(nullptr), m_attributes(), m_children(),
-#if _DEBUG
               m_startTagBeginPosition(0), m_startTagEndPosition(0),m_stopTagBeginPosition(0), m_stopTagEndPosition(0),
-#endif
               m_isParsedAsAutoClosed(false)
         {   m_attributes = std::make_shared<std::vector<XhtmlAttribute::Ptr>>();   }
 
@@ -150,9 +148,7 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         XhtmlElement(const char* typeName)
             : m_elementType(XhtmlElementType::getType(typeName)), m_parent(nullptr), m_attributes(), m_children(),
-#if _DEBUG
               m_startTagBeginPosition(0), m_startTagEndPosition(0),m_stopTagBeginPosition(0), m_stopTagEndPosition(0),
-#endif
               m_isParsedAsAutoClosed(false)
         {   m_attributes = std::make_shared<std::vector<XhtmlAttribute::Ptr>>();   }
 
@@ -1539,7 +1535,6 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static XhtmlElement::Ptr getPreviousSibling(XhtmlElement::Ptr element);
 
-#if _DEBUG
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the element's start tag positions
         ///
@@ -1593,7 +1588,6 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline size_t getStopTagEndPos() const
         {   return m_stopTagEndPosition;   }
-#endif
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the flag indicating whether the element is parsed as auto-closed
@@ -1736,12 +1730,10 @@ namespace tgui  { namespace xhtml
         std::shared_ptr<std::vector<XhtmlElement::Ptr>>   m_children;    //!< This element's child elements
 
     private:
-#if _DEBUG
         size_t                                            m_startTagBeginPosition;
         size_t                                            m_startTagEndPosition;
         size_t                                            m_stopTagBeginPosition;
         size_t                                            m_stopTagEndPosition;
-#endif
         bool                                              m_isParsedAsAutoClosed;
     };
 
