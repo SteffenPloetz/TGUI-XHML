@@ -73,7 +73,7 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    size_t XhtmlParser::parseDocument(bool resolveEntities)
+    size_t XhtmlParser::parseDocument(bool resolveEntities, bool traceResult)
     {
         if (m_buffer.empty())
             return false;
@@ -161,6 +161,9 @@ namespace tgui  { namespace xhtml
                         {
                             characters.replace(U"\r\n", U"\n");
                             characters.replace(U"\n", U"<br>");
+                            characters.replace(U"\n", U"</br>");
+                            characters.replace(U"\n", U"<br/>");
+                            characters.replace(U"\n", U"<br />");
                         }
                     }
 
@@ -299,6 +302,13 @@ namespace tgui  { namespace xhtml
             m_messages.push_back(std::make_tuple(MessageType::ERROR, message));
         }
 
+        if (traceResult)
+        {
+            auto htmlElement = XhtmlElement::getFirstElement(m_rootElements, "html");
+            if (htmlElement != nullptr)
+                htmlElement->trace(L"");
+        }
+
         return m_bufferPos;
     }
 
@@ -330,16 +340,31 @@ namespace tgui  { namespace xhtml
 
     void XhtmlParser::parseDocument_createInnerText(XhtmlElement::Ptr parentElement, tgui::String& characters, int preformattedDepth)
     {
+        tgui::String match = U"";
         if (characters.find(U"<br>", 0) != SIZE_MAX)
+            match = U"<br>";
+        else if (characters.find(U"</br>", 0) != SIZE_MAX)
+            match = U"</br>";
+        else if (characters.find(U"<br/>", 0) != SIZE_MAX)
+            match = U"<br/>";
+        else if (characters.find(U"<br />", 0) != SIZE_MAX)
+            match = U"<br />";
+
+        if (match.length() > 0)
         {
-            auto charactersParts = characters.split(U"<br>");
+            auto charactersParts = characters.split(match);
             for (size_t index = 0; index < charactersParts.size(); index++)
             {
                 auto charactersPart = charactersParts[index];
 
                 if (preformattedDepth == 0)
                 {
-                    charactersPart = charactersPart.trim();
+                    if (index == 0)
+                        charactersPart = StringEx::trimRight(charactersPart);
+                    else if (index == charactersParts.size() - 1)
+                        charactersPart = StringEx::trimLeft(charactersPart);
+                    else
+                        charactersPart = charactersPart.trim();
                 }
 
                 if (charactersPart.size() > 0)
@@ -409,17 +434,6 @@ namespace tgui  { namespace xhtml
 
         m_bufferPos += processedLength;
         return element;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    XhtmlElement::Ptr XhtmlParser::getFirstRootElement(const char* typeName) const
-    {
-        for (XhtmlElement::Ptr e : m_rootElements)
-            if (typeName == nullptr || strlen(typeName) == 0 || tgui::viewEqualIgnoreCase(e->getTypeName(), typeName))
-                return e;
-
-        return nullptr;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

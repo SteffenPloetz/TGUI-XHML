@@ -1,0 +1,33 @@
+XHTMLViewerTGUI project (test application) is configured for Visual Studio 2022 community edition
+- x64 / Debug and
+- x64 / Release
+where the include paths are used for Debug and Release as 
+- ..\..\TGUI-XHTML\include
+- ..\..\TGUI-0.10-Apr\include
+- ..\..\SFML-2.5.1\include
+which assumes that
+* TGUI-XHTML (this project), TGUI-0.10 (April snap-shot) and SFML-2.5.1 are stored in the same root folder and
+* TGUI is prepared to easily switch between different different versions (in this case 0.10) / snap-shots (in this cas April)
+and the library paths for Debug are
+- ..\..\TGUI-0.10-Apr\build\lib\Debug
+- ..\..\SFML-2.5.1\lib
+as well as the library paths for Release are
+- ..\..\TGUI-0.10-Apr\build\lib\Release
+- ..\..\SFML-2.5.1\lib
+and the following DLLs are available in the search path
+- opengl32.dll
+- OpenAL32.dll (optional)
+- OpenAL32.dll (optional)
+- sfml-audio-2.dll
+- sfml-audio-2-d.dll
+- sfml-graphics-2.dll
+- sfml-graphics-2-d.dll
+- sfml-network-2.dll
+- sfml-network-2-d.dll
+- sfml-system-2.dll
+- sfml-system-2-d.dll
+- sfml-window-2.dll
+- sfml-window-2-d.dll
+- tgui.dll
+- tgui-d.dll
+- tgui-d.pdb

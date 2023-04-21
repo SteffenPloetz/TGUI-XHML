@@ -105,10 +105,11 @@ namespace tgui  { namespace xhtml
         /// @brief Parses the complete XHTML document
         ///
         /// @param resolveEntities  Determine whether to resolve entities
+        /// @param traceResult      Determine whether to trace the result (element tree) to std::cout.
         ///
         /// @return The number of parsed characters
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        size_t parseDocument(bool resolveEntities = true);
+        size_t parseDocument(bool resolveEntities = true, bool traceResult = false);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Cleans breaks ('\r' '\n') and spaces ('\t', '\v', ' ') from characters string
@@ -158,15 +159,6 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline std::vector<XhtmlElement::Ptr> getRootElements() const
         {   return m_rootElements;   }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the first root element with the indicated type name. Can be nullptr
-        ///
-        /// @param typeName  The type name of the requested first root element
-        ///
-        /// @return The first root element with the indicated type name. Can be nullptr
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        XhtmlElement::Ptr getFirstRootElement(const char* typeName = "") const;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the complete collection of parser (error/warning) messages. Can be empty (if parser could recognize 100%)

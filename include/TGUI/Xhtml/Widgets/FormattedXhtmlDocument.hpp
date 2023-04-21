@@ -171,6 +171,24 @@ namespace tgui  { namespace xhtml
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Sets the root element of the XHTML element tree
+        ///
+        /// @param errorNotifyDlgParent  The parent window of the notify errors dialog. If set to a window, errors are notified
+        ///                              via dialog, if set to nullptr, errors are not notified via dialog.
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline void setErrorNotifyDlgParent(Widget::Ptr errorNotifyDlgParent)
+        {   m_errorNotifyDlgParent = errorNotifyDlgParent;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the root element of the XHTML element tree
+        ///
+        /// @return  The parent window of the notify errors dialog. If set to a window, errors are notified via dialog, if set to
+        ///          nullptr, errors are not notified via dialog.
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline Widget::Ptr getErrorNotifyDlgParent() const
+        {   return m_errorNotifyDlgParent;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Gets the formatted content of this document
         ///
         /// @return The formatted content of this document
@@ -178,11 +196,10 @@ namespace tgui  { namespace xhtml
         inline const std::vector<std::shared_ptr<FormattedElement>>& getContent() const
         {   return m_content;   }
 
-
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Gets the root element of the XHTML element tree
+        /// @brief Sets the root element of the XHTML element tree
         ///
-        /// @return The root element of the XHTML element tree
+        /// @param rootElement  The root element of the XHTML element tree
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setRootElement(XhtmlContainerElement::Ptr rootElement)
         {   m_rootElement = rootElement;   }
@@ -289,6 +306,30 @@ namespace tgui  { namespace xhtml
             float indentOffset = 0.0f, float superscriptOrSubsciptTextHeightReduction = 0.0f);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Returns the layout size
+        ///
+        /// @return The layout size
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline Vector2f getOccupiedLayoutSize() const
+        {   return Vector2f(m_occupiedLayoutSize.x, m_occupiedLayoutSize.y);   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Loads an XHTML document into an XHTML DOM and replaces the previous XHTML DOM root
+        ///
+        /// This method combines
+        /// @see readXhtmlDocument
+        /// @see parseXhtmlDocument
+        /// in a most common way. To get a better control, the methods can also be called separately.
+        ///
+        /// @param filePath  The XHTML file to load into this document's XHTML DOM
+        /// @param trace     Determine whether to trace the result (element tree) and errors/warnings to std::cout.
+        ///
+        /// @return The state with the value 0 on succes, value -1 if file can not be red, value -2 if file can not be parsed or
+        ///         is empty or value -3 if no XHTML document root tag (<html ...></html>) is available.
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        virtual int loadDocument(const std::string filePath, bool trace = false) override;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Rearrange the complete visible content
         ///
         /// @param clientSize       The available size of the area to render to
@@ -302,13 +343,27 @@ namespace tgui  { namespace xhtml
                     const FormattedDocument::FontCollection& fontCollection, bool keepSelection);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Returns the layout size
+        /// @brief Reads an XHTML file into a string
         ///
-        /// @return The layout size
+        /// @param filePath         The XHTML file to read into a string
+        /// @param fileEncoding     [OUT] The file encding if recognized or an empty string otherwise
+        /// @param errorMessage     [OUT] The error message on any error or an empty string otherwise
+        ///
+        /// @return The XHTML file content on success or an empty string otherwise
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline Vector2f getOccupiedLayoutSize() const
-        { return Vector2f(m_occupiedLayoutSize.x, m_occupiedLayoutSize.y); }
+        static tgui::String readXhtmlDocument(const std::string filePath, tgui::String& fileEncoding, std::string& errorMessage);
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Parses an XHTML string into an XHTML DOM
+        ///
+        /// @param hypertextString  The XHTML string to parse into an XHTML DOM
+        /// @param resolveEntities  Determine whether to resolve entities
+        /// @param trace            Determine whether to trace the result (element tree) and errors/warnings to std::cout.
+        ///
+        /// @return The collection of XHTML DOM root elements. Can be empty
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static std::vector<XhtmlElement::Ptr> parseXhtmlDocument(const tgui::String hypertextString,
+                                                                 bool resolveEntities = true, bool trace = false);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     protected:
@@ -346,6 +401,7 @@ namespace tgui  { namespace xhtml
         std::map<size_t, Texture>                 m_textures;                 //!< The collection of already created textures
         std::vector<FormattedElement::Ptr>        m_content;                  //!< The collection of formatted content elements
         XhtmlContainerElement::Ptr                m_rootElement;              //!< The root element of the raw data elements
+        Widget::Ptr                               m_errorNotifyDlgParent;     //!< The parent window to notify errors via dialog (if not nullptr).
 
         float                                     m_defaultTextSize;          //!< The default text size (for HTML typically 16)
         Color                                     m_defaultForeColor;         //!< The default fore color

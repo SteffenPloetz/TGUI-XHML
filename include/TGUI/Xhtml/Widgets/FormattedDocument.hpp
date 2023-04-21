@@ -550,6 +550,22 @@ namespace tgui  { namespace xhtml
         virtual const std::vector<std::shared_ptr<FormattedElement>>& getContent() const = 0;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Loads an XHTML document into an XHTML DOM and replaces the previous XHTML DOM root
+        ///
+        /// This method combines
+        /// @see readXhtmlDocument
+        /// @see parseXhtmlDocument
+        /// in a most common way. To get a better control, the methods can also be called separately.
+        ///
+        /// @param filePath  The XHTML file to load into this document's XHTML DOM
+        /// @param trace     Determine whether to trace the result (element tree) and errors/warnings to std::cout.
+        ///
+        /// @return The state with the value 0 on succes, value -1 if file can not be red, value -2 if file can not be parsed or
+        ///         is empty or value -3 if no XHTML document root tag (<html ...></html>) is available.
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        virtual int loadDocument(const std::string filePath, bool trace = false) = 0;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Rearrange the complete visible content
         ///
         /// @param clientSize       The available size of the area to render to

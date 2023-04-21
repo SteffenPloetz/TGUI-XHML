@@ -41,4 +41,22 @@ namespace tgui  { namespace xhtml
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    tgui::String StringEx::trimLeft(const tgui::String& s)
+    {
+        const auto firstIt = std::find_if(s.begin(), s.end(), [](char32_t c) { return (c >= 256) || !std::isspace(static_cast<unsigned char>(c)); });
+        if (firstIt == s.end())
+            return {};
+
+        return tgui::String(firstIt, s.end());
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    tgui::String StringEx::trimRight(const tgui::String& s)
+    {
+        const auto lastIt = std::find_if(s.rbegin(), s.rend(), [](char32_t c) { return (c >= 256) || !std::isspace(static_cast<unsigned char>(c)); }).base();
+        return tgui::String(s.begin(), lastIt);
+    }
+
 } }

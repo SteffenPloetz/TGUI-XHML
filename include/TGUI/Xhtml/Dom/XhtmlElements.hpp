@@ -1715,6 +1715,16 @@ namespace tgui  { namespace xhtml
             bool& isOpeningTag, bool& isClosingTag, bool elementOpened, bool elementClosed, tgui::String& typeName,
             XhtmlElement::Ptr& parent, const size_t& beginPosition, const size_t& endPosition, std::vector<XhtmlAttribute::Ptr>& attributesBuffer);
 
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the first root element with the indicated type name. Can be nullptr
+        ///
+        /// @param elements  The collection of XHTML element to find the first matching element in. Can be empty
+        /// @param typeName  The type name of the requested first root element
+        ///
+        /// @return The first XHTML element with the indicated type name. Can be nullptr
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static const XhtmlElement::Ptr getFirstElement(std::vector<XhtmlElement::Ptr> elements, const char* typeName = "");
+
     protected:
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Investigates the style entry

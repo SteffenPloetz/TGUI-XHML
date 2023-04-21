@@ -33,9 +33,6 @@
     <ClCompile Include="src\Xhtml\Renderers\FormattedTextRenderer.cpp">
       <Filter>Xhtml\Renderers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Xhtml\Widgets\FormattedElements.cpp">
-      <Filter>Xhtml\Widgets</Filter>
-    </ClCompile>
     <ClCompile Include="src\Xhtml\Widgets\FormattedTextView.cpp">
       <Filter>Xhtml\Widgets</Filter>
     </ClCompile>
@@ -61,6 +58,9 @@
       <Filter>Xhtml</Filter>
     </ClCompile>
     <ClCompile Include="src\Xhtml\Widgets\FormattedXhtmlDocument.cpp">
+      <Filter>Xhtml\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Xhtml\Widgets\FormattedDocument.cpp">
       <Filter>Xhtml\Widgets</Filter>
     </ClCompile>
   </ItemGroup>
@@ -100,6 +100,15 @@
     </ClInclude>
     <ClInclude Include="include\TGUI\Xhtml\Widgets\FormattedXhtmlDocument.hpp">
       <Filter>Xhtml\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\MarkupBorderStyle.hpp">
+      <Filter>Xhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\MarkupListItemType.hpp">
+      <Filter>Xhtml</Filter>
+    </ClInclude>
+    <ClInclude Include="include\TGUI\Xhtml\MarkupSizeType.hpp">
+      <Filter>Xhtml</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

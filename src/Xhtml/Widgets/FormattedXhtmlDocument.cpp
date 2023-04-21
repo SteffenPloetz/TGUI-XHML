@@ -1,6 +1,8 @@
 #include <TGUI/Config.hpp>
 #include <TGUI/TGUI.hpp>
 
+#include <iostream>
+#include <fstream>
 #include <list>
 #include <map>
 
@@ -15,15 +17,17 @@
 
 #include "TGUI/Xhtml/StringHelper.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp"
+#include "TGUI/Xhtml/Dom/XhtmlParser.hpp"
+#include "TGUI/Xhtml/UtfHelper.hpp"
 
 namespace tgui  { namespace xhtml
 {
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     FormattedXhtmlDocument::FormattedXhtmlDocument()
-        : FormattedDocument(), m_textures(), m_content(), m_rootElement(), m_defaultTextSize(14.0f),
-          m_defaultForeColor(Color(0, 0, 0)), m_defaultOpacity(1), m_defaultFont(nullptr), m_availableClientSize(0.0f, 0.0f),
-          m_occupiedLayoutSize(0.0f, 0.0f), m_evolvingLayoutArea(0.0f, 0.0f, 0.0f, 0.0f),
+        : FormattedDocument(), m_textures(), m_content(), m_rootElement(), m_errorNotifyDlgParent(),
+          m_defaultTextSize(14.0f), m_defaultForeColor(Color(0, 0, 0)), m_defaultOpacity(1), m_defaultFont(nullptr),
+          m_availableClientSize(0.0f, 0.0f), m_occupiedLayoutSize(0.0f, 0.0f), m_evolvingLayoutArea(0.0f, 0.0f, 0.0f, 0.0f),
           m_evolvingLineExtraHeight(0.0f), m_evolvingLineRunLength(0.0f), m_preformattedTextFlagCnt(0), m_formattingState(Color(0, 0, 0)),
           m_listPadding(30), m_backPadding(4)
     {
@@ -316,6 +320,66 @@ namespace tgui  { namespace xhtml
             FormattedElement::Ptr formattedElement = m_content[m_content.size() - 1];
             m_occupiedLayoutSize.y += formattedElement->getLayoutSize().y + m_defaultTextSize / 2;
         }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    int FormattedXhtmlDocument::loadDocument(const std::string filePath, bool trace)
+    {
+        int state = 0;
+
+        std::string  errorMessage;
+        String fileEncoding;
+        String hypertextString = FormattedXhtmlDocument::readXhtmlDocument(filePath, fileEncoding, errorMessage);
+        if (hypertextString.size() == 0)
+        {
+            if (trace)
+                std::cerr << "ERROR: " << errorMessage << "\n";
+            state = -1;
+        }
+        else
+        {
+            auto elements = FormattedXhtmlDocument::parseXhtmlDocument(hypertextString, true, trace);
+            if (elements.size() == 0)
+                state = -2;
+            else
+            {
+                auto rootHtml = XhtmlElement::getFirstElement(elements, "html");
+                auto html = std::dynamic_pointer_cast<XhtmlContainerElement>(rootHtml);
+                if (html == nullptr)
+                    state = -3;
+                else
+                    setRootElement(html);
+            }
+        }
+
+        if (m_errorNotifyDlgParent && state != 0)
+        {
+            static MessageBox::Ptr errorMessageBox;
+            tgui::String message;
+            if (state == -1)
+                message = "File can not be red:\n";
+            else if (state == -2)
+                message = "File can not be parsed (has syntax errors or is to complex):\n";
+            else
+                message = "File doesn't contain an XHTML root element:\n";
+            message += '\"' + filePath + '\"';
+            if (errorMessageBox)
+                errorMessageBox->setText(message);
+            else
+                errorMessageBox = MessageBox::create("Error loading XML file", message, {"OK"});
+            auto parentSize = m_errorNotifyDlgParent->getSize();
+            errorMessageBox->setPosition(parentSize.x / 2 - 150, parentSize.y / 2 - 50);
+            m_errorNotifyDlgParent->getParentGui()->add(errorMessageBox, U"FormattedXhtmlDocument_ErrorMessageBox");
+            auto children = errorMessageBox->getWidgets(); // First child is label, second child id button.
+            auto button = std::dynamic_pointer_cast<tgui::Button>(children[children.size() - 1]);
+            if (button)
+            {
+                button->onPress([&] { auto gui = m_errorNotifyDlgParent->getParentGui(); if (gui) { gui->remove(errorMessageBox); } });
+            }
+        }
+
+        return state;
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -1126,4 +1190,78 @@ namespace tgui  { namespace xhtml
             m_evolvingLineRunLength += logicSize.x + m_formattingState.TextHeight / 8;
         }
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    tgui::String FormattedXhtmlDocument::readXhtmlDocument(const std::string filePath, tgui::String& fileEncoding, std::string& errorMessage)
+    {
+        tgui::String  hypertextString;
+        std::ifstream hypertextFile(filePath, std::ios::in | std::ios::binary);
+        if (hypertextFile.is_open())
+        {
+            hypertextFile.seekg (0, std::ios::end);
+            size_t fileSizeInByte = hypertextFile.tellg();
+            hypertextFile.seekg (0, std::ios::beg);
+            std::vector<char> data;
+            data.resize(fileSizeInByte);
+            hypertextFile.read(&data[0], fileSizeInByte);
+
+            if (fileSizeInByte <= 2)
+            {
+                errorMessage = "File too small or empty.";
+            }
+            else if ((unsigned char)data[0] == 254 && (unsigned char)data[1] == 255)
+            {
+                if ((unsigned char)data[0] == 0)
+                    fileEncoding = U"UTF-16 BE";
+                else
+                    fileEncoding = U"UTF-16 LE";
+            }
+            else if ((unsigned char)data[0] == 254 && (unsigned char)data[1] == 239)
+            {
+                fileEncoding = U"UTF-8";
+            }
+            else
+            {
+                if (tgui::xhtml::UtfHelper::checkValid(data))
+                    fileEncoding = U"UTF-8";
+                else
+                    fileEncoding = U"ASCII";
+            }
+
+            if (fileEncoding == U"UTF-8" || fileEncoding == U"ASCII")
+            {
+                data.push_back(0);
+                hypertextString = tgui::String(data.data());
+            }
+            hypertextFile.close();
+        }
+        else
+            errorMessage = "Unable to open file.";
+
+        return hypertextString;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    std::vector<XhtmlElement::Ptr> FormattedXhtmlDocument::parseXhtmlDocument(const tgui::String hypertextString,
+                                                                                  bool resolveEntities, bool trace)
+    {
+        XhtmlParser xhtmlParser(hypertextString);
+        xhtmlParser.parseDocument(resolveEntities, trace);
+
+        if (trace)
+        {
+            auto errorMessages = xhtmlParser.getErrorMessages();
+            for (size_t index = 0; index < errorMessages->size(); index++)
+                std::wcerr << errorMessages->at(index) << std::endl;
+
+            auto warningMessages = xhtmlParser.getWarningMessages();
+            for (size_t index = 0; index < warningMessages->size(); index++)
+                std::wcout << warningMessages->at(index) << std::endl;
+        }
+
+        return xhtmlParser.getRootElements();
+    }
+
 } }

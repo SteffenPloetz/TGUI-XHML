@@ -66,7 +66,6 @@
 		<Unit filename="../src/Xhtml/StringHelper.cpp" />
 		<Unit filename="../src/Xhtml/UtfHelper.cpp" />
 		<Unit filename="../src/Xhtml/Widgets/FormattedDocument.cpp" />
-		<Unit filename="../src/Xhtml/Widgets/FormattedElements.cpp" />
 		<Unit filename="../src/Xhtml/Widgets/FormattedTextView.cpp" />
 		<Unit filename="../src/Xhtml/Widgets/FormattedXhtmlDocument.cpp" />
 		<Unit filename="main.cpp" />

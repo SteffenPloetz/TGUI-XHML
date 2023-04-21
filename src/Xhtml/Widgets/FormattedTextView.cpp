@@ -156,6 +156,8 @@ namespace tgui  { namespace xhtml
         rearrangeText(false);
     }
 
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     bool FormattedTextView::updateZoom(float delta)
     {
         float newZoom = m_zoom;
@@ -170,6 +172,8 @@ namespace tgui  { namespace xhtml
 
         return setZoom(newZoom);
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     bool FormattedTextView::setZoom(float newZoom)
     {
@@ -301,6 +305,65 @@ namespace tgui  { namespace xhtml
         }
 
         ClickableWidget::rightMouseReleased(pos);
+}
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    void FormattedTextView::keyPressed(const Event::KeyEvent& event)
+    {
+        if (event.shift)
+        {
+            return;
+        }
+
+        if (event.code == Event::KeyboardKey::PageUp)
+        {
+            auto scrollPosY = m_verticalScrollbar->getValue();
+            if (scrollPosY > m_verticalScrollbar->getScrollAmount() * 20)
+                scrollPosY -= m_verticalScrollbar->getScrollAmount() * 20;
+            else if (scrollPosY > 0)
+                scrollPosY = 0;
+            else
+                return;
+
+            m_verticalScrollbar->setValue(scrollPosY);
+        }
+        else if (event.code == Event::KeyboardKey::PageDown)
+        {
+            auto scrollPosY = m_verticalScrollbar->getValue();
+            if (scrollPosY < m_verticalScrollbar->getMaximum() * 20)
+                scrollPosY += m_verticalScrollbar->getScrollAmount() * 20;
+            else if (scrollPosY > m_verticalScrollbar->getMaximum())
+                scrollPosY = m_verticalScrollbar->getMaximum();
+            else
+                return;
+
+            m_verticalScrollbar->setValue(scrollPosY);
+        }
+        else if (keyboard::isKeyPressMoveCaretUp(event))
+        {
+            auto scrollPosY = m_verticalScrollbar->getValue();
+            if (scrollPosY > m_verticalScrollbar->getScrollAmount())
+                scrollPosY -= m_verticalScrollbar->getScrollAmount();
+            else if (scrollPosY > 0)
+                scrollPosY = 0;
+            else
+                return;
+
+            m_verticalScrollbar->setValue(scrollPosY);
+        }
+        else if (keyboard::isKeyPressMoveCaretDown(event))
+        {
+            auto scrollPosY = m_verticalScrollbar->getValue();
+            if (scrollPosY < m_verticalScrollbar->getMaximum())
+                scrollPosY += m_verticalScrollbar->getScrollAmount();
+            else if (scrollPosY > m_verticalScrollbar->getMaximum())
+                scrollPosY = m_verticalScrollbar->getMaximum();
+            else
+                return;
+
+            m_verticalScrollbar->setValue(scrollPosY);
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -349,6 +412,14 @@ namespace tgui  { namespace xhtml
                         auto scrollPosY = static_cast<unsigned int>(elementLayoutPosition.y + 0.49f);// / (layoutSize.y - innerSize.y) * m_verticalScrollbar->getMaximum() + 0.49F);
 
                         m_verticalScrollbar->setValue(scrollPosY);
+                    }
+                }
+                else
+                {
+                    if (m_document->loadDocument(href.toStdString()) == 0)
+                    {
+                        rearrangeText(true);
+                        m_verticalScrollbar->setValue(0);
                     }
                 }
             }
@@ -1174,6 +1245,8 @@ namespace tgui  { namespace xhtml
         return {std::max(0.f, getSize().x - m_bordersCached.getLeft() - m_bordersCached.getRight()),
                 std::max(0.f, getSize().y - m_bordersCached.getTop() - m_bordersCached.getBottom())};
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     Vector2f FormattedTextView::getRenderSize() const
     {

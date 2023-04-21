@@ -463,7 +463,7 @@
 
 1681157076 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Widgets/FormattedTextDocument.hpp
 
-1681633203 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/sample-app/main.cpp
+1682013687 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/sample-app/main.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<TGUI/Base64.hpp>
@@ -478,10 +478,6 @@
 	"TGUI/Xhtml/Widgets/FormattedElements.hpp"
 	"TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp"
 	"TGUI/Xhtml/Widgets/FormattedTextView.hpp"
-	"TGUI/Xhtml/UtfHelper.hpp"
-	<filesystem>
-	<experimental/filesystem>
-	<iostream>
 	<fstream>
 	<thread>
 	<cmath>
@@ -497,7 +493,7 @@
 	"TGUI/Xhtml/DOM/XhtmlEntityResolver.hpp"
 	"TGUI/Xhtml/DOM/XhtmlAttributes.hpp"
 
-1681458548 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/StringHelper.hpp
+1682055465 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/StringHelper.hpp
 	<cwctype>
 	<string>
 	<vector>
@@ -578,7 +574,7 @@
 	<string>
 	"TGUI/Xhtml/StringHelper.hpp"
 
-1681563209 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/UtfHelper.cpp
+1681563208 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/UtfHelper.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	"TGUI/Xhtml/UtfHelper.hpp"
@@ -601,7 +597,7 @@
 	"TGUI/Xhtml/MarkupBorderStyle.hpp"
 	"TGUI/Xhtml/MarkupLanguageElement.hpp"
 
-1681563209 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Widgets/FormattedTextView.cpp
+1682016018 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Widgets/FormattedTextView.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<TGUI/Keyboard.hpp>
@@ -614,7 +610,7 @@
 
 1681451347 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedTextDocument.hpp
 
-1681561883 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedTextView.hpp
+1681882192 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedTextView.hpp
 	"TGUI/Xhtml/Widgets/FormattedDocument.hpp"
 
 1681451352 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Widgets/FormattedTextXhtmlDocument.cpp
@@ -637,7 +633,7 @@
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Dom/XhtmlAttributes.hpp"
 
-1681563209 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp
+1681563208 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp
 	<tuple>
 	<vector>
 
@@ -649,7 +645,7 @@
 	"TGUI/Xhtml/MarkupBorderStyle.hpp"
 	"TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
 
-1681639519 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlElements.cpp
+1681800262 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlElements.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
 	<TGUI/Vector2.hpp>
@@ -657,7 +653,7 @@
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Dom/XhtmlElements.hpp"
 
-1681712626 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlElements.hpp
+1681800262 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlElements.hpp
 	<cstddef>
 	<memory>
 	<vector>
@@ -673,25 +669,25 @@
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp"
 
-1681564488 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlParser.cpp
+1682055443 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Dom/XhtmlParser.cpp
 	<TGUI/TGUI.hpp>
 	<iostream>
 	<memory>
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Dom/XhtmlParser.hpp"
 
-1681539726 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlParser.hpp
+1681799322 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Dom/XhtmlParser.hpp
 	<tuple>
 	<vector>
 	<map>
 	<algorithm>
 	"TGUI/Xhtml/Dom/XhtmlElements.hpp"
 
-1681562700 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp
+1682013687 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp
 	"TGUI/Xhtml/Widgets/FormattedDocument.hpp"
 	"TGUI/Xhtml/Dom/XhtmlElements.hpp"
 
-1681564603 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedDocument.hpp
+1682013687 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/Widgets/FormattedDocument.hpp
 	"TGUI/Xhtml/MarkupListItemType.hpp"
 	"TGUI/Xhtml/Widgets/FormattedElements.hpp"
 
@@ -713,13 +709,17 @@
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Widgets/FormattedDocument.hpp"
 
-1681626232 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Widgets/FormattedXhtmlDocument.cpp
+1682016161 source:/home/steffen/Projects/CodeBlocks/TGUI-XHTML/src/Xhtml/Widgets/FormattedXhtmlDocument.cpp
 	<TGUI/Config.hpp>
 	<TGUI/TGUI.hpp>
+	<iostream>
+	<fstream>
 	<list>
 	<map>
 	"TGUI/Xhtml/StringHelper.hpp"
 	"TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp"
+	"TGUI/Xhtml/Dom/XhtmlParser.hpp"
+	"TGUI/Xhtml/UtfHelper.hpp"
 
 1681548144 /home/steffen/Projects/CodeBlocks/TGUI-XHTML/include/TGUI/Xhtml/MarkupSizeType.hpp
 
