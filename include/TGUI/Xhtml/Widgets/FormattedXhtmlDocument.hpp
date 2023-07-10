@@ -164,6 +164,8 @@ namespace tgui  { namespace xhtml
         /// @brief Creates a new formatted XHTML document
         ///
         /// Prefer the factory method in cases where the formatted XHTML document needs to be shared, otherwise prefer the constructor.
+        /// Also prefer the factory method in cases where mutual references between owner and owned are required, bacause
+        /// sing shared_from_this() without previous call to make_shared() (like in a constructor) leads to undefined results.
         ///
         /// @return The new formatted XHTML document
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -256,11 +258,12 @@ namespace tgui  { namespace xhtml
         /// @brief Applies a list of XHTML style entries to the formatted element
         ///
         /// @param formattedElement                         The formatted element to apply the style entries to
+        /// @param parentSize                               The parent size for the calculation of a relative defined size
         /// @param styleEntries                             The XHTML style entries to apply
         /// @param styleCategories                          The style categories to apply
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         void applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement, const std::vector<XhtmlStyleEntry::Ptr> styleEntries,
-            const FormattedDocument::FontCollection& fontCollection,
+            Vector2f parentSize, const FormattedDocument::FontCollection& fontCollection,
             StyleCategoryFlags styleCategories = StyleCategoryFlags::ColorsAndOpacity | StyleCategoryFlags::Fonts);
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -369,19 +372,55 @@ namespace tgui  { namespace xhtml
     protected:
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Calculate the best outo-line-break position, that enables the biggest possible part of the 'remainingText' to be
-        // placed on the current FormattedTextSection assuming this FormattedTextSection has remaining 'runLengt'.
+        /// @brief Calculates the best outo-line-break position, that enables the biggest possible part of the 'remainingText' to be
+        /// placed on the current FormattedTextSection assuming this FormattedTextSection has remaining 'runLengt'
         ///
-        /// @param remainingText     The text to calculate the best outo-line-break position for
-        /// @param runLengt          The remaining run lengt on the current FormattedTextSection
+        /// @param remainingText        The text to calculate the best outo-line-break position for
+        /// @param runLengt             The remaining run lengt on the current FormattedTextSection
         ///
-        /// @return                  The best outo-line-break position on success, or SIZE_MAX otherwise (which is equal to
-        ///                          std::string::npos and (size_t)-1)
+        /// @return                     The best outo-line-break position on success, or SIZE_MAX otherwise (which is equal to
+        ///                             std::string::npos and (size_t)-1)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         size_t calculateAutoLineBreak(const String remainingText, float runLengt) const;
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        // Rearrange the visible content, defined by the indicated XHTML Element
+        /// @brief Calculates the column requested sizes of a table
+        ///
+        /// @param xhtmlTableElement    The XHTML element, that contains the table
+        /// @param tableMetric          The table-data, that supports the individual specifications of a table
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        void calculateTableColumnRequestedSizes(XhtmlElement::Ptr xhtmlTableElement, FormattedDocument::TableMetric::Ptr tableMetric);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Calculates the column requested sizes of a row
+        ///
+        /// @param xhtmlElement         The XHTML element, that contains the table's children (table rows or row-less table cells)
+        /// @param tableMetric          The table-data, that supports the individual specifications of a table
+        /// @param forceNewFreeCellRow  Determine whether a new row must be created in case 'free' cells occure.
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        void calculateRowRangeColumnRequestedSizes(XhtmlElement::Ptr xhtmlElement, FormattedDocument::TableMetric::Ptr tableMetric,
+            bool forceNewFreeCellRow);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Calculates the column requested sizes of a cell
+        ///
+        /// @param xhtmlElement         The XHTML element, that contains the table cell
+        /// @param tableMetric          The table-data, that supports the individual specifications of a table
+        /// @param tableRowMetric       The table row-data, that supports the individual specifications of a table
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        void calculateCellColumnRequestedSize(XhtmlElement::Ptr xhtmlElement, FormattedDocument::TableMetric::Ptr tableMetric,
+            FormattedDocument::TableRowMetric::Ptr tableRowMetric);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Calculates the column preferred sizes of a table
+        ///
+        /// @param availableDimension   The available dimension (width)
+        /// @param tableMetric          The table-data, that supports the individual specifications of a table
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        void calculateTableColumnPreferredSizes(float availableDimension, FormattedDocument::TableMetric::Ptr tableMetric);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Rearrange the visible content, defined by the indicated XHTML Element
         ///
         /// @param predecessorElementProvidesExtraSpace     Flag that helps to avoid directly successive application of extra space
         /// @param parentElementSuppressesInitialExtraSpace Flag that helps to avoid application of extra space for specific blocks

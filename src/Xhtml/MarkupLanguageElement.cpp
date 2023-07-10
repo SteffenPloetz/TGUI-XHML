@@ -1,7 +1,8 @@
+#include <fstream>
+#include <cstdint>
+
 #include <TGUI/Config.hpp>
 #include <TGUI/TGUI.hpp>
-
-#include <fstream>
 
 // MSC needs a clear distiction between "__declspec(dllimport)" (above) and "__declspec(dllexport)" (below) this comment.
 // So in the case of direct source file integration (in contrast to library creation and linking), the API must be 'dllexport'.

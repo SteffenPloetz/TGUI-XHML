@@ -43,9 +43,16 @@
 			<Add library="sfml-system" />
 		</Linker>
 		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlAttributes.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlContainerElement.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlElement.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlElements.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlListItem.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlParser.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlStyle.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlStyleableContainerElement.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlStyleableInterface.hpp" />
+		<Unit filename="../include/TGUI/Xhtml/Dom/XhtmlStyleableNoncontainerElement.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/MarkupBorderStyle.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/MarkupLanguageElement.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/MarkupListItemType.hpp" />
@@ -58,7 +65,7 @@
 		<Unit filename="../include/TGUI/Xhtml/Widgets/FormattedTextView.hpp" />
 		<Unit filename="../include/TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp" />
 		<Unit filename="../src/Xhtml/Dom/XhtmlAttributes.cpp" />
-		<Unit filename="../src/Xhtml/Dom/XhtmlElements.cpp" />
+		<Unit filename="../src/Xhtml/Dom/XhtmlElement.cpp" />
 		<Unit filename="../src/Xhtml/Dom/XhtmlEntityResolver.cpp" />
 		<Unit filename="../src/Xhtml/Dom/XhtmlParser.cpp" />
 		<Unit filename="../src/Xhtml/MarkupLanguageElement.cpp" />

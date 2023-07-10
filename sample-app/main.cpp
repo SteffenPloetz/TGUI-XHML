@@ -4,6 +4,12 @@
 // The SFML OpenGL window (sf::Window) doesn't necessarily require the TGUI_HAS_FONT_BACKEND_FREETYPE to be set.
 // It works fine with the TGUI_HAS_FONT_BACKEND_SFML_GRAPHICS, if TGUI_HAS_RENDERER_BACKEND_SFML_GRAPHICS is also set.
 // See "https://www.sfml-dev.org/tutorials/2.5/window-opengl.php" (last section) for details.
+
+#include <fstream>
+#include <thread>
+#include <cmath>
+#include <cstdint>
+
 #include <TGUI/Config.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Base64.hpp>
@@ -23,10 +29,6 @@
 #include "TGUI/Xhtml/Widgets/FormattedElements.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedXhtmlDocument.hpp"
 #include "TGUI/Xhtml/Widgets/FormattedTextView.hpp"
-
-#include <fstream>
-#include <thread>
-#include <cmath>
 
 #define UNUSED(x) (void)(x)
 
@@ -420,7 +422,7 @@ public:
             XhtmlElement::createListItem(nullptr, XhtmlElement::createInnerText(nullptr, U"First unordered list item")),
             XhtmlElement::createListItem(nullptr, {XhtmlElement::createInnerText(nullptr, U"Second unordered list item"),
                                                    XhtmlElement::createUnorderedList(nullptr, pinkOverlayBG, {XhtmlElement::createListItem(nullptr, XhtmlElement::createInnerText(nullptr, U"Coffee")),
-                                                                                                              XhtmlElement::createListItem(nullptr, XhtmlElement::createInnerText(nullptr, U"Tee"))})
+                                                                                                              XhtmlElement::createListItem(nullptr, XhtmlElement::createInnerText(nullptr, U"Tea"))})
                                                   }),
             XhtmlElement::createListItem(nullptr, XhtmlElement::createInnerText(nullptr, U"Third unordered list item"))});
         auto pinkBG = std::make_shared<XhtmlStyleEntry>();

@@ -93,70 +93,104 @@ namespace tgui  { namespace xhtml
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Determines the border style
+        /// @brief Tries to recognize the border style
         ///
-        /// @param borderStylePart  The string that should contain information about the border style
+        /// @param borderStyleString The string that should contain information about the border style
+        /// @param borderStyleValue  The border style on success
         ///
-        /// @return                 The border style
+        /// @return                  The flag indicating whether recognition succeded (true) or not (false)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        static inline BorderStyle determineBorderStyle(tgui::String borderStylePart)
+        static inline bool tryRecognizeBorderStyle(tgui::String borderStyleString, BorderStyle& borderStyleValue)
         {
-            if (borderStylePart.length() == 0)
-                return BorderStyle::None;
+            if (borderStyleString.length() == 0)
+                return false;
 
-            if(borderStylePart.equalIgnoreCase(U"none"))
-                return BorderStyle::None;
-            else if (borderStylePart.equalIgnoreCase(U"hidden"))
-                return BorderStyle::Hidden;
-            else if (borderStylePart.equalIgnoreCase(U"dotted"))
-                return BorderStyle::Dotted;
-            else if (borderStylePart.equalIgnoreCase(U"dashed"))
-                return BorderStyle::Dashed;
-            else if (borderStylePart.equalIgnoreCase(U"solid"))
-                return BorderStyle::Solid;
-            else if (borderStylePart.equalIgnoreCase(U"double"))
-                return BorderStyle::Double;
-            else if (borderStylePart.equalIgnoreCase(U"groove"))
-                return BorderStyle::Groove;
-            else if (borderStylePart.equalIgnoreCase(U"ridge"))
-                return BorderStyle::Ridge;
-            else if (borderStylePart.equalIgnoreCase(U"inset"))
-                return BorderStyle::Inset;
-            else if (borderStylePart.equalIgnoreCase(U"outset"))
-                return BorderStyle::Outset;
+            if(borderStyleString.equalIgnoreCase(U"none"))
+                borderStyleValue = BorderStyle::None;
+            else if (borderStyleString.equalIgnoreCase(U"hidden"))
+                borderStyleValue = BorderStyle::Hidden;
+            else if (borderStyleString.equalIgnoreCase(U"dotted"))
+                borderStyleValue = BorderStyle::Dotted;
+            else if (borderStyleString.equalIgnoreCase(U"dashed"))
+                borderStyleValue = BorderStyle::Dashed;
+            else if (borderStyleString.equalIgnoreCase(U"solid"))
+                borderStyleValue = BorderStyle::Solid;
+            else if (borderStyleString.equalIgnoreCase(U"double"))
+                borderStyleValue = BorderStyle::Double;
+            else if (borderStyleString.equalIgnoreCase(U"groove"))
+                borderStyleValue = BorderStyle::Groove;
+            else if (borderStyleString.equalIgnoreCase(U"ridge"))
+                borderStyleValue = BorderStyle::Ridge;
+            else if (borderStyleString.equalIgnoreCase(U"inset"))
+                borderStyleValue = BorderStyle::Inset;
+            else if (borderStyleString.equalIgnoreCase(U"outset"))
+                borderStyleValue = BorderStyle::Outset;
             else
-                return BorderStyle::None;
+                return false;
+
+            return true;
         }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// @brief Parsed the four size values
+        /// @brief Tries to parse the four size values
         ///
         /// @param borderStyleParts  The string array that should contain information about the border style values
+        ///
+        /// @return                  The flag indicating whether parse succeded (true) or not (false)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        inline void parse(std::vector<tgui::String> borderStyleParts)
+        inline bool tryParse(std::vector<tgui::String> borderStyleParts)
         {
             if (borderStyleParts.size() == 1)
             {
-                top = left = bottom = right = determineBorderStyle(borderStyleParts[0]);
+                BorderStyle borderStyle = BorderStyle::None;
+                if (!tryRecognizeBorderStyle(borderStyleParts[0], borderStyle))
+                    return false;
+                top = left = bottom = right = borderStyle;
+                return true;
             }
             if (borderStyleParts.size() == 2)
             {
-                top = bottom = determineBorderStyle(borderStyleParts[0]);
-                left = right = determineBorderStyle(borderStyleParts[1]);
+                BorderStyle borderStyle = BorderStyle::None;
+                if (!tryRecognizeBorderStyle(borderStyleParts[0], borderStyle))
+                    return false;
+                top = bottom = borderStyle;
+                if (!tryRecognizeBorderStyle(borderStyleParts[1], borderStyle))
+                    return false;
+                left = right = borderStyle;
+                return true;
             }
             if (borderStyleParts.size() == 3)
             {
-                top = determineBorderStyle(borderStyleParts[0]);
-                left = right = determineBorderStyle(borderStyleParts[1]);
-                bottom = determineBorderStyle(borderStyleParts[2]);
+                BorderStyle borderStyle = BorderStyle::None;
+                if (!tryRecognizeBorderStyle(borderStyleParts[0], borderStyle))
+                    return false;
+                top = borderStyle;
+                if (!tryRecognizeBorderStyle(borderStyleParts[1], borderStyle))
+                    return false;
+                left = right = borderStyle;
+                if (!tryRecognizeBorderStyle(borderStyleParts[2], borderStyle))
+                    return false;
+                bottom = borderStyle;
+                return true;
             }
             if (borderStyleParts.size() == 4)
             {
-                top = determineBorderStyle(borderStyleParts[0]);
-                right = determineBorderStyle(borderStyleParts[1]);
-                bottom = determineBorderStyle(borderStyleParts[2]);
-                left = determineBorderStyle(borderStyleParts[3]);
+                BorderStyle borderStyle = BorderStyle::None;
+                if (!tryRecognizeBorderStyle(borderStyleParts[0], borderStyle))
+                    return false;
+                top = borderStyle;
+                if (!tryRecognizeBorderStyle(borderStyleParts[1], borderStyle))
+                    return false;
+                right = borderStyle;
+                if (!tryRecognizeBorderStyle(borderStyleParts[2], borderStyle))
+                    return false;
+                bottom = borderStyle;
+                if (!tryRecognizeBorderStyle(borderStyleParts[3], borderStyle))
+                    return false;
+                left = borderStyle;
+                return true;
             }
+            return false;
         }
     };
 

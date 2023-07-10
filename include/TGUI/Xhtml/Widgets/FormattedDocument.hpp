@@ -192,6 +192,472 @@ namespace tgui  { namespace xhtml
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief The table-cell-data supports the individual specifications of a table-cell
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        class TGUI_API TableCellMetric
+        {
+        public:
+            typedef std::shared_ptr<TableCellMetric> Ptr; //!< Shared table cell data pointer
+
+        public:
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the associated formatted element
+            ///
+            /// @param formattedElement  The associated formatted element
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setFormattedElement(FormattedElement::Ptr formattedElement)
+            {   m_formattedElement = formattedElement;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the associated formatted element
+            ///
+            /// @return  The associated formatted element on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline FormattedElement::Ptr getFormattedElement() const
+            {   return m_formattedElement;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the content origin data element, that is to be (partly) represented by this formatted element
+            ///
+            /// @param origin  The new content origin data element to set
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setContentOrigin(MarkupLanguageElement::Ptr origin)
+            {   m_contentOrigin = origin;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the origin data element, that is (partly) represented by this formatted element
+            ///
+            /// @return The origin data element
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline MarkupLanguageElement::Ptr getContentOrigin() const
+            {   return m_contentOrigin;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the start coordinate
+            ///
+            /// @param startCoordinate  The start coordinate
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setStartCoordinate(float startCoordinate)
+            {   m_startCoordinate = startCoordinate;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the start coordinate
+            ///
+            /// @return  The start coordinate
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline float getStartCoordinate() const
+            {   return m_startCoordinate;   }
+
+        private:
+            FormattedElement::Ptr            m_formattedElement;       //!< The associated formatted element
+            MarkupLanguageElement::Ptr       m_contentOrigin;          //!< The origin data element, that is (partly) represented by this formatted element
+            float                            m_startCoordinate = 0.0f; //!< The start coordinate
+        };
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief The table-row-data supports the individual specifications of a table-row
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        class TGUI_API TableRowMetric
+        {
+        public:
+            typedef std::shared_ptr<TableRowMetric> Ptr; //!< Shared table row data pointer
+
+        public:
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Adds a table cell metric to a row
+            ///
+            /// @param tableCellMetric  The cell metric to add
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void addCellMetric(TableCellMetric::Ptr tableCellMetric)
+            {   m_cellMetrics.push_back(tableCellMetric);   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the number of registered cell metrics
+            ///
+            /// @return  The number of registered cell metrics
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline size_t getCellMetricCount() const
+            {   return m_cellMetrics.size();   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the cell metric of a cell
+            ///
+            /// @param index  The cell index to get the metric for
+            ///
+            /// @return  The cell metric of a cell on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline TableCellMetric::Ptr getCellMetric(size_t index) const
+            {   return index < m_cellMetrics.size() ? m_cellMetrics[index] : nullptr;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the cell metric of the first cell that is associated to the indicated content origin data element
+            ///
+            /// @param origin  The content origin data element to get the cell metric for
+            ///
+            /// @return  The cell metric on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline TableCellMetric::Ptr firstOrDefaultCellMetricByContentOrigin(MarkupLanguageElement::Ptr origin) const
+            {
+                for (size_t index = 0; index < m_cellMetrics.size(); index++)
+                    if (m_cellMetrics[index]->getContentOrigin() == origin)
+                        return m_cellMetrics[index];
+
+                return nullptr;
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the cell index of a the first cell that is associated to the indicated content origin data element
+            ///
+            /// @param origin  The content origin data element to get the cell index for
+            ///
+            /// @return  The cell index on success, or 0 otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline size_t firstOrDefaultCellIndexByContentOrigin(MarkupLanguageElement::Ptr origin) const
+            {
+                for (size_t index = 0; index < m_cellMetrics.size(); index++)
+                    if (m_cellMetrics[index]->getContentOrigin() == origin)
+                        return index;
+
+                return 0;
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the associated formatted element
+            ///
+            /// @param formattedElement  The associated formatted element
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setFormattedElement(FormattedElement::Ptr formattedElement)
+            {   m_formattedElement = formattedElement;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the associated formatted element
+            ///
+            /// @return  The associated formatted element on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline FormattedElement::Ptr getFormattedElement() const
+            {   return m_formattedElement;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the content origin data element, that is to be (partly) represented by this formatted element
+            ///
+            /// @param origin  The new content origin data element to set
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setContentOrigin(MarkupLanguageElement::Ptr origin)
+            {   m_contentOrigin = origin;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the origin data element, that is (partly) represented by this formatted element
+            ///
+            /// @return The origin data element
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline MarkupLanguageElement::Ptr getContentOrigin() const
+            {   return m_contentOrigin;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the start coordinate
+            ///
+            /// @param startCoordinate  The start coordinate
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setStartCoordinate(float startCoordinate)
+            {   m_startCoordinate = startCoordinate;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the start coordinate
+            ///
+            /// @return  The start coordinate
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline float getStartCoordinate() const
+            {   return m_startCoordinate;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the end coordinate
+            ///
+            /// @param endCoordinate  The end coordinate
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setEndCoordinate(float endCoordinate)
+            {   m_endCoordinate = endCoordinate;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the end coordinate
+            ///
+            /// @return  The end coordinate
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline float getEndCoordinate() const
+            {   return m_endCoordinate;   }
+
+        private:
+            FormattedElement::Ptr             m_formattedElement;        //!< The associated formatted element
+            MarkupLanguageElement::Ptr        m_contentOrigin;           //!< The origin data element, that is (partly) represented by this formatted element
+            std::vector<TableCellMetric::Ptr> m_cellMetrics;             //!< Specifications of the table cells
+            float                             m_startCoordinate = -0.1f; //!< The start coordinate
+            float                             m_endCoordinate = 0.0f;    //!< The end coordinate
+        };
+
+        enum class TableRowRange
+        {
+            Head,   //!< The head row range
+            Body,   //!< The body row range
+            Foot    //!< The foot row range
+        };
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief The table-data supports the individual specifications of a table
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        class TGUI_API TableMetric
+        {
+        public:
+            typedef std::shared_ptr<TableMetric> Ptr; //!< Shared table data pointer
+
+        public:
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief The default constructor
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            TableMetric()
+                : m_columnRequestedSizes(), m_formattedElement(nullptr), m_contentOrigin(nullptr), m_currentRowRange(TableRowRange::Body),
+                  m_headRowMetrics(), m_bodyRowMetrics(), m_footRowMetrics()
+            {   ;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Updates the requested size of a column
+            ///
+            /// @param index             The column index of the column to update the requested size for
+            /// @param updateSize        The requested size to update to
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            void updateRequestedColumnSize(size_t index, OneDimSize updateSize);
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the number of registered requested sizes of columns
+            ///
+            /// @return                  The number of registered requested sizes of columns
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline size_t getRequestedColumnSizesCount() const
+            {   return m_columnRequestedSizes.size();   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the requested size of a column
+            ///
+            /// @param columnIndex       The column index of the column to get the requested size for
+            ///
+            /// @return                  The requested size of a column on success, or the default (SizeType::ViewportWidth, 0.0f)
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline OneDimSize getRequestedColumnSize(size_t columnIndex) const
+            {
+                // SizeType::ViewportWidth with 0.0f acts as a default.
+                return (columnIndex < m_columnRequestedSizes.size()) ? m_columnRequestedSizes[columnIndex] : OneDimSize(SizeType::ViewportWidth, 0.0f);
+            }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Updates the preferred size of a column
+            ///
+            /// @param columnIndex       The column index of the column to update the preferred size for
+            /// @param updateSize        The preferred size to update to
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            void updatePreferredColumnSize(size_t columnIndex, SizePreference updateSize);
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the aggregated preferred size of all columns
+            ///
+            /// @return                  The aggregated preferred size of all columns
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            float getTotalPreferredColumnSizes() const;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the current row range
+            ///
+            /// @param currentRowRange   The row range to set as current
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setCurrentRowRange(TableRowRange currentRowRange)
+            {   m_currentRowRange = currentRowRange;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the current row range
+            ///
+            /// @return                  The current row range
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline TableRowRange getCurrentRowRange() const
+            {   return m_currentRowRange;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the number of rows for a row range
+            ///
+            /// @param rowRange          The row range to get the number of rows for
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            size_t getRowRangeRowMetricCount(TableRowRange rowRange) const;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Adds a row metric to a row range
+            ///
+            /// @param rowRange          The row range to add the row metric to
+            /// @param tableRowMetric    The row metric to add
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            void addRowRangeRowMetric(TableRowRange rowRange, TableRowMetric::Ptr tableRowMetric);
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets a row metric of a row range
+            ///
+            /// @param rowRange          The row range to get the row metric from
+            /// @param index             The index of the row metric to get
+            ///
+            /// @return                  The row metric on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            TableRowMetric::Ptr getRowRangeRowMetric(TableRowRange rowRange, size_t index) const;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the tailing row metric of a row range
+            ///
+            /// @param rowRange          The row range to get the tailing row metric from
+            ///
+            /// @return                  The row metric on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            TableRowMetric::Ptr getRowRangeTailRowMetric(TableRowRange rowRange) const;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the tailing row metric of the tailing row range
+            ///
+            /// @return                  The row metric on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            TableRowMetric::Ptr getTailRowMetric() const;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the associated formatted element
+            ///
+            /// @param formattedElement  The associated formatted element
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setFormattedElement(FormattedElement::Ptr formattedElement)
+            {   m_formattedElement = formattedElement;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the associated formatted element
+            ///
+            /// @return                  The associated formatted element on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline FormattedElement::Ptr getFormattedElement() const
+            {   return m_formattedElement;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the content origin data element, that is to be (partly) represented by this formatted element
+            ///
+            /// @param origin            The new content origin data element to set
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setContentOrigin(MarkupLanguageElement::Ptr origin)
+            {   m_contentOrigin = origin;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the origin data element, that is (partly) represented by this formatted element
+            ///
+            /// @return                  The origin data element
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline MarkupLanguageElement::Ptr getContentOrigin() const
+            {   return m_contentOrigin;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the row metric of a the first row that is associated to the indicated content origin data element
+            ///
+            /// @param origin            The row content origin data element to get the row metric for
+            /// @param rowIndex          [OUT] The row index on succes, or the number of rows otherwise
+            ///
+            /// @return                  The row metric on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            TableRowMetric::Ptr firstOrDefaultRowMetricByContentOrigin(MarkupLanguageElement::Ptr origin, size_t& rowIndex) const;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the row metric of a the first row that is associated to the indicated content origin data element
+            ///
+            /// @param origin            The row content origin data element to get the row metric for
+            ///
+            /// @return                  The row metric on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline TableRowMetric::Ptr firstOrDefaultRowMetricByContentOrigin(MarkupLanguageElement::Ptr origin) const
+            {   size_t rowIndex;    return firstOrDefaultRowMetricByContentOrigin(origin, rowIndex);   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the row metric of a the first row that contains a cell that is associated to the indicated content origin data element
+            ///
+            /// @param origin            The cell content origin data element to get the row metric for
+            /// @param rowIndex          [OUT] The row index on succes, or the number of rows otherwise
+            ///
+            /// @return                  The row metric on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            TableRowMetric::Ptr firstOrDefaultRowMetricByAnyCellContentOrigin(MarkupLanguageElement::Ptr origin, size_t& rowIndex) const;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the row metric of a the first row that contains a cell that is associated to the indicated content origin data element
+            ///
+            /// @param origin            The cell content origin data element to get the row metric for
+            ///
+            /// @return                  The row metric on success, or nullptr otherwise
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline TableRowMetric::Ptr firstOrDefaultRowMetricByAnyCellContentOrigin(MarkupLanguageElement::Ptr origin) const
+            {   size_t rowIndex = 0;    return firstOrDefaultRowMetricByAnyCellContentOrigin(origin, rowIndex);   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the layout area. Must be done before before table columns are calculated
+            ///
+            /// @param cachedLayoutArea  The layout ares
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setCachedLayoutArea(FloatRect cachedLayoutArea)
+            {   m_cachedLayoutArea = cachedLayoutArea;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the layout area
+            ///
+            /// @return                  The layout area
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline FloatRect getCachedLayoutArea() const
+            {   return m_cachedLayoutArea;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Sets the table to cell spacing. Must be done before table columns are calculated
+            ///
+            /// @param cachedLayoutArea  The table to cell spacing (margin + border + default spacing) from table's layout area
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            inline void setTableLayoutAreaToCellSpacing(Outline tableToCellSpacing)
+            {   m_tableToCellSpacing = tableToCellSpacing;   }
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Gets the table margis
+            ///
+            /// @return  The table margin, fallback is 0.0f
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            Outline getTableMargin() const;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Calculates the table render area (layout area + margin) to cell spacing
+            ///
+            /// @return  The table render area (layout area + margin) to cell spacing (border + default spacing), fallback is 0.0f
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            Outline calculateTableRenderAreaToCellSpacing() const;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Calculates the table layout area to cell spacing
+            ///
+            /// @return  The table layout area to cell spacing (margin + border + default spacing), fallback is 0.0f
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            Outline calculateTableLayoutAreaToCellSpacing() const;
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            /// @brief Calculates the cell layout area for a cell
+            ///
+            /// @param columnIndex  The column index of the cell to calculate the cell layout area for
+            ///
+            /// @return  The cell layout area for a cell
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            FloatRect calculateCellLayoutArea(size_t columnIndex) const;
+
+        private:
+            std::vector<OneDimSize>          m_columnRequestedSizes;   //!< The column requested sizes
+            std::vector<SizePreference>      m_columnPreferredSizes;   //!< The column preferred sizes
+            FormattedElement::Ptr            m_formattedElement;       //!< The associated formatted element
+            MarkupLanguageElement::Ptr       m_contentOrigin;          //!< The origin data element, that is (partly) represented by this formatted element
+            TableRowRange                    m_currentRowRange;        //!< The currently selected row range, used to add rows
+            std::vector<TableRowMetric::Ptr> m_headRowMetrics;         //!< Specifications of the table head rows
+            std::vector<TableRowMetric::Ptr> m_bodyRowMetrics;         //!< Specifications of the table body rows
+            std::vector<TableRowMetric::Ptr> m_footRowMetrics;         //!< Specifications of the table foot rows
+            FloatRect                        m_cachedLayoutArea;       //!< Caches the layout area before table columns are calculated
+            Outline                          m_tableToCellSpacing;     //!< The table to cell spacing (margin + border + default spacing)
+        };
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief The list-data supports the individual specifications of a list
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         class TGUI_API ListData
@@ -199,9 +665,9 @@ namespace tgui  { namespace xhtml
         public:
             typedef std::shared_ptr<ListData> Ptr; //!< Shared list data pointer
 
-            bool         Ordered;          //!< Determine whether the list is ordered or unordered
-            unsigned int ActualItemIndex;  //!< The 1-based index of the actual list item
-            ListItemType ItemType;         //!< Determine the bullet to apply
+            bool               Ordered;          //!< Determine whether the list is ordered or unordered
+            unsigned int       ActualItemIndex;  //!< The 1-based index of the actual list item
+            MarkupListItemType ItemType;         //!< The list item type (defining the bullet or enumeration of a list item)
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             /// @brief Calculates the bullet of a list item
@@ -213,33 +679,34 @@ namespace tgui  { namespace xhtml
             String calculateBullet(size_t nestingDepth)
             {
                 String bullet = U"";
+
                 if (!Ordered)
                 {
                     if     (nestingDepth % 3 == 1)
                     {
-                        if ((ItemType == ListItemType::InheritOrDefault) || (ItemType == ListItemType::Disc))
+                        if ((ItemType == MarkupListItemType::InheritOrDefault) || (ItemType == MarkupListItemType::Disc))
                             bullet.push_back(U'\u25CF'); // ●
-                        else if (ItemType == ListItemType::Circle)
+                        else if (ItemType == MarkupListItemType::Circle)
                             bullet.push_back(U'\u25CB'); // ○
-                        else if (ItemType == ListItemType::Square)
+                        else if (ItemType == MarkupListItemType::Square)
                             bullet.push_back(U'\u25A0'); // ■
                     }
                     else if (nestingDepth % 3 == 2)
                     {
-                        if (ItemType == ListItemType::InheritOrDefault || ItemType == ListItemType::Circle)
+                        if (ItemType == MarkupListItemType::InheritOrDefault || ItemType == MarkupListItemType::Circle)
                             bullet.push_back(U'\u25CB'); // ○
-                        else if (ItemType == ListItemType::Disc)
+                        else if (ItemType == MarkupListItemType::Disc)
                             bullet.push_back(U'\u25CF'); // ●
-                        else if (ItemType == ListItemType::Square)
+                        else if (ItemType == MarkupListItemType::Square)
                             bullet.push_back(U'\u25A0'); // ■
                     }
                     else
                     {
-                        if (ItemType == ListItemType::InheritOrDefault || ItemType == ListItemType::Square)
+                        if (ItemType == MarkupListItemType::InheritOrDefault || ItemType == MarkupListItemType::Square)
                             bullet.push_back(U'\u25A0'); // ■
-                        else if (ItemType == ListItemType::Disc)
+                        else if (ItemType == MarkupListItemType::Disc)
                             bullet.push_back(U'\u25CF'); // ●
-                        else if (ItemType == ListItemType::Circle)
+                        else if (ItemType == MarkupListItemType::Circle)
                             bullet.push_back(U'\u25CB'); // ○
                     }
                 }
@@ -247,24 +714,25 @@ namespace tgui  { namespace xhtml
                 {
                     if (nestingDepth % 2 == 1)
                     {
-                        if(ItemType == ListItemType::InheritOrDefault || ItemType == ListItemType::Arabic)
+                        if(ItemType == MarkupListItemType::InheritOrDefault || ItemType == MarkupListItemType::Arabic)
                             bullet = std::to_wstring(ActualItemIndex);
-                        else if(ItemType == ListItemType::UpperAlpha)
+                        else if(ItemType == MarkupListItemType::UpperAlpha)
                             bullet = static_cast<char32_t>('@' + (wchar_t)ActualItemIndex);
-                        else if(ItemType == ListItemType::LowerAlpha)
+                        else if(ItemType == MarkupListItemType::LowerAlpha)
                             bullet = static_cast<char32_t>('`' + (wchar_t)ActualItemIndex);
                     }
                     else
                     {
-                        if(ItemType == ListItemType::InheritOrDefault || ItemType == ListItemType::LowerAlpha)
+                        if(ItemType == MarkupListItemType::InheritOrDefault || ItemType == MarkupListItemType::LowerAlpha)
                             bullet = static_cast<char32_t>('`' + (wchar_t)ActualItemIndex);
-                        else if(ItemType == ListItemType::UpperAlpha)
+                        else if(ItemType == MarkupListItemType::UpperAlpha)
                             bullet = static_cast<char32_t>('@' + (wchar_t)ActualItemIndex);
-                        else if(ItemType == ListItemType::Arabic)
+                        else if(ItemType == MarkupListItemType::Arabic)
                             bullet = std::to_wstring(ActualItemIndex);
                     }
                     bullet += U".";
                 }
+
                 return bullet;
             }
         };
@@ -280,8 +748,8 @@ namespace tgui  { namespace xhtml
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             FormattingState(const Color& foreColor)
                 : ForeColor(foreColor), BackColor(Color(255, 255, 255)), Opacity(1), TextHeight(14.0f),
-                  TextFont(nullptr), Style(TextStyle::Regular), Superscript(false), Subscript(false), ListMetrics(),
-                  BorderWidth(SizeType::Pixel, 0.0f), BlockPadding(SizeType::Pixel, 0.0f)
+                  TextFont(nullptr), Style(TextStyle::Regular), Superscript(false), Subscript(false),
+                  TableMetrics(), ListMetrics(), BorderWidth(SizeType::Pixel, 0.0f), BlockPadding(SizeType::Pixel, 0.0f)
             { ; }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -293,7 +761,8 @@ namespace tgui  { namespace xhtml
                 : ForeColor(formattingState.ForeColor), BackColor(formattingState.BackColor), Opacity(formattingState.Opacity),
                   TextHeight(formattingState.TextHeight), TextFont(formattingState.TextFont),
                   Style(formattingState.Style), Superscript(formattingState.Superscript), Subscript(formattingState.Subscript),
-                  ListMetrics(formattingState.ListMetrics), BorderWidth(formattingState.BorderWidth), BlockPadding(formattingState.BlockPadding)
+                  TableMetrics(formattingState.TableMetrics), ListMetrics(formattingState.ListMetrics),
+                  BorderWidth(formattingState.BorderWidth), BlockPadding(formattingState.BlockPadding)
             { ; }
 
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -311,6 +780,7 @@ namespace tgui  { namespace xhtml
                 Style           = formattingState.Style;
                 Superscript     = formattingState.Superscript;
                 Subscript       = formattingState.Subscript;
+                TableMetrics    = formattingState.TableMetrics;
                 ListMetrics     = formattingState.ListMetrics;
                 BorderWidth     = formattingState.BorderWidth;
                 BlockPadding    = formattingState.BlockPadding;
@@ -520,17 +990,18 @@ namespace tgui  { namespace xhtml
             {   if (italic) setFontToItalic(fontCollection); else setFontToRegularSlant(fontCollection);   }
 
         public:
-            Color                    ForeColor;
-            Color                    BackColor;
-            float                    Opacity;
-            float                    TextHeight;
-            Font                     TextFont;
-            TextStyle                Style;
-            float                    Superscript;  //!< Superscript offset to normal text
-            float                    Subscript;    //!< Subscript offset to normal text
-            std::list<ListData::Ptr> ListMetrics;  //!< Specifications of the (nested) lists
-            FourDimSize              BorderWidth;  //!< Specifications of the border
-            FourDimSize              BlockPadding; //!< Specifications of the padding
+            Color                     ForeColor;    //!< The rurrent fore color
+            Color                     BackColor;    //!< The rurrent back color
+            float                     Opacity;      //!< The rurrent opacity
+            float                     TextHeight;   //!< The rurrent text height
+            Font                      TextFont;     //!< The rurrent font
+            TextStyle                 Style;        //!< The rurrent text style
+            float                     Superscript;  //!< Superscript offset to normal text
+            float                     Subscript;    //!< Subscript offset to normal text
+            std::list<TableMetric::Ptr> TableMetrics;  //!< Specifications of the (nested) tables
+            std::list<ListData::Ptr>  ListMetrics;  //!< Specifications of the (nested) lists
+            FourDimSize               BorderWidth;  //!< Specifications of the border
+            FourDimSize               BlockPadding; //!< Specifications of the padding
         };
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -242,7 +242,7 @@ namespace tgui  { namespace xhtml
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         inline void setLayoutBottom(float bottom)
         {
-            m_layoutRefLine = bottom - (m_layoutArea.top + m_layoutArea.height);
+            m_layoutRefLine = bottom;
             m_layoutArea.height = bottom - m_layoutArea.top;
         }
 
@@ -683,6 +683,8 @@ namespace tgui  { namespace xhtml
         /// @brief Creates a new formatted text section
         ///
         /// Prefer the factory method in cases where the formatted text section needs to be shared, otherwise prefer the constructor.
+        /// Also prefer the factory method in cases where mutual references between owner and owned are required, bacause
+        /// sing shared_from_this() without previous call to make_shared() (like in a constructor) leads to undefined results.
         ///
         /// @param textStyle  The text style
         ///

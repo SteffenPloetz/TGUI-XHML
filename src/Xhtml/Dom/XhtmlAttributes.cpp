@@ -1,8 +1,9 @@
+#include <algorithm>
+#include <cstdint>
+
 #include <TGUI/Config.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Vector2.hpp>
-
-#include <algorithm>
 
 // #define LOG_ATTRIBUTE 1
 
@@ -425,7 +426,6 @@ namespace tgui  { namespace xhtml
         return *this;
     }
 
-
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void XhtmlStyleEntry::putValue(std::vector<std::tuple<tgui::xhtml::MessageType, String>>& messages, const tgui::String& rawValue)
@@ -461,7 +461,7 @@ namespace tgui  { namespace xhtml
 
             if (styleEntryParts[0].size() <= 1 || styleEntryParts[1].size() <= 1)
             {
-                tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  key and value from style value '" + styleEntryValue + U"'!");
+                tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize key and value from style value '" + styleEntryValue + U"'!");
                 messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 continue;
             }
@@ -485,41 +485,31 @@ namespace tgui  { namespace xhtml
                 }
                 catch(const Exception&)
                 {
-                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
+                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize value from style value '" + styleEntryValue + U"'!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 }
                 continue;
             }
             else if (styleEntryParts[0].equalIgnoreCase(U"color"))
             {
-                try
+                Color colorValue = Color::Transparent;
+                if (tryParseColor(styleEntryParts[1], colorValue))
+                    setColor(colorValue);
+                else
                 {
-                    auto colorValue = WebColorMap.find(styleEntryParts[1]) != WebColorMap.end() ? WebColorMap[styleEntryParts[1]] : styleEntryParts[1];
-                    if (colorValue[0] != U'#')
-                        colorValue = U"#" + colorValue;
-                    Color color(colorValue);
-                    setColor(color);
-                }
-                catch(const Exception&)
-                {
-                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
+                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize color value from style value '" + styleEntryValue + U"'!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 }
                 continue;
             }
             else if (styleEntryParts[0].equalIgnoreCase(U"border-color"))
             {
-                try
+                Color colorValue = Color::Transparent;
+                if (tryParseColor(styleEntryParts[1], colorValue))
+                    setBorderColor(colorValue);
+                else
                 {
-                    auto colorValue = WebColorMap.find(styleEntryParts[1]) != WebColorMap.end() ? WebColorMap[styleEntryParts[1]] : styleEntryParts[1];
-                    if (colorValue[0] != U'#')
-                        colorValue = U"#" + colorValue;
-                    Color color(colorValue);
-                    setBorderColor(color);
-                }
-                catch(const Exception&)
-                {
-                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
+                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize color value from style value '" + styleEntryValue + U"'!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 }
                 continue;
@@ -530,7 +520,7 @@ namespace tgui  { namespace xhtml
                     setItalic(true);
                 else
                 {
-                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
+                    tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize value from style value '" + styleEntryValue + U"'!");
                     messages.push_back(std::make_tuple(MessageType::ERROR, message));
                 }
                 continue;
@@ -549,8 +539,8 @@ namespace tgui  { namespace xhtml
             else if (styleEntryParts[0].equalIgnoreCase(U"border-style"))
             {
                 FourDimBorderStyle borderStyle = getBorderStyle();
-                borderStyle.parse(StringEx::split(styleEntryParts[1], U' '));
-                setBorderStyle(borderStyle);
+                if (borderStyle.tryParse(StringEx::split(styleEntryParts[1], U' ')))
+                    setBorderStyle(borderStyle);
                 continue;
             }
             else if (styleEntryParts[0].equalIgnoreCase(U"border-width"))
@@ -562,6 +552,73 @@ namespace tgui  { namespace xhtml
                 borderWidth.parse(StringEx::split(styleEntryParts[1], U' '));
                 setBorderWidth(borderWidth);
                 continue;
+            }
+            else if (styleEntryParts[0].equalIgnoreCase(U"border"))
+            {
+                styleEntryParts[1].replace(U"thin", U"1px");
+                styleEntryParts[1].replace(U"medium", U"3px");
+                styleEntryParts[1].replace(U"thick", U"5px");
+
+                auto styleEntrySubParts = StringEx::split(styleEntryParts[1], U' ', true);
+                for (size_t subPartIndex = 0; subPartIndex < styleEntrySubParts.size() && subPartIndex < 3; subPartIndex++)
+                    styleEntrySubParts[subPartIndex] = styleEntrySubParts[subPartIndex].trim();
+
+                if (styleEntrySubParts.size() == 1)
+                {
+                    // border CSS consists of style
+                    FourDimBorderStyle borderStyle = getBorderStyle();
+                    if (borderStyle.tryParse({ styleEntrySubParts[0] }))
+                        setBorderStyle(borderStyle);
+                }
+                else if (styleEntrySubParts.size() == 2)
+                {
+                    // border CSS consists of width and sytyle OR style and color
+                    FourDimBorderStyle borderStyle = getBorderStyle();
+                    if (borderStyle.tryParse({ styleEntrySubParts[0] }))
+                    {
+                        // border CSS consists of style and color
+                        setBorderStyle(borderStyle);
+
+                        Color colorValue = Color::Transparent;
+                        if (tryParseColor(styleEntrySubParts[1], colorValue))
+                            setBorderColor(colorValue);
+                        else
+                        {
+                            tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize color value from style value '" + styleEntryValue + U"'!");
+                            messages.push_back(std::make_tuple(MessageType::ERROR, message));
+                        }
+                    }
+                    else if (borderStyle.tryParse({ styleEntrySubParts[1] }))
+                    {
+                        // border CSS consists of width and sytyle
+                        setBorderStyle(borderStyle);
+
+                        FourDimSize borderWidth = getBorderWidth();
+                        borderWidth.parse({ styleEntrySubParts[0] });
+                        setBorderWidth(borderWidth);
+                        continue;
+                    }
+                }
+                else if (styleEntrySubParts.size() == 3)
+                {
+                    // border CSS consists of width and sytyle OR style and color
+                    FourDimSize borderWidth = getBorderWidth();
+                    borderWidth.parse({ styleEntrySubParts[0] });
+                    setBorderWidth(borderWidth);
+
+                    FourDimBorderStyle borderStyle = getBorderStyle();
+                    if (borderStyle.tryParse({ styleEntrySubParts[1] }))
+                        setBorderStyle(borderStyle);
+
+                    Color colorValue = Color::Transparent;
+                    if (tryParseColor(styleEntrySubParts[2], colorValue))
+                        setBorderColor(colorValue);
+                    else
+                    {
+                        tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize color value from style value '" + styleEntryValue + U"'!");
+                            messages.push_back(std::make_tuple(MessageType::ERROR, message));
+                    }
+                }
             }
             else if (XhtmlStyleEntry::containsAnyIgnoreCase(styleEntryParts[0],
                         {U"margin", U"margin-top", U"margin-left", U"margin-bottom", U"margin-right"}))
@@ -607,6 +664,20 @@ namespace tgui  { namespace xhtml
                 setPadding(padding);
                 continue;
             }
+            else if (styleEntryParts[0].equalIgnoreCase(U"height"))
+            {
+                OneDimSize height = getHeight();
+                height.value = styleEntryParts[1].toFloat();
+                setHeight(height);
+                continue;
+            }
+            else if (styleEntryParts[0].equalIgnoreCase(U"width"))
+            {
+                OneDimSize width = getWidth();
+                width.value = styleEntryParts[1].toFloat();
+                setWidth(width);
+                continue;
+            }
             tgui::String message(U"XhtmlAttribute::putValue() -> Unable to recognize  value from style value '" + styleEntryValue + U"'!");
             messages.push_back(std::make_tuple(MessageType::ERROR, message));
             continue;
@@ -623,6 +694,25 @@ namespace tgui  { namespace xhtml
                 return true;
 
         return false;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    bool XhtmlStyleEntry::tryParseColor(const tgui::String& colorString, Color& colorValue)
+    {
+        try
+        {
+            auto finalColorString = WebColorMap.find(colorString) != WebColorMap.end() ? WebColorMap[colorString] : colorString;
+            if (finalColorString[0] != U'#')
+                finalColorString = U"#" + finalColorString;
+            Color color(finalColorString);
+            colorValue = color;
+            return true;
+        }
+        catch (const Exception&)
+        {
+            return false;
+        }
     }
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

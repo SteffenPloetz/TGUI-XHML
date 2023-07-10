@@ -1,11 +1,12 @@
-#include <TGUI/Config.hpp>
-#include <TGUI/TGUI.hpp>
-#include <TGUI/Vector2.hpp>
-
 #include <cuchar>
 #include <codecvt>
 #include <locale>
 #include <string>
+#include <cstdint>
+
+#include <TGUI/Config.hpp>
+#include <TGUI/TGUI.hpp>
+#include <TGUI/Vector2.hpp>
 
 // MSC needs a clear distiction between "__declspec(dllimport)" (above) and "__declspec(dllexport)" (below) this comment.
 // So in the case of direct source file integration (in contrast to library creation and linking), the API must be 'dllexport'.

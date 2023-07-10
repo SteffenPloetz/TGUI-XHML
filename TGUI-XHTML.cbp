@@ -45,9 +45,16 @@
 			<Add library="sfml-system" />
 		</Linker>
 		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlAttributes.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlContainerElement.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlElement.hpp" />
 		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlElements.hpp" />
 		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlEntityResolver.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlListItem.hpp" />
 		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlParser.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlStyle.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlStyleableContainerElement.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlStyleableInterface.hpp" />
+		<Unit filename="include/TGUI/Xhtml/Dom/XhtmlStyleableNoncontainerElement.hpp" />
 		<Unit filename="include/TGUI/Xhtml/MarkupLanguageElement.hpp" />
 		<Unit filename="include/TGUI/Xhtml/Renderers/FormattedTextRenderer.hpp" />
 		<Unit filename="include/TGUI/Xhtml/StringHelper.hpp" />
@@ -57,16 +64,16 @@
 		<Unit filename="include/TGUI/Xhtml/Widgets/FormattedTextView.hpp" />
 		<Unit filename="include/TGUI/Xhtml/Widgets/FormattedTextXhtmlDocument.hpp" />
 		<Unit filename="src/Xhtml/Dom/XhtmlAttributes.cpp" />
-		<Unit filename="src/Xhtml/Dom/XhtmlElements.cpp" />
+		<Unit filename="src/Xhtml/Dom/XhtmlElement.cpp" />
 		<Unit filename="src/Xhtml/Dom/XhtmlEntityResolver.cpp" />
 		<Unit filename="src/Xhtml/Dom/XhtmlParser.cpp" />
 		<Unit filename="src/Xhtml/MarkupLanguageElement.cpp" />
 		<Unit filename="src/Xhtml/Renderers/FormattedTextRenderer.cpp" />
 		<Unit filename="src/Xhtml/StringHelper.cpp" />
 		<Unit filename="src/Xhtml/UtfHelper.cpp" />
-		<Unit filename="src/Xhtml/Widgets/FormattedElements.cpp" />
+		<Unit filename="src/Xhtml/Widgets/FormattedDocument.cpp" />
 		<Unit filename="src/Xhtml/Widgets/FormattedTextView.cpp" />
-		<Unit filename="src/Xhtml/Widgets/FormattedTextXhtmlDocument.cpp" />
+		<Unit filename="src/Xhtml/Widgets/FormattedXhtmlDocument.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>

@@ -1,3 +1,5 @@
+#include <cstdint>
+
 #include <TGUI/Config.hpp>
 #include <TGUI/TGUI.hpp>
 

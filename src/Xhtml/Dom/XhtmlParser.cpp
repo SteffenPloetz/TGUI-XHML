@@ -1,8 +1,9 @@
-﻿#include <TGUI/Config.hpp>
-#include <TGUI/TGUI.hpp>
-
-#include <iostream>
+﻿#include <iostream>
 #include <memory>
+#include <cstdint>
+
+#include <TGUI/Config.hpp>
+#include <TGUI/TGUI.hpp>
 
 // MSC needs a clear distiction between "__declspec(dllimport)" (above) and "__declspec(dllexport)" (below) this comment.
 // So in the case of direct source file integration (in contrast to library creation and linking), the API must be 'dllexport'.
@@ -150,21 +151,14 @@ namespace tgui  { namespace xhtml
                     }
 
                     // prepare current character(s) for tag content, if any
-                    if (workDataLen || characters.size())
-                    {
+                    if (workDataLen)
                         characters.append(m_buffer.substr(workStartPosition, workDataLen));
+                    if (characters.size())
+                    {
                         if (preformattedDepth == 0)
-                        {
                             parseDocument_cleanBreaksAndSpaces(parentElements.back(), characters);
-                        }
                         else
-                        {
                             characters.replace(U"\r\n", U"\n");
-                            characters.replace(U"\n", U"<br>");
-                            characters.replace(U"\n", U"</br>");
-                            characters.replace(U"\n", U"<br/>");
-                            characters.replace(U"\n", U"<br />");
-                        }
                     }
 
                     // register current character(s) for tag content, if any
@@ -248,7 +242,7 @@ namespace tgui  { namespace xhtml
                     break;
                 }
 
-                // handle entities (HRML special characters) initiating characters
+                // handle entities (HTML special characters) initiating characters
                 case '&':
                 {
                     workCharacter = rejectChar();
@@ -259,8 +253,8 @@ namespace tgui  { namespace xhtml
 
                     if (charOffset)
                     {
-                        characters += m_buffer.substr(workStartPosition, workDataLen);
-                        characters += workCharacter;
+                        characters.append(m_buffer.substr(workStartPosition, workDataLen));
+                        characters.append(workCharacter);
                         m_bufferPos += charOffset;
                         workStartPosition = m_bufferPos;
                         workDataLen = 0L;
@@ -281,7 +275,7 @@ namespace tgui  { namespace xhtml
                     break;
                 }
             }
-        }
+        };
 
         // do a simple quality check
         if (workDataLen || characters.size())
@@ -341,14 +335,8 @@ namespace tgui  { namespace xhtml
     void XhtmlParser::parseDocument_createInnerText(XhtmlElement::Ptr parentElement, tgui::String& characters, int preformattedDepth)
     {
         tgui::String match = U"";
-        if (characters.find(U"<br>", 0) != SIZE_MAX)
-            match = U"<br>";
-        else if (characters.find(U"</br>", 0) != SIZE_MAX)
-            match = U"</br>";
-        else if (characters.find(U"<br/>", 0) != SIZE_MAX)
-            match = U"<br/>";
-        else if (characters.find(U"<br />", 0) != SIZE_MAX)
-            match = U"<br />";
+        if (characters.find(U"\n", 0) != SIZE_MAX)
+            match = U"\n";
 
         if (match.length() > 0)
         {

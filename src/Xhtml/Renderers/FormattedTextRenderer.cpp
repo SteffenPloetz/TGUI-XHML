@@ -1,3 +1,5 @@
+#include <cstdint>
+
 #include <TGUI/Config.hpp>
 #include <TGUI/RendererDefines.hpp>
 #include <TGUI/Renderers/WidgetRenderer.hpp>

@@ -1,3 +1,5 @@
+#include <cstdint>
+
 #include <TGUI/Config.hpp>
 #include <TGUI/TGUI.hpp>
 #include <TGUI/Keyboard.hpp>
@@ -18,7 +20,7 @@
 namespace tgui  { namespace xhtml
 {
     // ToDo: Discuss in forum.
-#if TGUI_COMPILED_WITH_CPP_VER < 17 && !defined( _MSC_VER)
+#if TGUI_COMPILED_WITH_CPP_VER < 17 && !defined(_MSC_VER)
     constexpr const char FormattedTextView::StaticWidgetType[];
 #endif
 

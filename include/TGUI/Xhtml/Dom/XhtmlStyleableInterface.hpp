@@ -1,8 +1,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //
-// Markup list item type provided for TGUI - Texus' Graphical User Interface
+// XHTML styleable interface (zlib license) provided for TGUI - Texus' Graphical User Interface
 // Copyright (C) 2023 Steffen Ploetz (Steffen.Ploetz@cityweb.de)
-// The list item type is used to represent the possible list item bullet styles.
 //
 // This software is provided 'as-is', without any express or implied warranty.
 // In no event will the authors be held liable for any damages arising from the use of this software.
@@ -23,31 +22,31 @@
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-#ifndef TGUI_LIST_ITEM_TYPE_HPP
-#define TGUI_LIST_ITEM_TYPE_HPP
-
-#include "TGUI/Xhtml/MarkupBorderStyle.hpp"
+#ifndef TGUI_XHTML_STYLEABLE_INTERFACE_HPP
+#define TGUI_XHTML_STYLEABLE_INTERFACE_HPP
 
 namespace tgui  { namespace xhtml
 {
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// @brief The enumeration of list item types (defining the bullet or enumeration of a list item)
+    /// @brief Base class for all XHTML style-able container element classes
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    enum class MarkupListItemType
+    class TGUI_API XhtmlStyleableInterface
     {
-        InheritOrDefault = 1 << 0,
-        None = 1 << 1,
-        Disc = 1 << 2,
-        Circle = 1 << 3,
-        Square = 1 << 4,
-        Arabic = 1 << 5,
-        UpperRoman = 1 << 6,
-        LowerRoman = 1 << 7,
-        UpperAlpha = 1 << 8,
-        LowerAlpha = 1 << 9
+    public:
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Virtual destructor
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        virtual ~XhtmlStyleableInterface() = default;
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the style entry
+        ///
+        /// @return The style entry. Can be nullptr
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        virtual XhtmlStyleEntry::Ptr getStyleEntry() const = 0;
     };
 
 } }
 
-#endif // TGUI_LIST_ITEM_TYPE_HPP
+#endif // TGUI_XHTML_STYLEABLE_INTERFACE_HPP

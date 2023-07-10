@@ -149,7 +149,9 @@ namespace tgui  { namespace xhtml
         Margin      = 1 << 8,  //!< The margin is captured by this style entry
         BorderStyle = 1 << 9,  //!< The border style is captured by this style entry
         BorderWidth = 1 << 10, //!< The border width is captured by this style entry
-        Padding     = 1 << 11  //!< The padding is captured by this style entry
+        Padding     = 1 << 11, //!< The padding is captured by this style entry
+        Height      = 1 << 12, //!< The element height is captured by this style entry
+        Width       = 1 << 13  //!< The element width is captured by this style entry
     };
 
 #if defined(__GNUC__)
@@ -227,7 +229,8 @@ namespace tgui  { namespace xhtml
             : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(Color(0, 0, 0)), m_backgroundColor(Color::Transparent), m_borderColor(Color(0, 0, 0)),
               m_opacity(1.0f), m_fontFamily(U"Sans-serif"), m_fontSize({SizeType::Relative, 1.0f}), m_fontStyle(TextStyle::Regular),
               m_margin({SizeType::Relative, 0.0f}), m_borderStyle(FourDimBorderStyle()), m_borderWidth({SizeType::Relative, 0.0f}),
-              m_padding({SizeType::Relative, 0.0f}), m_styleEntryFlags(StyleEntryFlags::None)
+              m_padding({SizeType::Relative, 0.0f}), m_height({SizeType::ViewportWidth, 0.0f}), m_width({SizeType::ViewportWidth, 0.0f}),
+              m_styleEntryFlags(StyleEntryFlags::None)
         {   ;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -239,7 +242,8 @@ namespace tgui  { namespace xhtml
             : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(color), m_backgroundColor(Color::Transparent), m_borderColor(Color(0, 0, 0)),
             m_opacity(1.0f), m_fontFamily(U"Sans-serif"), m_fontSize({ SizeType::Relative, 1.0f }), m_fontStyle(TextStyle::Regular),
             m_margin({ SizeType::Relative, 0.0f }), m_borderStyle(FourDimBorderStyle()), m_borderWidth({ SizeType::Relative, 0.0f }),
-            m_padding({ SizeType::Relative, 0.0f }), m_styleEntryFlags(StyleEntryFlags::ForeColor)
+            m_padding({ SizeType::Relative, 0.0f }), m_height({SizeType::ViewportWidth, 0.0f}), m_width({SizeType::ViewportWidth, 0.0f}),
+            m_styleEntryFlags(StyleEntryFlags::ForeColor)
         {
             ;
         }
@@ -254,7 +258,8 @@ namespace tgui  { namespace xhtml
             : XhtmlAttribute(XhtmlStyleEntry::TypeName), m_color(Color(0, 0, 0)), m_backgroundColor(Color::Transparent), m_borderColor(Color(0, 0, 0)),
               m_opacity(1.0f), m_fontFamily(U"Sans-serif"), m_fontSize({SizeType::Relative, 1.0f}), m_fontStyle(TextStyle::Regular),
               m_margin({SizeType::Relative, 0.0f}), m_borderStyle(FourDimBorderStyle()), m_borderWidth({ SizeType::Relative, 0.0f }),
-              m_padding({SizeType::Relative, 0.0f}), m_styleEntryFlags(StyleEntryFlags::None)
+              m_padding({SizeType::Relative, 0.0f}), m_height({SizeType::ViewportWidth, 0.0f}), m_width({SizeType::ViewportWidth, 0.0f}),
+              m_styleEntryFlags(StyleEntryFlags::None)
         {
             if (initializer.ForeColor != Color::Transparent)
             {
@@ -294,7 +299,8 @@ namespace tgui  { namespace xhtml
               m_fontFamily(styleEntry.m_fontFamily), m_fontSize(styleEntry.m_fontSize),
               m_fontStyle(styleEntry.m_fontStyle),
               m_margin(styleEntry.m_margin), m_borderStyle(styleEntry.m_borderStyle), m_borderWidth(styleEntry.m_borderWidth),
-              m_padding(styleEntry.m_padding), m_styleEntryFlags(styleEntry.m_styleEntryFlags)
+              m_padding(styleEntry.m_padding), m_height(styleEntry.m_height), m_width(styleEntry.m_width),
+              m_styleEntryFlags(styleEntry.m_styleEntryFlags)
         {   ;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -308,7 +314,8 @@ namespace tgui  { namespace xhtml
               m_fontFamily(std::move(styleEntry.m_fontFamily)), m_fontSize(std::move(styleEntry.m_fontSize)),
               m_fontStyle(std::move(styleEntry.m_fontStyle)),
               m_margin(std::move(styleEntry.m_margin)), m_borderStyle(std::move(styleEntry.m_borderStyle)), m_borderWidth(std::move(styleEntry.m_borderWidth)),
-              m_padding(std::move(styleEntry.m_padding)), m_styleEntryFlags(std::move(styleEntry.m_styleEntryFlags))
+              m_padding(std::move(styleEntry.m_padding)), m_height(styleEntry.m_height), m_width(styleEntry.m_width),
+              m_styleEntryFlags(std::move(styleEntry.m_styleEntryFlags))
         {   ;   }
 
     public:
@@ -568,6 +575,42 @@ namespace tgui  { namespace xhtml
         {   return m_padding;   }
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Sets the new height
+        ///
+        /// @param height   The new height
+        ///
+        /// @return         A reference to this style entry
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline XhtmlStyleEntry& setHeight(OneDimSize height)
+        {   m_height = height; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::Height; return *this;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the height
+        ///
+        /// @return The height
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline OneDimSize getHeight() const
+        {   return m_height;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Sets the new width
+        ///
+        /// @param width    The new width
+        ///
+        /// @return         A reference to this style entry
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline XhtmlStyleEntry& setWidth(OneDimSize width)
+        {   m_width = width; m_styleEntryFlags = m_styleEntryFlags | StyleEntryFlags::Width; return *this;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Gets the width
+        ///
+        /// @return The width
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        inline OneDimSize getWidth() const
+        {   return m_width;   }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// @brief Sets the new style entry flags
         ///
         /// @param styleEntryFlags  The new style entry flags
@@ -598,9 +641,19 @@ namespace tgui  { namespace xhtml
         /// @param left      The string to be compared with the predicates
         /// @param patterns  The strings to check containment
         ///
-        /// @return The flag indicating whether one of the predicates is contained (true) or not (false)
+        /// @return          The flag indicating whether one of the predicates is contained (true) or not (false)
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         static bool containsAnyIgnoreCase(const tgui::String& nocaseLeft, const std::vector<tgui::String>& patterns);
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// @brief Tries to parse the color
+        ///
+        /// @param colorString The string that should contain information about the color
+        /// @param colorValue  [OUT] The color on success
+        ///
+        /// @return            The flag indicating whether parse succeded (true) or not (false)
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        static bool tryParseColor(const tgui::String& colorString, Color& colorValue);
 
     private:
         Color              m_color;             //!< The foreground/text color
@@ -614,6 +667,8 @@ namespace tgui  { namespace xhtml
         FourDimBorderStyle m_borderStyle;       //!< The border style (around the element)
         FourDimSize        m_borderWidth;       //!< The border width (around the element)
         FourDimSize        m_padding;           //!< The padding width (inside the element and inside it's border, if any)
+        OneDimSize         m_height;            //!< The element height
+        OneDimSize         m_width;             //!< The element width
         StyleEntryFlags    m_styleEntryFlags;   //!< The flags of style entry properties, that are actively set for this style entry
     };
 

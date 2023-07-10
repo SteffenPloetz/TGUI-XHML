@@ -1,10 +1,11 @@
-#include <TGUI/Config.hpp>
-#include <TGUI/TGUI.hpp>
-
 #include <iostream>
 #include <fstream>
 #include <list>
 #include <map>
+#include <cstdint>
+
+#include <TGUI/Config.hpp>
+#include <TGUI/TGUI.hpp>
 
 // MSC needs a clear distiction between "__declspec(dllimport)" (above) and "__declspec(dllexport)" (below) this comment.
 // So in the case of direct source file integration (in contrast to library creation and linking), the API must be 'dllexport'.
@@ -82,7 +83,7 @@ namespace tgui  { namespace xhtml
         if (styleElement)
         {
             auto classNames = StringEx::split(xhtmlElement->getClassNames(), U' ', true);
-            for (auto className : classNames)
+            for (String& className : classNames)
             {
                 auto globalStyleEntry = styleElement->getEntry(xhtmlElement->getTypeName(), className);
                 if (globalStyleEntry)
@@ -134,7 +135,7 @@ namespace tgui  { namespace xhtml
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void FormattedXhtmlDocument::applyStyleEntriesToFormattedElement(FormattedElement::Ptr formattedElement,
-        const std::vector<XhtmlStyleEntry::Ptr> styleEntries,
+        const std::vector<XhtmlStyleEntry::Ptr> styleEntries, Vector2f parentSize,
         const FormattedDocument::FontCollection& fontCollection, StyleCategoryFlags categories)
     {
 
@@ -166,7 +167,7 @@ namespace tgui  { namespace xhtml
                 !styleEntry->getBorderWidth().isEmpty(m_availableClientSize))
             {
                 if ((styleEntryFlags & StyleEntryFlags::BorderWidth) == StyleEntryFlags::BorderWidth)
-                    formattedRect->setBoderWidth(styleEntry->getBorderWidth());
+                    formattedRect->setBoderWidth(styleEntry->getBorderWidth().toPixel(parentSize));
             }
             if ((categories & StyleCategoryFlags::BorderColor) == StyleCategoryFlags::BorderColor)
             {
@@ -193,6 +194,8 @@ namespace tgui  { namespace xhtml
 
         return formattedRectangle;
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     FormattedLink::Ptr FormattedXhtmlDocument::createFormattedLinkWithPosition(XhtmlElement::Ptr xhtmlElement, bool applyLineRunLength)
     {
@@ -287,7 +290,7 @@ namespace tgui  { namespace xhtml
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     void FormattedXhtmlDocument::layout(Vector2f clientSize, float defaultTextSize, Color defaultForeColor,  float defaultOpacity,
-                                            const FormattedDocument::FontCollection& fontCollection, bool keepSelection)
+                                        const FormattedDocument::FontCollection& fontCollection, bool keepSelection)
     {
         if(!fontCollection.assertValid())
             std::cerr << "Invalid font collection!\n";
@@ -298,7 +301,7 @@ namespace tgui  { namespace xhtml
         bool parentElementSuppressesInitialExtraSpace = false;
         bool lastchildAcceptsRunLengtExpansion = false;
 
-        m_availableClientSize = {0.0f, 0.0f};
+        m_availableClientSize = clientSize;
         m_occupiedLayoutSize = {0.0f, 0.0f};
         m_content.clear();
         m_defaultTextSize = defaultTextSize;
@@ -384,9 +387,153 @@ namespace tgui  { namespace xhtml
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    void FormattedXhtmlDocument::calculateTableColumnRequestedSizes(XhtmlElement::Ptr tableElement, FormattedDocument::TableMetric::Ptr tableMetric)
+    {
+        bool forceNewFreeCellRow = false;
+        for (XhtmlElement::Ptr childElement : *(tableElement->getChildren()))
+        {
+            auto childTypeName = childElement->getTypeName();
+            if (childTypeName == XhtmlElementType::TableHead || childTypeName == XhtmlElementType::TableBody || childTypeName == XhtmlElementType::TableFoot)
+            {
+                if (childTypeName == XhtmlElementType::TableHead)
+                    tableMetric->setCurrentRowRange(TableRowRange::Head);
+                else if (childTypeName == XhtmlElementType::TableFoot)
+                    tableMetric->setCurrentRowRange(TableRowRange::Foot);
+                else
+                    tableMetric->setCurrentRowRange(TableRowRange::Body);
+
+                forceNewFreeCellRow = true;
+                for (XhtmlElement::Ptr grandchildElement : *(childElement->getChildren()))
+                {
+                    calculateRowRangeColumnRequestedSizes(grandchildElement, tableMetric, forceNewFreeCellRow);
+                    forceNewFreeCellRow = false;
+                }
+                forceNewFreeCellRow = true;
+            }
+            else
+            {
+                tableMetric->setCurrentRowRange(TableRowRange::Body);
+                calculateRowRangeColumnRequestedSizes(childElement, tableMetric, forceNewFreeCellRow);
+                forceNewFreeCellRow = false;
+            }
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    void FormattedXhtmlDocument::calculateRowRangeColumnRequestedSizes(XhtmlElement::Ptr xhtmlElement,
+        FormattedDocument::TableMetric::Ptr tableMetric, bool forceNewFreeCellRow)
+    {
+        auto elementTypeName = xhtmlElement->getTypeName();
+        if (elementTypeName == XhtmlElementType::TableRow)
+        {
+            auto tableRowMetric = std::make_shared<FormattedDocument::TableRowMetric>();
+            tableMetric->addRowRangeRowMetric(tableMetric->getCurrentRowRange(), tableRowMetric);
+            tableRowMetric->setContentOrigin(xhtmlElement);
+
+            for (XhtmlElement::Ptr childElement : *(xhtmlElement->getChildren()))
+            {
+                auto childTypeName = childElement->getTypeName();
+                if (childTypeName == XhtmlElementType::TableHeaderCell || childTypeName == XhtmlElementType::TableDataCell)
+                    calculateCellColumnRequestedSize(childElement, tableMetric, tableRowMetric);
+            }
+        }
+        else if (elementTypeName == XhtmlElementType::TableHeaderCell || elementTypeName == XhtmlElementType::TableDataCell)
+        {
+            // 'Free' cells on table level are added to the last 'free' row of the table's BODY part, if any, or create a new 'free' row in the table's BODY part.
+            // 'Free' cells on thead/tbody/tfoot level are added to the last 'free' row of the HED/BODY/FOOT part, if any, or create a new 'free' row in the table's BODY part.
+            auto tableRowMetric = tableMetric->getRowRangeTailRowMetric(tableMetric->getCurrentRowRange());
+            if ((tableRowMetric && tableRowMetric->getContentOrigin()) || forceNewFreeCellRow)
+                tableRowMetric = nullptr;
+            if (!tableRowMetric)
+            {
+                tableRowMetric = std::make_shared<FormattedDocument::TableRowMetric>();
+                tableMetric->addRowRangeRowMetric(tableMetric->getCurrentRowRange(), tableRowMetric);
+            }
+
+            calculateCellColumnRequestedSize(xhtmlElement, tableMetric, tableRowMetric);
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    void FormattedXhtmlDocument::calculateCellColumnRequestedSize(XhtmlElement::Ptr xhtmlElement, FormattedDocument::TableMetric::Ptr tableMetric,
+        FormattedDocument::TableRowMetric::Ptr tableRowMetric)
+    {
+        auto tableCellMetric = std::make_shared<FormattedDocument::TableCellMetric>();
+        tableRowMetric->addCellMetric(tableCellMetric);
+        tableCellMetric->setContentOrigin(xhtmlElement);
+
+        auto styleableElement = std::dynamic_pointer_cast<XhtmlStyleableInterface>(xhtmlElement);
+        auto styleEntry = styleableElement->getStyleEntry();
+        // SizeType::ViewportWidth with 0.0f acts as a default.
+        if (styleEntry != nullptr && (styleEntry->getStyleEntryFlags() & StyleEntryFlags::Width) == StyleEntryFlags::Width)
+            tableMetric->updateRequestedColumnSize(tableRowMetric->getCellMetricCount() - 1, styleEntry->getWidth());
+        else
+            tableMetric->updateRequestedColumnSize(tableRowMetric->getCellMetricCount() - 1, OneDimSize(SizeType::ViewportWidth, 0.0f));
+
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    void FormattedXhtmlDocument::calculateTableColumnPreferredSizes(float availableDimension, FormattedDocument::TableMetric::Ptr tableMetric)
+    {
+        size_t freeColumnCount = 0;
+        float  freePercentageTotal = 0.0f;
+        size_t relativeColumnCount = 0;
+        float  relativePercentageTotal = 0.0f;
+        size_t fixedColumnCount = 0;
+        float  fixedWidthTotal = 0.0f;
+
+        for (size_t index = 0; index < tableMetric->getRequestedColumnSizesCount(); index++)
+        {
+            auto preferredColumnSize = tableMetric->getRequestedColumnSize(index);
+            if (preferredColumnSize.sizeType == SizeType::ViewportWidth && preferredColumnSize.value == 0.0f)
+            {
+                freeColumnCount++;
+                freePercentageTotal += availableDimension != 0.0f ? 100.0f / availableDimension : 0.1f;
+            }
+            else if (preferredColumnSize.sizeType == SizeType::ViewportWidth)
+            {
+                relativeColumnCount++;
+                relativePercentageTotal += preferredColumnSize.value;
+            }
+            else if (preferredColumnSize.sizeType == SizeType::Relative)
+            {
+                relativeColumnCount++;
+                relativePercentageTotal += preferredColumnSize.value;
+            }
+            else
+            {
+                auto fixedWidth = preferredColumnSize.toPixel(availableDimension);
+                fixedColumnCount++;
+                fixedWidthTotal += fixedWidth.value;
+
+                tableMetric->updatePreferredColumnSize(index, {true, fixedWidth.value});
+            }
+        }
+
+        float relativePercentageRequired = relativePercentageTotal + freePercentageTotal;
+        float freeWidthAvailable = relativePercentageRequired != 0.0f ? (availableDimension - fixedWidthTotal) * freePercentageTotal / relativePercentageRequired : availableDimension - fixedWidthTotal;
+        float relativeWidthAvailable = relativePercentageRequired != 0.0f ? (availableDimension - fixedWidthTotal) * relativePercentageTotal / relativePercentageRequired : availableDimension - fixedWidthTotal;
+
+        for (size_t index = 0; index < tableMetric->getRequestedColumnSizesCount(); index++)
+        {
+            auto preferredColumnSize = tableMetric->getRequestedColumnSize(index);
+            if (preferredColumnSize.sizeType == SizeType::ViewportWidth && preferredColumnSize.value == 0.0f)
+                tableMetric->updatePreferredColumnSize(index, {false, freeWidthAvailable / freeColumnCount});
+            else if (preferredColumnSize.sizeType == SizeType::ViewportWidth)
+                tableMetric->updatePreferredColumnSize(index, {false, relativeWidthAvailable * preferredColumnSize.value});
+            else if (preferredColumnSize.sizeType == SizeType::Relative)
+                tableMetric->updatePreferredColumnSize(index, {false, relativeWidthAvailable * preferredColumnSize.value});
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     void FormattedXhtmlDocument::layout(bool& predecessorElementProvidesExtraSpace, bool parentElementSuppressesInitialExtraSpace,
-                                            bool& lastchildAcceptsRunLengtExpansion, XhtmlElement::Ptr xhtmlElement,
-                                            const FormattedDocument::FontCollection& fontCollection, bool keepSelection)
+                                        bool& lastchildAcceptsRunLengtExpansion, XhtmlElement::Ptr xhtmlElement,
+                                        const FormattedDocument::FontCollection& fontCollection, bool keepSelection)
     {
         auto typeName = xhtmlElement->getTypeName();
         if (typeName == XhtmlElementType::Head)
@@ -395,18 +542,21 @@ namespace tgui  { namespace xhtml
         std::shared_ptr<FormattedElement> currentFormattedElement = nullptr;
 
         // Block elements always need to start a new line and to lock the current line.
-        if (typeName == XhtmlElementType::Body          ||
-            typeName == XhtmlElementType::H1            || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3 ||
-            typeName == XhtmlElementType::H4            || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6 ||
-            typeName == XhtmlElementType::Emphasized    || typeName == XhtmlElementType::Italic ||
-            typeName == XhtmlElementType::Strong        || typeName == XhtmlElementType::Bold ||
-            typeName == XhtmlElementType::Underline     ||
-            typeName == XhtmlElementType::Superscript   || typeName == XhtmlElementType::Subscript    ||
-            typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList  ||
-            typeName == XhtmlElementType::ListItem      ||
-            typeName == XhtmlElementType::Span          || typeName == XhtmlElementType::Anchor       ||
-            typeName == XhtmlElementType::Division      || typeName == XhtmlElementType::Preformatted || typeName == XhtmlElementType::Code ||
-            typeName == XhtmlElementType::Paragraph     || typeName == XhtmlElementType::Image)
+        if (typeName == XhtmlElementType::Body            ||
+            typeName == XhtmlElementType::H1              || typeName == XhtmlElementType::H2              || typeName == XhtmlElementType::H3 ||
+            typeName == XhtmlElementType::H4              || typeName == XhtmlElementType::H5              || typeName == XhtmlElementType::H6 ||
+            typeName == XhtmlElementType::Emphasized      || typeName == XhtmlElementType::Italic          ||
+            typeName == XhtmlElementType::Strong          || typeName == XhtmlElementType::Bold            ||
+            typeName == XhtmlElementType::Underline       ||
+            typeName == XhtmlElementType::Superscript     || typeName == XhtmlElementType::Subscript       ||
+            typeName == XhtmlElementType::UnorderedList   || typeName == XhtmlElementType::OrderedList     ||
+            typeName == XhtmlElementType::ListItem        ||
+            typeName == XhtmlElementType::Table           ||
+            typeName == XhtmlElementType::TableHead       || typeName == XhtmlElementType::TableBody       || typeName == XhtmlElementType::TableFoot     ||
+            typeName == XhtmlElementType::TableRow        || typeName == XhtmlElementType::TableHeaderCell || typeName == XhtmlElementType::TableDataCell ||
+            typeName == XhtmlElementType::Span            || typeName == XhtmlElementType::Anchor          ||
+            typeName == XhtmlElementType::Division        || typeName == XhtmlElementType::Preformatted    || typeName == XhtmlElementType::Code ||
+            typeName == XhtmlElementType::Paragraph       || typeName == XhtmlElementType::Image)
         {
             // prepare rect section to accommodate the block
 
@@ -504,7 +654,7 @@ namespace tgui  { namespace xhtml
                 // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
 
                 // -- Prepare Y
-                if (predecessorElementProvidesExtraSpace || parentElementSuppressesInitialExtraSpace) // XXX
+                if (predecessorElementProvidesExtraSpace || parentElementSuppressesInitialExtraSpace)
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight;
                 else
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize + m_defaultTextSize + m_defaultTextSize / 2;
@@ -527,10 +677,11 @@ namespace tgui  { namespace xhtml
 
                 // -- Prepare Y
                 auto parent  = xhtmlElement->getParent();
-                auto sibling = XhtmlElement::getPreviousSibling(xhtmlElement);
-                auto parentTypeName = (parent  != nullptr ? parent->getTypeName()  : XhtmlElementType::Body);
-                auto predecTypeName = (sibling != nullptr ? sibling->getTypeName() : XhtmlElementType::Break);
+                auto predec = XhtmlElement::getPreviousSibling(xhtmlElement);
+                auto parentTypeName = (parent != nullptr ? parent->getTypeName() : XhtmlElementType::Body);
+                auto predecTypeName = (predec != nullptr ? predec->getTypeName() : XhtmlElementType::Break);
 
+                // -- Prepare inner layout
                 /*
                  * The list can be
                  * - outside any list [1] or
@@ -551,13 +702,13 @@ namespace tgui  { namespace xhtml
                     m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize + m_defaultTextSize / 4;
                 m_evolvingLineExtraHeight = 0;
 
-                // -- Prepare X
-
                 auto newListMetric = std::make_shared<FormattedDocument::ListData>();
                 newListMetric->Ordered = (typeName == XhtmlElementType::OrderedList);
                 newListMetric->ActualItemIndex = 0;
-                newListMetric->ItemType = ListItemType::InheritOrDefault;
+                newListMetric->ItemType = MarkupListItemType::InheritOrDefault;
                 m_formattingState.ListMetrics.push_back(newListMetric);
+
+                // -- Prepare X
 
                 // -- Create element
                 currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement);
@@ -576,7 +727,7 @@ namespace tgui  { namespace xhtml
                 // -- Prepare Y
                 m_evolvingLineExtraHeight = 0;
 
-                auto xhtmlListItem = std::dynamic_pointer_cast<XhtmlListItem>(xhtmlStyleableElement);
+                // -- Prepare Bullet-Counting and Indent
                 FormattedDocument::ListData::Ptr listMetrics = m_formattingState.ListMetrics.back();
                 listMetrics->ActualItemIndex++;
                 if (listMetrics->ActualItemIndex == 1)
@@ -606,6 +757,148 @@ namespace tgui  { namespace xhtml
 
                 // -- Set flags
                 currentIsInitialExtraSpaceSuppressingElement = true; // First child element can be placed without preceeding extra space.
+            }
+            else if (typeName == XhtmlElementType::Table)
+            {
+                // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
+
+                // -- Prepare Y
+                m_evolvingLayoutArea.top += m_evolvingLineExtraHeight + m_defaultTextSize;
+                m_evolvingLineExtraHeight = 0;
+
+                // -- Prepare inner layout
+                auto tableMetric = std::make_shared<FormattedDocument::TableMetric>();
+                m_formattingState.TableMetrics.push_back(tableMetric);
+
+                // -- Prepare X
+                tableMetric->setCachedLayoutArea(m_evolvingLayoutArea);
+
+                // -- Create element
+                currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement);
+                m_content.push_back(currentFormattedElement);
+
+                // -- Update inner layout
+                tableMetric->setFormattedElement(currentFormattedElement);
+                tableMetric->setContentOrigin(xhtmlElement);
+
+                // -- Act like a "\r"
+                m_evolvingLineRunLength = 0;
+
+                // -- Set flags
+            }
+            else if (typeName == XhtmlElementType::TableHead || typeName == XhtmlElementType::TableBody || typeName == XhtmlElementType::TableFoot)
+            {
+                // Everything is done by table's call to calculateTableColumnRequestedSizes().
+            }
+            else if (typeName == XhtmlElementType::TableRow || typeName == XhtmlElementType::TableHeaderCell || typeName == XhtmlElementType::TableDataCell)
+            {
+                // Can be an anchor or styled, but doesn't represent text/image ==> FormattedRectangle
+
+                // -- Prepare Y
+                m_evolvingLineExtraHeight = 0;
+
+                // -- Prepare inner layout
+                FormattedDocument::TableMetric::Ptr tableMetric = m_formattingState.TableMetrics.back();
+
+                // -- Prepare X, remember Y and update Y & X
+                if (tableMetric)
+                {
+                    // Prepare X
+                    auto cachedLayoutArea = tableMetric->getCachedLayoutArea();
+                    auto tableToCellSpacing = tableMetric->calculateTableLayoutAreaToCellSpacing();
+                    m_evolvingLayoutArea.left  = cachedLayoutArea.left + tableToCellSpacing.getLeft();
+                    m_evolvingLayoutArea.width = cachedLayoutArea.width - tableToCellSpacing.getLeft() - tableToCellSpacing.getRight();
+
+                    // Remember Y
+                    if (typeName == XhtmlElementType::TableRow)
+                    {
+                        // Must be dispensable, since there are also free cells without row.
+                        size_t rowIndex = 0;
+                        auto tableRowMetric = tableMetric->firstOrDefaultRowMetricByContentOrigin(xhtmlElement, rowIndex);
+                        if (tableRowMetric)
+                        {
+                            if (tableRowMetric->getStartCoordinate() < 0.0f)
+                            {
+                                auto tableCellSpacing = tableMetric->calculateTableRenderAreaToCellSpacing();
+                                m_evolvingLayoutArea.top += tableCellSpacing.getTop();
+                            }
+                            else
+                                m_evolvingLayoutArea.top += 2.0f;
+
+                            tableRowMetric->setStartCoordinate(m_evolvingLayoutArea.top);
+                        }
+                        m_evolvingLayoutArea.top = tableRowMetric->getStartCoordinate();
+                    }
+
+                    // Remember Y and update Y & X
+                    if (typeName == XhtmlElementType::TableHeaderCell || typeName == XhtmlElementType::TableDataCell)
+                    {
+                        size_t rowIndex = 0;
+                        auto tableRowMetric = tableMetric->firstOrDefaultRowMetricByAnyCellContentOrigin(xhtmlElement, rowIndex);
+                        if (tableRowMetric)
+                        {
+                            // Fallback, if there is no row.
+                            if (tableRowMetric->getStartCoordinate() < 0.0f)
+                            {
+                                if (rowIndex == 0)
+                                {
+                                    auto tableCellSpacing = tableMetric->calculateTableRenderAreaToCellSpacing();
+                                    m_evolvingLayoutArea.top += tableCellSpacing.getTop();
+                                }
+                                else
+                                    m_evolvingLayoutArea.top += 2.0f;
+
+                                tableRowMetric->setStartCoordinate(m_evolvingLayoutArea.top);
+                            }
+                            m_evolvingLayoutArea.top = tableRowMetric->getStartCoordinate();
+
+                            auto columnIndex = tableRowMetric ? tableRowMetric->firstOrDefaultCellIndexByContentOrigin(xhtmlElement) : (size_t)0;
+                            auto cellLayoutArea = tableMetric->calculateCellLayoutArea(columnIndex);
+                            m_evolvingLayoutArea.left += cellLayoutArea.left;
+                            m_evolvingLayoutArea.width = cellLayoutArea.width;
+
+                            auto tableCellMetric = tableRowMetric->firstOrDefaultCellMetricByContentOrigin(xhtmlElement);
+                            if (tableCellMetric)
+                                tableCellMetric->setStartCoordinate(m_evolvingLayoutArea.left);
+                        }
+                    }
+                }
+
+                // -- Create element (but only if <table> tag exists)
+                if (tableMetric)
+                {
+                    currentFormattedElement = createFormattedRectangleWithPosition(xhtmlElement);
+                    m_content.push_back(currentFormattedElement);
+                }
+
+                // -- Register element
+                if (tableMetric)
+                {
+                    if (typeName == XhtmlElementType::TableRow)
+                    {
+                        auto tableRowMetric = tableMetric->firstOrDefaultRowMetricByContentOrigin(xhtmlElement);
+                        if (tableRowMetric)
+                            tableRowMetric->setFormattedElement(currentFormattedElement);
+                    }
+
+                    // Header cells (<th>...</th>) aren't automatically assigned to the head row range!
+                    // The only defferences are alignment center and bold font.
+                    if (typeName == XhtmlElementType::TableHeaderCell || typeName == XhtmlElementType::TableDataCell)
+                    {
+                        auto tableRowMetric = tableMetric->firstOrDefaultRowMetricByAnyCellContentOrigin(xhtmlElement);
+                        auto tableCellMetric = tableRowMetric ? tableRowMetric->firstOrDefaultCellMetricByContentOrigin(xhtmlElement) : nullptr;
+                        if (tableCellMetric)
+                            tableCellMetric->setFormattedElement(currentFormattedElement);
+                    }
+                }
+
+                // -- Act like a "\r"
+                if (tableMetric)
+                {
+                    m_evolvingLineRunLength = 0;
+                }
+
+                // -- Set flags
             }
             else if (typeName == XhtmlElementType::Span || typeName == XhtmlElementType::Anchor)
             {
@@ -728,18 +1021,22 @@ namespace tgui  { namespace xhtml
             // -------------------------------
             // Initialize backgound and border
             // -------------------------------
-            if (typeName == XhtmlElementType::Body          ||
-                typeName == XhtmlElementType::H1            || typeName == XhtmlElementType::H2            || typeName == XhtmlElementType::H3 ||
-                typeName == XhtmlElementType::H4            || typeName == XhtmlElementType::H5            || typeName == XhtmlElementType::H6 ||
-                typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList   ||
-                typeName == XhtmlElementType::Span          || typeName == XhtmlElementType::Anchor        ||
-                typeName == XhtmlElementType::Division      || typeName == XhtmlElementType::Preformatted  || typeName == XhtmlElementType::Code ||
-                typeName == XhtmlElementType::Paragraph     || typeName == XhtmlElementType::Image)
+            if (typeName == XhtmlElementType::Body            ||
+                typeName == XhtmlElementType::H1              || typeName == XhtmlElementType::H2              || typeName == XhtmlElementType::H3 ||
+                typeName == XhtmlElementType::H4              || typeName == XhtmlElementType::H5              || typeName == XhtmlElementType::H6 ||
+                typeName == XhtmlElementType::UnorderedList   || typeName == XhtmlElementType::OrderedList     ||
+                typeName == XhtmlElementType::Table           ||
+                typeName == XhtmlElementType::TableHead       || typeName == XhtmlElementType::TableBody       || typeName == XhtmlElementType::TableFoot     ||
+                typeName == XhtmlElementType::TableRow        || typeName == XhtmlElementType::TableHeaderCell || typeName == XhtmlElementType::TableDataCell ||
+                typeName == XhtmlElementType::Span            || typeName == XhtmlElementType::Anchor          ||
+                typeName == XhtmlElementType::Division        || typeName == XhtmlElementType::Preformatted    || typeName == XhtmlElementType::Code ||
+                typeName == XhtmlElementType::Paragraph       || typeName == XhtmlElementType::Image)
             {
                 FormattedRectangle::Ptr formattedRectSection = std::dynamic_pointer_cast<FormattedRectangle>(currentFormattedElement);
                 if (formattedRectSection)
+
                 {
-                    applyStyleEntriesToFormattedElement(formattedRectSection, styleEntries, fontCollection,
+                    applyStyleEntriesToFormattedElement(formattedRectSection, styleEntries, { m_availableClientSize.x, /* yes, X */ m_availableClientSize.x }, fontCollection,
                         StyleCategoryFlags::BackColor | StyleCategoryFlags::Opacity |
                         StyleCategoryFlags::BorderStyle | StyleCategoryFlags::BorderWidth | StyleCategoryFlags::BorderColor);
                 }
@@ -748,17 +1045,25 @@ namespace tgui  { namespace xhtml
             // -------------------------------
             // Apply leading margin
             // -------------------------------
-            if (xhtmlStyleableElement)
+            if (xhtmlStyleableElement &&
+                typeName != XhtmlElementType::TableHead &&
+                typeName != XhtmlElementType::TableBody &&
+                typeName != XhtmlElementType::TableFoot &&
+                typeName != XhtmlElementType::TableRow &&
+                typeName != XhtmlElementType::TableHeaderCell &&
+                typeName != XhtmlElementType::TableDataCell)
             {
                 FormattedRectangle::Ptr formattedRectSection = std::dynamic_pointer_cast<FormattedRectangle>(currentFormattedElement);
-                for (auto styleEntry : styleEntries)
+                if (formattedRectSection)
                 {
-                    if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) == StyleEntryFlags::Margin)
+                    for (auto styleEntry : styleEntries)
                     {
-                        auto margin = styleEntry->getMargin().toPixel(m_availableClientSize);
-                        inflate(m_evolvingLayoutArea, -margin.left, -margin.top, -margin.right, 0);
-                        if (formattedRectSection)
+                        if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) == StyleEntryFlags::Margin)
+                        {
+                            auto margin = styleEntry->getMargin().toPixel({ m_availableClientSize.x, /* yes, X */ m_availableClientSize.x });
+                            inflate(m_evolvingLayoutArea, -margin.left, -margin.top, -margin.right, 0);
                             formattedRectSection->setMargin(margin);
+                        }
                     }
                 }
             }
@@ -766,41 +1071,120 @@ namespace tgui  { namespace xhtml
             // -----------------------------
             // Apply leading padding
             // -----------------------------
-            if (xhtmlStyleableElement)
+            if (xhtmlStyleableElement &&
+                typeName != XhtmlElementType::Table &&
+                typeName != XhtmlElementType::TableHead &&
+                typeName != XhtmlElementType::TableBody &&
+                typeName != XhtmlElementType::TableFoot &&
+                typeName != XhtmlElementType::TableRow)
             {
-                for (auto styleEntry : styleEntries)
+                if (currentFormattedElement)
                 {
-                    if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Padding) == StyleEntryFlags::Padding)
+                    for (auto styleEntry : styleEntries)
                     {
-                        auto padding = styleEntry->getPadding().toPixel(m_availableClientSize);
-                        inflate(m_evolvingLayoutArea, -padding.left, -padding.top, -padding.right, 0);
+                        if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Padding) == StyleEntryFlags::Padding)
+                        {
+                            auto padding = styleEntry->getPadding().toPixel({ m_availableClientSize.x, /* yes, X */ m_availableClientSize.x });
+                            inflate(m_evolvingLayoutArea, -padding.left, -padding.top, -padding.right, 0);
+                        }
                     }
+                }
+            }
+
+            // -------------------------------
+            // Special table treatment
+            // -------------------------------
+            if (typeName == XhtmlElementType::Table)
+            {
+                // First stage precalculation of rows and cells.
+                FormattedDocument::TableMetric::Ptr tableMetric = m_formattingState.TableMetrics.back();
+                if (tableMetric)
+                {
+                    calculateTableColumnRequestedSizes(xhtmlElement, tableMetric);
+
+                    auto tableToCellSpacing = tableMetric->calculateTableLayoutAreaToCellSpacing();
+                    auto cellToCellSpacing  = std::max((size_t)0, tableMetric->getRequestedColumnSizesCount() - 1) * 2.0f;
+                    calculateTableColumnPreferredSizes(m_evolvingLayoutArea.width - tableToCellSpacing.getLeft() - tableToCellSpacing.getRight() - cellToCellSpacing, tableMetric);
                 }
             }
 
             // -------------------------------
             // Process children
             // -------------------------------
-            bool loopinternalPredecessorElementProvidesExtraSpace = false; // XXX (typeName == XhtmlElementType::Body);
+            bool loopinternalPredecessorElementProvidesExtraSpace = false;
             bool lastchildAcceptsRunLengtExpansion = false;
-            for (size_t index = 0; xhtmlElement->isContainer() && index < xhtmlElement->countChildren(); index++)
-                layout(loopinternalPredecessorElementProvidesExtraSpace, index == 0 && currentIsInitialExtraSpaceSuppressingElement, lastchildAcceptsRunLengtExpansion,
-                    xhtmlElement->getChild(index), fontCollection, keepSelection);
+            if (typeName == XhtmlElementType::Table     ||
+                typeName == XhtmlElementType::TableHead || typeName == XhtmlElementType::TableBody || typeName == XhtmlElementType::TableFoot)
+            {
+                // For a table and table row-ranges we can't strictly follow the XHTML element hierarchy.
+                // Because free rows always belog to the <tbody>...</tbody> row-range (even if they appear before or after the <tbody>...</tbody> row-range).
+                // And free cells always create a separate row and this row belongs to the  <tbody>...</tbody> row-range.
 
+                FormattedDocument::TableMetric::Ptr tableMetric = m_formattingState.TableMetrics.back();
+                if (tableMetric && typeName == XhtmlElementType::Table)
+                {
+                    auto tableRowRanges = { TableRowRange::Head , TableRowRange::Body, TableRowRange::Foot };
+                    for (auto tableRowRange : tableRowRanges)
+                    {
+                        for (size_t rowIndex = 0; rowIndex < tableMetric->getRowRangeRowMetricCount(tableRowRange); rowIndex++)
+                        {
+                            auto rowMetric = tableMetric->getRowRangeRowMetric(tableRowRange, rowIndex);
+                            auto rowMarkupElement = rowMetric ? rowMetric->getContentOrigin() : nullptr;
+                            auto rowXhtmlElement = std::dynamic_pointer_cast<XhtmlElement>(rowMarkupElement);
+                            if (rowXhtmlElement)
+                            {
+                                layout(loopinternalPredecessorElementProvidesExtraSpace, false,
+                                    lastchildAcceptsRunLengtExpansion, rowXhtmlElement, fontCollection, keepSelection);
+                            }
+                            else if (rowMetric)
+                            {
+                                for (size_t cellIndex = 0; cellIndex < rowMetric->getCellMetricCount(); cellIndex++)
+                                {
+                                    auto tableCellMetric = rowMetric->getCellMetric(cellIndex);
+                                    auto cellMarkupElement = tableCellMetric ? tableCellMetric->getContentOrigin() : nullptr;
+                                    auto cellXhtmlElement = std::dynamic_pointer_cast<XhtmlElement>(cellMarkupElement);
+                                    if (cellXhtmlElement)
+                                    {
+                                        layout(loopinternalPredecessorElementProvidesExtraSpace, false,
+                                            lastchildAcceptsRunLengtExpansion, cellXhtmlElement, fontCollection, keepSelection);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else
+            {
+                // For everything else except table and table row-ranges we can strictly follow the XHTML element hierarchy.
+                // Because free rows are already assigned to a row-range and free cells are already assigned to a row.
+
+                for (size_t index = 0; xhtmlElement->isContainer() && index < xhtmlElement->countChildren(); index++)
+                    layout(loopinternalPredecessorElementProvidesExtraSpace, index == 0 && currentIsInitialExtraSpaceSuppressingElement,
+                        lastchildAcceptsRunLengtExpansion, xhtmlElement->getChild(index), fontCollection, keepSelection);
+            }
             float bottomExtraSpace = 0.0f;
 
             // -----------------------------
             // Apply tailing padding
             // -----------------------------
-            if (xhtmlStyleableElement)
+            if (xhtmlStyleableElement &&
+                typeName != XhtmlElementType::Table &&
+                typeName != XhtmlElementType::TableHead &&
+                typeName != XhtmlElementType::TableBody &&
+                typeName != XhtmlElementType::TableFoot &&
+                typeName != XhtmlElementType::TableRow)
             {
-                for (auto styleEntry : styleEntries)
+                if (currentFormattedElement)
                 {
-                    if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Padding) == StyleEntryFlags::Padding)
+                    for (auto styleEntry : styleEntries)
                     {
-                        auto padding = styleEntry->getPadding().toPixel(m_availableClientSize);
-                        inflate(m_evolvingLayoutArea, padding.left, -padding.bottom, padding.right, 0);
-                        bottomExtraSpace += padding.bottom;
+                        if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Padding) == StyleEntryFlags::Padding)
+                        {
+                            auto padding = styleEntry->getPadding().toPixel({ m_availableClientSize.x, /* yes, X */ m_availableClientSize.x });
+                            inflate(m_evolvingLayoutArea, padding.left, -padding.bottom, padding.right, 0);
+                            bottomExtraSpace += padding.bottom;
+                        }
                     }
                 }
             }
@@ -808,15 +1192,24 @@ namespace tgui  { namespace xhtml
             // -------------------------------
             // Apply tailing margin
             // -------------------------------
-            if (xhtmlStyleableElement)
+            if (xhtmlStyleableElement &&
+                typeName != XhtmlElementType::TableHead &&
+                typeName != XhtmlElementType::TableBody &&
+                typeName != XhtmlElementType::TableFoot &&
+                typeName != XhtmlElementType::TableRow &&
+                typeName != XhtmlElementType::TableHeaderCell &&
+                typeName != XhtmlElementType::TableDataCell)
             {
-                for (auto styleEntry : styleEntries)
+                if (currentFormattedElement)
                 {
-                    if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) == StyleEntryFlags::Margin)
+                    for (auto styleEntry : styleEntries)
                     {
-                        auto margin = styleEntry->getMargin().toPixel(m_availableClientSize);
-                        inflate(m_evolvingLayoutArea, margin.left, -margin.bottom, margin.right, 0);
-                        bottomExtraSpace += margin.bottom;
+                        if ((styleEntry->getStyleEntryFlags() & StyleEntryFlags::Margin) == StyleEntryFlags::Margin)
+                        {
+                            auto margin = styleEntry->getMargin().toPixel({ m_availableClientSize.x, /* yes, X */ m_availableClientSize.x });
+                            inflate(m_evolvingLayoutArea, margin.left, -margin.bottom, margin.right, 0);
+                            bottomExtraSpace += margin.bottom;
+                        }
                     }
                 }
             }
@@ -824,26 +1217,48 @@ namespace tgui  { namespace xhtml
             // -------------------------------
             // Finalize background
             // -------------------------------
-            if (typeName == XhtmlElementType::Body          || typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList ||
-                typeName == XhtmlElementType::H1            || typeName == XhtmlElementType::H2            || typeName == XhtmlElementType::H3 ||
-                typeName == XhtmlElementType::H4            || typeName == XhtmlElementType::H5            || typeName == XhtmlElementType::H6 ||
-                typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList   ||
-                typeName == XhtmlElementType::Span          || typeName == XhtmlElementType::Anchor        ||
-                typeName == XhtmlElementType::Division      || typeName == XhtmlElementType::Preformatted  || typeName == XhtmlElementType::Code ||
-                typeName == XhtmlElementType::Paragraph)    // typeName == XhtmlElementType::Image)
+            if (typeName == XhtmlElementType::Body            || typeName == XhtmlElementType::UnorderedList   || typeName == XhtmlElementType::OrderedList ||
+                typeName == XhtmlElementType::H1              || typeName == XhtmlElementType::H2              || typeName == XhtmlElementType::H3 ||
+                typeName == XhtmlElementType::H4              || typeName == XhtmlElementType::H5              || typeName == XhtmlElementType::H6 ||
+                typeName == XhtmlElementType::UnorderedList   || typeName == XhtmlElementType::OrderedList     ||
+                typeName == XhtmlElementType::Table           ||
+                typeName == XhtmlElementType::TableHead       || typeName == XhtmlElementType::TableBody       || typeName == XhtmlElementType::TableFoot ||
+                typeName == XhtmlElementType::TableRow        || typeName == XhtmlElementType::TableHeaderCell || typeName == XhtmlElementType::TableDataCell ||
+                typeName == XhtmlElementType::Span            || typeName == XhtmlElementType::Anchor          ||
+                typeName == XhtmlElementType::Division        || typeName == XhtmlElementType::Preformatted    || typeName == XhtmlElementType::Code ||
+                typeName == XhtmlElementType::Paragraph)      // typeName == XhtmlElementType::Image)
             {
-                if (currentFormattedElement != nullptr)
+                if (currentFormattedElement && typeName == XhtmlElementType::Table)
+                {
+                    FormattedDocument::TableMetric::Ptr tableMetric = m_formattingState.TableMetrics.back();
+                    if (tableMetric)
+                    {
+                        auto tableToCellSpacing = tableMetric->calculateTableLayoutAreaToCellSpacing();
+                        auto rowMetric = tableMetric->getTailRowMetric();
+                        auto rightBottom = Vector2f(tableMetric->getCachedLayoutArea().left + tableMetric->getTotalPreferredColumnSizes() +
+                                                    std::max((size_t)0, tableMetric->getRequestedColumnSizesCount() - 1) * 2.0f +
+                                                    tableToCellSpacing.getLeft() + tableToCellSpacing.getRight(),
+                                                    (rowMetric != nullptr ? rowMetric->getEndCoordinate() : m_evolvingLayoutArea.top) +
+                                                    tableToCellSpacing.getBottom());
+                        currentFormattedElement->setLayoutRightBottom(rightBottom);
+                    }
+                }
+                else if (currentFormattedElement)
                 {
                     // Recover the last child (if any) or itself. If there is a child - if child is text section a special treatment is required.
-                    auto lastTextSection = std::dynamic_pointer_cast<FormattedTextSection>(m_content.back());
-                    if (lastTextSection)
+                    auto lastText = std::dynamic_pointer_cast<FormattedTextSection>(m_content.back());
+                    auto lastImage = std::dynamic_pointer_cast<FormattedImage>(m_content.back());
+                    auto lastFlowContentSection = lastText ? std::dynamic_pointer_cast<FormattedElement>(lastText) : std::dynamic_pointer_cast<FormattedElement>(lastImage);
+                    if (lastFlowContentSection)
                     {
                         // typically the the text sections are always open to add new charachters (in other words: not finalized with line break / carriage return)
                         // which implies, that m_evolvingLayoutArea.top points still to the top of the  text sections, while they might have a heigth
                         if (typeName == XhtmlElementType::Span || typeName == XhtmlElementType::Anchor)
-                            currentFormattedElement->setLayoutRightBottom(Vector2f(m_evolvingLayoutArea.left + m_evolvingLineRunLength, lastTextSection->getLayoutRefLine() + m_formattingState.TextHeight / 4 + bottomExtraSpace));
+                            currentFormattedElement->setLayoutRightBottom(Vector2f(m_evolvingLayoutArea.left + m_evolvingLineRunLength, lastFlowContentSection->getLayoutRefLine() + m_formattingState.TextHeight / 4 + bottomExtraSpace));
+                        else if (typeName == XhtmlElementType::TableDataCell || typeName == XhtmlElementType::TableHeaderCell)
+                            currentFormattedElement->setLayoutRightBottom(Vector2f(right(m_evolvingLayoutArea), lastFlowContentSection->getLayoutRefLine() + bottomExtraSpace));
                         else
-                            currentFormattedElement->setLayoutRightBottom(Vector2f(right(m_evolvingLayoutArea), lastTextSection->getLayoutRefLine() + m_formattingState.TextHeight / 4 + bottomExtraSpace));
+                            currentFormattedElement->setLayoutRightBottom(Vector2f(right(m_evolvingLayoutArea), lastFlowContentSection->getLayoutRefLine() + m_formattingState.TextHeight / 4 + bottomExtraSpace));
                     }
                     else
                         currentFormattedElement->setLayoutRightBottom(Vector2f(right(m_evolvingLayoutArea), m_evolvingLayoutArea.top));
@@ -851,10 +1266,11 @@ namespace tgui  { namespace xhtml
             }
 
             // -------------------------------
+            // Finalize formatted elements
             // Apply tailing offsets
             // -------------------------------
-            if (typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3 ||
-                typeName == XhtmlElementType::H4 || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6)
+            if (typeName == XhtmlElementType::H1       || typeName == XhtmlElementType::H2              || typeName == XhtmlElementType::H3 ||
+                typeName == XhtmlElementType::H4       || typeName == XhtmlElementType::H5              || typeName == XhtmlElementType::H6)
             {
                 m_evolvingLayoutArea.top += m_evolvingLineExtraHeight +
                                             (m_formattingState.TextHeight >= m_defaultTextSize ?
@@ -899,6 +1315,70 @@ namespace tgui  { namespace xhtml
                 m_evolvingLineRunLength = 0;
                 m_evolvingLineExtraHeight = 0;
             }
+            else if (typeName == XhtmlElementType::Table)
+            {
+                FormattedDocument::TableMetric::Ptr tableMetric = m_formattingState.TableMetrics.back();
+                if (typeName == XhtmlElementType::Table)
+                    m_formattingState.TableMetrics.pop_back();
+
+                if (tableMetric)
+                {
+                    auto cachedLayoutArea = tableMetric->getCachedLayoutArea();
+                    m_evolvingLayoutArea.left  = cachedLayoutArea.left;
+                    m_evolvingLayoutArea.width = cachedLayoutArea.width;
+                }
+            }
+            else if (typeName == XhtmlElementType::TableRow)
+            {
+                FormattedDocument::TableMetric::Ptr tableMetric = m_formattingState.TableMetrics.back();
+                if (tableMetric)
+                {
+                    auto tableRowMetric = tableMetric->firstOrDefaultRowMetricByContentOrigin(xhtmlElement);
+                    if (currentFormattedElement)
+                        currentFormattedElement->setLayoutBottom(currentFormattedElement->getLayoutBottom());
+                        // ToDo: Make this calculation meaningful!
+
+                    m_evolvingLayoutArea.left = tableMetric->getCachedLayoutArea().left;
+                }
+
+                // act like a "\r\n"
+                m_evolvingLineRunLength = 0;
+                m_evolvingLineExtraHeight = 0;
+            }
+            else if (typeName == XhtmlElementType::TableHeaderCell || typeName == XhtmlElementType::TableDataCell)
+            {
+                m_evolvingLayoutArea.top = currentFormattedElement->getLayoutBottom();
+
+                // Row end coordinate is equal to the max. cell end coordinate.
+                FormattedDocument::TableMetric::Ptr tableMetric = m_formattingState.TableMetrics.back();
+                if (tableMetric)
+                {
+                    auto tableRowMetric = tableMetric->firstOrDefaultRowMetricByAnyCellContentOrigin(xhtmlElement);
+                    if (tableRowMetric)
+                    {
+                        tableRowMetric->setEndCoordinate(std::max(m_evolvingLayoutArea.top, tableRowMetric->getEndCoordinate()));
+                        m_evolvingLayoutArea.top = tableRowMetric->getEndCoordinate();
+
+                        for (size_t columnIndex = 0; columnIndex < tableRowMetric->getCellMetricCount(); columnIndex++)
+                        {
+                            auto tableCellMetric = tableRowMetric->getCellMetric(columnIndex);
+                            if (tableCellMetric)
+                            {
+                                auto cellFormattedElement = tableCellMetric->getFormattedElement();
+                                if (cellFormattedElement)
+                                    cellFormattedElement->setLayoutBottom(m_evolvingLayoutArea.top);
+                                    // ToDo: Make this calculation meaningful!
+                            }
+                        }
+                    }
+
+                    m_evolvingLayoutArea.left = tableMetric->getCachedLayoutArea().left;
+                }
+
+                // act like a "\r\n"
+                m_evolvingLineRunLength = 0;
+                m_evolvingLineExtraHeight = 0;
+            }
             else if (typeName == XhtmlElementType::Division || typeName == XhtmlElementType::Preformatted || typeName == XhtmlElementType::Code)
             {
                 if (lastchildAcceptsRunLengtExpansion)
@@ -929,8 +1409,8 @@ namespace tgui  { namespace xhtml
             // -------------------------------
             predecessorElementProvidesExtraSpace = false;
 
-            if (typeName == XhtmlElementType::H1 || typeName == XhtmlElementType::H2 || typeName == XhtmlElementType::H3 ||
-                typeName == XhtmlElementType::H4 || typeName == XhtmlElementType::H5 || typeName == XhtmlElementType::H6)
+            if (typeName == XhtmlElementType::H1              || typeName == XhtmlElementType::H2            || typeName == XhtmlElementType::H3 ||
+                typeName == XhtmlElementType::H4              || typeName == XhtmlElementType::H5            || typeName == XhtmlElementType::H6)
             {
                 predecessorElementProvidesExtraSpace = true;
                 lastchildAcceptsRunLengtExpansion = false;
@@ -938,6 +1418,13 @@ namespace tgui  { namespace xhtml
             else if (typeName == XhtmlElementType::UnorderedList || typeName == XhtmlElementType::OrderedList)
             {
                 predecessorElementProvidesExtraSpace = true;
+                lastchildAcceptsRunLengtExpansion = false;
+            }
+            else if (typeName == XhtmlElementType::Table     ||
+                     typeName == XhtmlElementType::TableHead || typeName == XhtmlElementType::TableBody       || typeName == XhtmlElementType::TableFoot ||
+                     typeName == XhtmlElementType::TableRow  || typeName == XhtmlElementType::TableHeaderCell || typeName == XhtmlElementType::TableDataCell)
+            {
+                predecessorElementProvidesExtraSpace = false;
                 lastchildAcceptsRunLengtExpansion = false;
             }
             else if (typeName == XhtmlElementType::Division || typeName == XhtmlElementType::Preformatted || typeName == XhtmlElementType::Code)
